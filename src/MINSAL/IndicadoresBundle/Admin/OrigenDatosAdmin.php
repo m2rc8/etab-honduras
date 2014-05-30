@@ -28,6 +28,7 @@ class OrigenDatosAdmin extends Admin
                 ->add('periodicidad', null, array('label' => 'Periodicidad de actualización'))
                 ->add('actualizacionIncremental', null, array('attr' => array('label' => '¿Es actualización incremental?')))
                 ->add('ventana', null, array('attr' => array('label' => 'Ventana de actualización', 'min'=>'0')))
+				->add('fechaCorte', null, array('attr' => array('label' => 'Dia de Corte', 'min'=>'1', 'max'=>'30')))
                 ->end()
         ;
         if ($esFusionado == false)

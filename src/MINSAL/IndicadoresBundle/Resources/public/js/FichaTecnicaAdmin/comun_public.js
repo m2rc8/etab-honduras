@@ -443,6 +443,18 @@ function dibujarControles(zona, datos) {
             '<li class="lista_datos_dimension"></li>' +
             '</ul>' +
             '</div>';
+			
+	opciones_dimension+='<div class="btn-group dropdown sobre_div">' +
+            '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' + trans.exportar_imagen + '">' +
+            '<i class="icon-camera"></i>' +
+            '</button>' +
+            '<ul class="opciones_dimension dropdown-menu" role="menu" >' +
+            '<li><A >' + combo_dimensiones + '</A></li>' +
+            //cambiar filtro_posicion por filtro_fecha
+            '<li ><A >' + filtro_fecha + '</A></li>' +
+            '<li class="lista_datos_dimension"></li>' +
+            '</ul>' +
+            '</div>';
     
     var opciones = '<div class="btn-group dropdown sobre_div">' +
             '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' + trans.opciones + '">' +
@@ -542,7 +554,49 @@ function dibujarControles(zona, datos) {
     ////
     //$('#fechainicio'+zona).datepicker({ navigationAsDateFormat: true , dateFormat: "mm-yy", constrainInput: true});
     //$('#fechafin'+zona).datepicker({ navigationAsDateFormat: true , dateFormat: "mm-yy", constrainInput: true});
-    
+    $("#"+zona+"_toimage").click(function(e) {
+            $("#"+zona+"_image").html('<canvas id="'+zona+'canvas" style="display:none"></canvas><img id="'+zona+'laimage" style="clear:both;display:none;">');
+			
+			// se obtiene el uniqid que genera en auto symfony al create
+			var valor = $("#"+zona+" .grafico").html();
+			$("svg").attr({ version: '1.1' , xmlns:"http://www.w3.org/2000/svg"});
+			
+			/*var data   = valor;
+			var DOMURL = window.URL || window.webkitURL || window;
+
+			var svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+			var url = DOMURL.createObjectURL(svg);
+						
+			document.getElementById(zona+"laimagen").src=url;*/
+			
+			var blob = new Blob([Array(valor)], {type: 'image/svg+xml'});
+			var url = URL.createObjectURL(blob);
+
+			var image = new Image;
+			image.src = url;
+			image.onload = function() {
+
+				var canvas = document.getElementById(zona+"canvas");
+				canvas.width = image.width;
+				canvas.height = image.height;
+				
+				var context = canvas.getContext("2d");
+							
+			  context.drawImage(image, 0, 0);
+
+			  var a = document.createElement("a");
+			  a.download = "etab.png";
+			  a.href = canvas.toDataURL("image/png");		  
+			  a.click();
+
+			  v = document.getElementById(zona+"laimage");
+			  v.src = a.href
+			  v.style.display = "block";
+
+
+			};
+			
+        });
     $('#filtro_por_fecha'+zona).change(function(){
     	if (this.checked == true)
     	{

@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use MINSAL\IndicadoresBundle\Entity\FichaTecnica;
 use MINSAL\IndicadoresBundle\Entity\ClasificacionUso;
 use MINSAL\IndicadoresBundle\Entity\User;
@@ -603,6 +604,53 @@ return $result;
 				'group' => $sa,
 				'token' => $token,
 				'valor' => $valor));	
+    }
+	
+	/**
+     * @Route("/acIndicador/", name="autoComplete_Indicador", options={"expose"=true})
+     */
+	public function acIndicadorAction(Request $request)
+	{
+		$term = strtoupper($request->query->get('term', null));
+        $em = $this->getDoctrine()->getManager();
+        $clasificacionUso = $em->getRepository("IndicadoresBundle:ClasificacionUso")->findAll();
+
+        //Luego agregar un método para obtener la clasificacion de uso por defecto del usuario
+        $usuario = $this->getUser();
+        if ($usuario->getClasificacionUso()) {
+            $clasificacionUsoPorDefecto = $usuario->getClasificacionUso();
+        } else {
+            $clasificacionUsoPorDefecto = $clasificacionUso[0];
+        }
+        $categorias = $em->getRepository("IndicadoresBundle:ClasificacionTecnica")->findBy(array('clasificacionUso' => $clasificacionUsoPorDefecto));
+                     
+
+        //Indicadores asignados por usuario
+        $usuarioIndicadores = ($usuario->hasRole('ROLE_SUPER_ADMIN')) ?
+		//$em->getRepository("IndicadoresBundle:FichaTecnica")->findAll() :
+		$this->get('doctrine')->getManager()->createQuery("SELECT c FROM IndicadoresBundle:FichaTecnica c where UPPER(c.nombre) like '%$term%' ORDER BY c.nombre ASC")->getResult() :
+		$usuario->getIndicadores();
+        //Indicadores asignadas al grupo al que pertenece el usuario
+        $indicadoresPorGrupo = array();
+        foreach ($usuario->getGroups() as $grp){            
+            foreach ($grp->getIndicadores() as $indicadores_grupo){
+                $indicadoresPorGrupo[] = $indicadores_grupo;
+            }
+        }
+        
+        $indicadores_por_usuario = array();
+        $indicadores_clasificados = array();
+        foreach ($usuarioIndicadores as $ind) {
+			
+            $indicadores_por_usuario[] = '['.$ind->getId().']=> '.$ind->getNombre();
+        }
+        
+        foreach ($indicadoresPorGrupo as $ind){
+            $indicadores_por_usuario[] = '['.$ind->getId().']=> '.$ind->getNombre();
+        }        
+        
+		$response=new Response(json_encode($indicadores_por_usuario));
+		return $response;
     }
   
 }//end class

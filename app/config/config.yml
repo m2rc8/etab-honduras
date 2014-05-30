@@ -56,6 +56,9 @@ doctrine:
         charset:  UTF8
         types:
             json: Sonata\Doctrine\Types\JsonType
+            hstore: Application\Sonata\Doctrine\Types\Hstore           
+        mapping_types:
+            hstore: hstore
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%
@@ -210,16 +213,16 @@ services:
         arguments: [%archivo_vitacora%, 200] #definido en Parameters.yml
 
 #Fr3d_LDAP
-fr3d_ldap:
-    driver:
-        host:         10.10.20.2 # Servidor LDAP Zimbra
-        port:         389    # Optional
-    user:
-        baseDn:          ou=people,dc=salud,dc=gob,dc=sv
-        filter: (objectClass=organizationalPerson)
-        attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
-            - { ldap_attr: uid,  user_method: setUsername } # Default
-            - { ldap_attr: mail,   user_method: setEmail }     # Optional
+#fr3d_ldap:
+#    driver:
+#        host:         10.10.20.2 # Servidor LDAP Zimbra
+#        port:         389    # Optional
+#    user:
+#        baseDn:          ou=people,dc=salud,dc=gob,dc=sv
+#        filter: (objectClass=organizationalPerson)
+#        attributes:          # Specify ldap attributes mapping [ldap attribute, user object method]
+#            - { ldap_attr: uid,  user_method: setUsername } # Default
+#            - { ldap_attr: mail,   user_method: setEmail }     # Optional
 #            - { ldap_attr: cn,  user_method: setName }         # Optional
 #   service:
 #       user_manager: fos_user.user_manager          # Overrides default user manager

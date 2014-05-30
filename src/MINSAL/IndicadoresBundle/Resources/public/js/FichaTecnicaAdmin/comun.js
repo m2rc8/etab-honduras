@@ -443,6 +443,14 @@ function dibujarControles(zona, datos) {
             '<li class="lista_datos_dimension"></li>' +
             '</ul>' +
             '</div>';
+			
+	opciones_dimension+='<div class="btn-group dropdown sobre_div">' +
+            '<button class="btn btn-info dropdown-toggle" id="'+ zona +'_toimage" data-toggle="dropdown" title="' + trans.exportar_imagen + '">' +
+            '<i class="icon-camera"></i>' +
+            '</button>' +
+            '<div class="opciones_dimension dropdown-menu" role="menu"  id="'+ zona +'_image">' +          
+            '</div>' +
+            '</div>';
 
     var opciones = '<div class="btn-group dropdown sobre_div">' +
             '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' + trans.opciones + '">' +
@@ -533,14 +541,55 @@ function dibujarControles(zona, datos) {
     }
     $('#' + zona + ' .controles').append(opciones);
     $('#' + zona + ' .controles').append(opciones_dimension);
-    $('#' + zona + ' .controles').append('<a id="'+zona+'_ultima_lectura" data-placement="bottom" data-toggle="popover" class="btn-small btn pull-right" href="#" >'+datos.ultima_lectura+'</a>');
-    $('#'+zona+'_ultima_lectura').popover({title: trans.ultima_lectura, content: trans.ultima_lectura_exp});
+   
     
     ////agregar los calendarios
     ////
     //$('#fechainicio').datepicker({ altField: "#fechainicio"});
     //$('#fechafin').datepicker({ altField: "#fechafin"});
     
+		$("#"+zona+"_toimage").click(function(e) {
+            $("#"+zona+"_image").html('<canvas id="'+zona+'canvas" style="display:none"></canvas><img id="'+zona+'laimage" style="clear:both;display:none;">');
+			
+			// se obtiene el uniqid que genera en auto symfony al create			
+			$("svg").attr({ version: '1.1' , xmlns:"http://www.w3.org/2000/svg"});
+			var valor = $("#"+zona+" .grafico").html();
+			/*var data   = valor;
+			var DOMURL = window.URL || window.webkitURL || window;
+
+			var svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+			var url = DOMURL.createObjectURL(svg);
+						
+			document.getElementById(zona+"laimagen").src=url;*/
+			
+			var blob = new Blob([Array(valor)], {type: 'image/svg+xml'});
+			var url = URL.createObjectURL(blob);
+
+			var image = new Image;
+			image.src = url;
+			image.onload = function() {
+
+				var canvas = document.getElementById(zona+"canvas");
+				canvas.width = image.width;
+				canvas.height = image.height;
+				
+				var context = canvas.getContext("2d");
+							
+			  context.drawImage(image, 0, 0);
+
+			  var a = document.createElement("a");
+			  a.download = "etab.png";
+			  a.href = canvas.toDataURL("image/png");		  
+			  a.click();
+
+			  v = document.getElementById(zona+"laimage");
+			  v.src = a.href
+			  v.style.display = "block";
+
+
+			};
+			
+        });
         $('#filtro_por_fecha'+zona).change(function(){
     	if (this.checked == true)
     	{
@@ -572,7 +621,10 @@ function dibujarControles(zona, datos) {
   	 + zona +'_icon_maximizar"> </i></button>'
       	
   $('#' + zona + ' .controles').append(opciones_maximizar);
-  
+  $('#' + zona + ' .controles').append('<a id="'+zona+'_ultima_lectura" data-placement="bottom" data-toggle="popover" class="btn-small btn alinear" href="#" >'+datos.ultima_lectura+'</a>');
+   
+    $('#'+zona+'_ultima_lectura').popover({title: trans.ultima_lectura, content: trans.ultima_lectura_exp});
+	
    $('#' + zona + '_maximizar').click(function(){
   	if ($('#' + zona + '_icon_maximizar').hasClass('icon-zoom-out'))
   		{

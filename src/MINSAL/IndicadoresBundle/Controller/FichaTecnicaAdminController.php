@@ -178,6 +178,5 @@ class FichaTecnicaAdminController extends Controller
             'Expires' => '0'
             )
         );
-    }
-
+    }	
 }

@@ -227,6 +227,6 @@ class CorreoController extends ccontroller
 	public function tokenAction($sala,$token)
 	{
 		echo $sala."-".$token;
-	}
+	}	
 }
 ?>

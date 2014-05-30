@@ -89,6 +89,13 @@ class OrigenDatos
      * @ORM\Column(name="es_catalogo", type="boolean", nullable=true)
      */
     private $esCatalogo;
+	
+	/**
+     * @var string $fechaCorte
+     *
+     * @ORM\Column(name="fecha_corte", type="integer", nullable=true)
+     */
+    private $fechaCorte;
 
     /**
      * @var string $nombreCatalogo
@@ -577,6 +584,30 @@ class OrigenDatos
     {
         return $this->esCatalogo;
     }
+	
+	/**
+     * Set fechaCorte
+     *
+     * @param  date     $fechaCorte
+     * @return OrigenDatos
+     */
+    public function setFechaCorte($fechaCorte)
+    {
+        $this->fechaCorte = $fechaCorte;
+
+        return $this;
+    }
+
+    /**
+     * Get esCatalogo
+     *
+     * @return date
+     */
+    public function getFechaCorte()
+    {
+        return $this->fechaCorte;
+    }
+
 
     /**
      * Set nombreCatalogo
@@ -690,4 +721,27 @@ class OrigenDatos
         return $this->esPivote;
     }
 
+
+    /**
+     * Add reporteActualizaciones
+     *
+     * @param \MINSAL\IndicadoresBundle\Entity\ReporteActualizacion $reporteActualizaciones
+     * @return OrigenDatos
+     */
+    public function addReporteActualizacione(\MINSAL\IndicadoresBundle\Entity\ReporteActualizacion $reporteActualizaciones)
+    {
+        $this->reporteActualizaciones[] = $reporteActualizaciones;
+    
+        return $this;
+    }
+
+    /**
+     * Remove reporteActualizaciones
+     *
+     * @param \MINSAL\IndicadoresBundle\Entity\ReporteActualizacion $reporteActualizaciones
+     */
+    public function removeReporteActualizacione(\MINSAL\IndicadoresBundle\Entity\ReporteActualizacion $reporteActualizaciones)
+    {
+        $this->reporteActualizaciones->removeElement($reporteActualizaciones);
+    }
 }

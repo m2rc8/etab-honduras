@@ -214,6 +214,7 @@ javascript:
   quitar_filtro: 'Remove Filters'
   opciones_grafico: 'Graph options'
   dimension_opciones: 'Dimension options'
+  exportar_imagen: 'Expor to Image'
   cambiar_dimension: 'Dimension options'
   ordenar: 'Sorting'
   filtrar_por_elemento: 'Filter by element'
@@ -283,6 +284,7 @@ _tipo_no_corresponde_con_datos_: 'The selected type is not suitable for the fiel
 _sala_: 'Room'
 _salas_: 'Rooms'
 _agregar_area_grafico_: 'Add graphic area'
+_search_buscar_: 'Search'
 _guardar_sala_: 'Save room'
 _sala_situacional_: 'Situation Room'
 _nombre_sala_: Room name

@@ -60,7 +60,7 @@
             {% if categoria.indicadores|length > 0 %}
             <li class="dropdown-submenu">
                 <a> {{categoria.cat.descripcion}} ({{categoria.indicadores|length}}) </a>
-                <ul class="dropdown-menu" >
+                <ul class="dropdown-menu scroll-menu" id="max_menu" >
                     {% for indicador in categoria.indicadores %}
                     <li ><A id='{{indicador.id}}' class='indicador'
                             data-id='{{indicador.id}}'
@@ -88,7 +88,15 @@
                 {% endfor %}
             </ul>
         </li >
-        {% endif %}
+        {% endif %}        
         </ul>
+        <div class='btn-group btn-group-lg'>
+        <form class="form-search" style="margin-left:5px; margin-bottom:0px;">
+		    <div class="input-prepend">
+		        <button type="button" class="btn btn-default"><i class="icon-search"></i></button>
+		        <input type="text" class="" id="search_">
+		    </div>
+		</form>
+		</div>
     </div>
 </div>
