@@ -38,7 +38,7 @@
 <script>
 $(document).ready(function(){
 	$("#search_").autocomplete({
-		source: '{{ path('autoComplete_Indicador') }}',
+		source: "{{ path('autoComplete_Indicador') }}",
 		select: function (a, b) 
 				{
 					var valor=b.item.value;
@@ -55,8 +55,8 @@ $(document).ready(function(){
 function maximizar()
 {		
 		var windowH = $(window).height();
-        $('#max_menu').css({'max-height':($(window).height()-300)+'px'});
-        $('#max_menu').css({'overflow':'auto'});
+        $('#menu_sala .dropdown-submenu .dropdown-menu').css({'max-height':($(window).height()-300)+'px'});
+        $('#menu_sala .dropdown-submenu .dropdown-menu').css({'overflow':'auto'});
         
         $('.ui-autocomplete').css({'max-height':($(window).height()-300)+'px'});
         $('.ui-autocomplete').css({'overflow':'auto'});

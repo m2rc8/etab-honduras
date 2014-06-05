@@ -201,8 +201,7 @@ function dibujarGrafico(zona, dimension) {
         filtrofecha = {mesmin : min[1],aniomin : min[0],mesmax:max[1],aniomax:max[0]};
     }
     
-    $.getJSON(Routing.generate('indicador_datos',
-            {id: $('#' + zona + ' .titulo_indicador').attr('data-id'), dimension: dimension}),
+    $.getJSON(Routing.generate('indicador_datos',{id: $('#' + zona + ' .titulo_indicador').attr('data-id'), dimension: dimension}),
     {filtro: filtro, ver_sql: false, filtrofecha : filtrofecha},
     function(resp) {
     	    	
@@ -621,9 +620,42 @@ function dibujarControles(zona, datos) {
   	 + zona +'_icon_maximizar"> </i></button>'
       	
   $('#' + zona + ' .controles').append(opciones_maximizar);
-  $('#' + zona + ' .controles').append('<a id="'+zona+'_ultima_lectura" data-placement="bottom" data-toggle="popover" class="btn-small btn alinear" href="#" >'+datos.ultima_lectura+'</a>');
+  $('#' + zona + ' .controles').append('<div class="btn-group dropdown sobre_div">' +
+            '<button class="btn btn-info dropdown-toggle" id="'+ zona +'_ultima_lectura" data-toggle="dropdown" title="' + trans.notas_lectura + '">' +
+            '<i class="icon-calendar"></i>' +
+            '</button>' +
+			'<ul class="dropdown-menu"><li>' +
+            '<div id="'+ zona +'_minota">' +          
+            '</div></li></ul>' +
+            '</div>');
+			
+  //'<a id="'+zona+'_ultima_lectura" data-placement="bottom" data-toggle="popover" class="btn-small btn alinear btn btn-info dropdown-toggle" href="#" >'+datos.ultima_lectura+'</a>');
    
-    $('#'+zona+'_ultima_lectura').popover({title: trans.ultima_lectura, content: trans.ultima_lectura_exp});
+    $('#'+zona+'_ultima_lectura').click(function(){
+		var variable_="";
+		var origen=datos.origen_dato_;
+		for(data in origen)
+		{
+			variable_+='<table class="dataTable"><tr><th><h3 class="popover-title">Variable '+((data*1)+1)+'</h3></th></tr><tr><th width="20%">'+
+			trans.last_confiable+':</th><td>'+origen[data].origen_dato_confiabilidad+'</td></tr><tr><th>'+
+			trans.last_nombre+' :</th><td>'+origen[data].origen_dato_nombre+'</td></tr><tr><th>'+
+			trans.last_fuente+' :</th><td>'+origen[data].origen_dato_fuente+'</td></tr><tr><th>'+			
+			trans.last_origen+' :</th><td>'+origen[data].origen_dato_origen+'</td></tr><tr><th>'+
+			trans.last_conexion+' :</th><td>'+origen[data].origen_dato_conexion+'</td></tr><tr><th>'+
+			trans.last_responsable+' :</th><td>'+origen[data].origen_dato_responsable+'</td></tr></table>';
+		}
+		$("#"+ zona +"_minota").html('<h3 class="popover-title">'+trans.notas_lectura+'</h3><div class="popover-content"><table class="dataTable"><tr><th>'+
+		trans.indicador+' :</th><td>'+datos.nombre_indicador+'</td></tr><tr><th>'+
+		trans.last_reading+' :</th><td>'+datos.ultima_lectura+' (dd/mm/aaaa hh:mm:ss)</td></tr><tr><th>'+
+		trans.last_update+' :</th><td>'+datos.origen_dato_actualizacion+' (dd/mm/aaaa hh:mm:ss)</td></tr><tr><th colspan=2>'+
+		variable_
+		+'</th></tr></table></div>');
+		
+		var windowH = $(window).height();
+        $("#"+ zona +"_minota").css({'max-height':($(window).height()-400)+'px'});
+        $("#"+ zona +"_minota").css({'overflow':'auto'});
+	});
+	//({title: trans.ultima_lectura, content: trans.ultima_lectura_exp});
 	
    $('#' + zona + '_maximizar').click(function(){
   	if ($('#' + zona + '_icon_maximizar').hasClass('icon-zoom-out'))

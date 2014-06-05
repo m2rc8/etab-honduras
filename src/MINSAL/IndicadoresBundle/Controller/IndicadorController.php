@@ -34,11 +34,12 @@ class IndicadorController extends Controller
     {
         $resp = array();
         $em = $this->getDoctrine()->getManager();
-
+		
         if ($fichaTec) {
             $resp['nombre_indicador'] = $fichaTec->getNombre();
             $resp['id_indicador'] = $fichaTec->getId();
             $resp['unidad_medida'] = $fichaTec->getUnidadMedida();
+			$resp["origen_dato_actualizacion"]= date('d/m/Y H:i:s',$fichaTec->getUpdatedAt()->getTimestamp());
             if ($fichaTec->getCamposIndicador() != '') {
                 $campos = explode(',', str_replace(array("'", ' '), array('', ''), $fichaTec->getCamposIndicador()));
             } else {
@@ -74,18 +75,40 @@ class IndicadorController extends Controller
                         
             //Verificar que se tiene la más antigua de las últimas lecturas de los orígenes
             //de datos del indicador
-            $ultima_lectura = new \DateTime("NOW");;
-            foreach($fichaTec->getVariables() as $var){
+            $ultima_lectura = new \DateTime("NOW");
+			
+            foreach($fichaTec->getVariables() as $var)
+			{
                 $fecha_lectura = $em->getRepository('IndicadoresBundle:OrigenDatos')->getUltimaActualizacion($var->getOrigenDatos());
                 if ($fecha_lectura < $ultima_lectura){
                     $ultima_lectura = $fecha_lectura;
-                }                
+                }
+				$conexion="Excel o csv";
+				foreach($var->getOrigenDatos()->getConexiones() as $od)
+				$conexion=$od->__toString();
+				
+				$fuente=null;
+				if(method_exists($var->getIdFuenteDato(), '__toString'))
+				$fuente=$var->getIdFuenteDato()->__toString();
+				
+				$responsable=null;
+				if(method_exists($var->getIdResponsableDato(), '__toString'))
+				$responsable=$var->getIdResponsableDato()->__toString();
+				
+				$resp["origen_dato_"][]=array("origen_dato_nombre"=>$var->getNombre(),
+											  "origen_dato_confiabilidad"=>$var->getConfiabilidad(),
+											  "origen_dato_fuente"=>$fuente,
+											  "origen_dato_responsable"=>$responsable,
+											  "origen_dato_origen"=>$var->getOrigenDatos()->getNombre(),
+											  "origen_dato_conexion"=>$conexion); 
+				
             }            
             $fichaTec->setUltimaLectura(new \DateTime($ultima_lectura));
             $em->flush();
             
-            $resp['ultima_lectura'] = date('d/m/Y', $fichaTec->getUltimaLectura()->getTimestamp());
+            $resp['ultima_lectura'] = date('d/m/Y H:i:s', $fichaTec->getUltimaLectura()->getTimestamp());
             $resp['resultado'] = 'ok';
+			
         } else {
             $resp['resultado'] = 'error';
         }
@@ -93,7 +116,7 @@ class IndicadorController extends Controller
         if ($this->get('kernel')->getEnvironment() != 'dev') {
             $response->setMaxAge($this->container->getParameter('indicador_cache_consulta'));
         }
-
+		
         return $response;
     }
 
@@ -509,13 +532,13 @@ return $result;
 	}
 	$em->flush(); 
 	return new Response($cubo?'Se creo nuevo esquema':'No es posible crear cubo');	
-  }//end function
- 
-    /////metodos de acceso publico para los indicadores
+  }
+  
     /**
     * @Route("/indicador/dimensiones/public/{id}/{token}/{sala}", name="indicador_dimensiones_public", options={"expose"=true})
     */
-    public function getDimensionesPublic(FichaTecnica $fichaTec,$token,$sala) {
+    public function getDimensionesPublic(FichaTecnica $fichaTec,$token,$sala) 
+	{
 		$em = $this->getDoctrine()->getManager();
 		if ($fichaTec)
 		{
@@ -524,7 +547,7 @@ return $result;
 			else
 			{
 				settype($sala,"integer");
-				$sa = $em->getRepository('IndicadoresBundle:Boletin')->getRuta($sala,$token);
+				$sa = $em->getRepository('IndicadoresBundle:Boletin')->getRuta($sala,$token);				
 				if ($sa)
 				{
 					if ($sa != "Error")
@@ -551,7 +574,7 @@ return $result;
 				return $this->getDatos($fichaTec, $dimension);
 			else 
 			{
-                            settype($sala,"integer");
+                settype($sala,"integer");
 				$sa = $em->getRepository('IndicadoresBundle:Boletin')->getRuta($sala,$token);
 				if ($sa)
 				{
@@ -559,11 +582,11 @@ return $result;
 						return $this->getDatos($fichaTec, $dimension);
 					else
 						//return $this->redirect($this->generateUrl('_inicio'));
-                                            return new Response();
+                        return new Response();
 				}
 				else
 					//return $this->redirect($this->generateUrl('_inicio'));
-                                    return new Response();
+                    return new Response();
 			}
 		}
     }

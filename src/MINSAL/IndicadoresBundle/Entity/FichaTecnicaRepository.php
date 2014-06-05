@@ -18,6 +18,7 @@ class FichaTecnicaRepository extends EntityRepository
         
         return $query->getArrayResult();
     }
+
 	
     public function crearIndicador(FichaTecnica $fichaTecnica, $dimension = null, $filtros = null)
     {
@@ -342,7 +343,7 @@ class FichaTecnicaRepository extends EntityRepository
         {
             if (count($rangocolumnas)>=1)
             {
-                if ($filtrofecha == null)
+                if (isset($filtrofecha) == null)
                 {
                     $camposrangos .= "min(anio) as min_anio, max(anio) as max_anio, ";
                 }else
@@ -353,7 +354,7 @@ class FichaTecnicaRepository extends EntityRepository
             }
             if (count($rangocolumnas)==2)
             {
-                if ($filtrofecha == null)
+                if (isset($filtrofecha) == null)
                 {
                     $camposrangos .= "min(mes) as min_mes, max(mes) as max_mes, ";
                 }

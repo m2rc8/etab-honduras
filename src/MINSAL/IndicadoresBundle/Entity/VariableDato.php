@@ -12,7 +12,7 @@ use MINSAL\IndicadoresBundle\Validator as CustomAssert;
  * @ORM\Table(name="variable_dato")
  * @ORM\Entity
  */
-class VariableDato
+class VariableDato 
 {
     /**
      * @var integer $id
@@ -303,7 +303,7 @@ class VariableDato
      * @return MINSAL\IndicadoresBundle\Entity\OrigenDatos
      */
     public function getOrigenDatos()
-    {
+    {		
         return $this->origenDatos;
     }
 

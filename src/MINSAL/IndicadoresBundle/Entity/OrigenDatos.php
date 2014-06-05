@@ -164,7 +164,7 @@ class OrigenDatos
         $this->fusiones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->conexiones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->esCatalogo = false;
-	$this->actualizacionIncremental = false;
+		$this->actualizacionIncremental = false;
     }
 
     public function getAbsolutePath()

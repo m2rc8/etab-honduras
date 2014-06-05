@@ -45,7 +45,8 @@ file that was distributed with this source code.
 
         {% block javascripts %}
             <script type="text/javascript">
-                window.SONATA_CONFIG = {
+                window.SONATA_CONFIG = 
+				{
                     CONFIRM_EXIT: {% if admin_pool is defined and admin_pool.getOption('confirm_exit') %}true{% else %}false{% endif %}
                 };
                 window.SONATA_TRANSLATIONS = {
