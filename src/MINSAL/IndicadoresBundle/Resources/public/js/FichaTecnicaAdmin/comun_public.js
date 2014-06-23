@@ -402,7 +402,7 @@ function dibujarControles(zona, datos) {
 
             .attr('rangos_alertas', JSON.stringify(datos.rangos));
 
-    var combo_dimensiones = trans.cambiar_dimension + ":<SELECT class='dimensiones' name='dimensiones'>";
+    var combo_dimensiones = trans.cambiar_dimension + ":<SELECT class='dimensiones form-control' name='dimensiones'>";
     $.each(datos.dimensiones, function(codigo, datosDimension) {
         combo_dimensiones += "<option value='" + codigo + "' data-escala='" + datosDimension.escala +
                 "' data-x='" + datosDimension.origenX +
@@ -411,14 +411,14 @@ function dibujarControles(zona, datos) {
     });
     combo_dimensiones += "</SELECT>";
 
-    var combo_tipo_grafico = trans.tipo_grafico + ": <SELECT class='tipo_grafico_principal'  ></SELECT>";
+    var combo_tipo_grafico = trans.tipo_grafico + ": <SELECT class='tipo_grafico_principal form-control'  ></SELECT>";
 
-    var combo_ordenar_por_dimension = trans.ordenar_x + ": <SELECT class='ordenar_dimension'>" +
+    var combo_ordenar_por_dimension = trans.ordenar_x + ": <SELECT class='ordenar_dimension form-control'>" +
             "<OPTION VALUE='-1'></OPTION>" +
             "<OPTION VALUE='desc'>" + trans.descendente + "</OPTION>" +
             "<OPTION VALUE='asc'>" + trans.ascendente + "</OPTION>" +
             "</SELECT>";
-    var combo_ordenar_por_medida = trans.ordenar_y + ": <SELECT class='ordenar_medida'>" +
+    var combo_ordenar_por_medida = trans.ordenar_y + ": <SELECT class='ordenar_medida form-control'>" +
             "<OPTION VALUE='-1'></OPTION>" +
             "<OPTION VALUE='desc'>" + trans.descendente + "</OPTION>" +
             "<OPTION VALUE='asc'>" + trans.ascendente + "</OPTION>" +
@@ -437,7 +437,7 @@ function dibujarControles(zona, datos) {
     
     var opciones_dimension = '<div class="btn-group dropdown sobre_div">' +
             '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' + trans.dimension_opciones + '">' +
-            '<i class="icon-check"></i>' +
+            '<i class="glyphicon glyphicon-check"></i>' +
             '</button>' +
             '<ul class="opciones_dimension dropdown-menu" role="menu" >' +
             '<li><A >' + combo_dimensiones + '</A></li>' +
@@ -449,7 +449,7 @@ function dibujarControles(zona, datos) {
 			
 	opciones_dimension+='<div class="btn-group dropdown sobre_div">' +
             '<button class="btn btn-info dropdown-toggle" id="'+ zona +'_toimage" data-toggle="dropdown" title="' + trans.exportar_imagen + '">' +
-            '<i class="icon-camera"></i>' +
+            '<i class="glyphicon glyphicon-camera"></i>' +
             '</button>' +
             '<div class="opciones_dimension dropdown-menu" role="menu"  id="'+ zona +'_image">' +          
             '</div>' +
@@ -457,25 +457,25 @@ function dibujarControles(zona, datos) {
     
     var opciones = '<div class="btn-group dropdown sobre_div">' +
             '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' + trans.opciones + '">' +
-            '<i class="icon-cog"></i>' +
+            '<i class="glyphicon glyphicon-cog"></i>' +
             '</button>' +
             '<ul class="dropdown-menu" role="menu" >' +
 //            '<li><A class="ver_ficha_tecnica" '
-//            + ' ><i class="icon-briefcase"></i> ' + trans.ver_ficha_tecnica + '</A></li>' +
-            '<li><A class="ver_tabla_datos" ><i class="icon-list-alt" ></i> ' + trans.tabla_datos + ' </A></li>' ;
-            //'<li><A class="ver_sql" ><i class="icon-eye-open" ></i> ' + trans.ver_sql + ' </A></li>' +
-           // '<li><A class="ver_imagen" ><i class="icon-picture"></i> ' + trans.descargar_grafico + '</A></li>' ;
-            //'<li><A class="quitar_indicador" ><i class="icon-remove-sign"></i> ' + trans.quitar_indicador + '</A></li>' +
+//            + ' ><i class="glyphicon glyphicon-briefcase"></i> ' + trans.ver_ficha_tecnica + '</A></li>' +
+            '<li><A class="ver_tabla_datos" ><i class="glyphicon glyphicon-list-alt" ></i> ' + trans.tabla_datos + ' </A></li>' ;
+            //'<li><A class="ver_sql" ><i class="glyphicon glyphicon-eye-open" ></i> ' + trans.ver_sql + ' </A></li>' +
+           // '<li><A class="ver_imagen" ><i class="glyphicon glyphicon-picture"></i> ' + trans.descargar_grafico + '</A></li>' ;
+            //'<li><A class="quitar_indicador" ><i class="glyphicon glyphicon-remove-sign"></i> ' + trans.quitar_indicador + '</A></li>' +
             //'<li><A class="agregar_como_favorito" data-indicador="' + datos.id_indicador + '" >';
 //    if ($('#fav-' + datos.id_indicador).length === 0)
-//        opciones += '<i class="icon-star"></i> ' + trans.agregar_favorito + '</A></li>';
+//        opciones += '<i class="glyphicon glyphicon-star"></i> ' + trans.agregar_favorito + '</A></li>';
 //    else
-//        opciones += '<i class="icon-star-empty"></i> ' + trans.quitar_favoritos + '</A></li>';
+//        opciones += '<i class="glyphicon glyphicon-star-empty"></i> ' + trans.quitar_favoritos + '</A></li>';
     opciones += '</ul>' +
             '</div>';
     var opciones_indicador = '<div class="btn-group sobre_div">' +
             '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' + trans.opciones_grafico + '">' +
-            '<i class="icon-signal"></i>' +
+            '<i class="glyphicon glyphicon-signal"></i>' +
             '</button>' +
             '<ul class="dropdown-menu" role="menu" >' +
             '<li><label>&nbsp;</label></li>' +
@@ -525,7 +525,7 @@ function dibujarControles(zona, datos) {
     if (rangos_alertas.length > 0) {
         opciones_indicador += '<li><A >' +
                 trans.max_escala_y +
-                ": <SELECT class='max_y'>" +
+                ": <SELECT class='max_y form-control form-control'>" +
                 "<OPTION VALUE='indicador' selected='selected'>" + trans.max_indicador + "</OPTION>" +
                 "<OPTION VALUE='rango_alertas'>" + trans.max_rango_alertas + "</OPTION>" +
                 "</SELECT>" +
@@ -534,7 +534,7 @@ function dibujarControles(zona, datos) {
 
         $('#' + zona + ' .controles').append('<div class="btn-group sobre_div">' +
                 '<a class="btn btn-warning dropdown-toggle" data-toggle="dropdown" title="' + trans.alertas_indicador + '">' +
-                '<i class="icon-exclamation-sign"></i>' +
+                '<i class="glyphicon glyphicon-exclamation-sign"></i>' +
                 '</a>' +
                 '<ul class="dropdown-menu">' +
                 alertas +
@@ -546,7 +546,7 @@ function dibujarControles(zona, datos) {
     }
     $('#' + zona + ' .controles').append(opciones);
     $('#' + zona + ' .controles').append(opciones_dimension);
-    $('#' + zona + ' .controles').append('<a id="'+zona+'_ultima_lectura" data-placement="bottom" data-toggle="popover" class="btn-small btn pull-right" href="#" >'+datos.ultima_lectura.substr(0,10)+'</a>');
+    $('#' + zona + ' .controles').append('<a id="'+zona+'_ultima_lectura" data-placement="bottom" data-toggle="popover" class="btn-small btn pull-right btn-info" href="#" >'+datos.ultima_lectura.substr(0,10)+'</a>');
     $('#'+zona+'_ultima_lectura').popover({title: trans.ultima_lectura, content: trans.ultima_lectura_exp});
 
     ////agregar los calendarios
@@ -622,13 +622,13 @@ function dibujarControles(zona, datos) {
 	//EDITADO PARA EL BOTON DE MAXIMIZAR
    /////////
    opciones_maximizar = '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' 
-  	 + trans.maximizar + '" id="'+ zona +'_maximizar">' +    '<i class="icon-zoom-in" id= "'
+  	 + trans.maximizar + '" id="'+ zona +'_maximizar">' +    '<i class="glyphicon glyphicon-zoom-in" id= "'
   	 + zona +'_icon_maximizar"> </i></button>'
       	
   $('#' + zona + ' .controles').append(opciones_maximizar);
   
    $('#' + zona + '_maximizar').click(function(){
-  	if ($('#' + zona + '_icon_maximizar').hasClass('icon-zoom-out'))
+  	if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out'))
   		{
   		   minimizar(zona,contenedor);
   		}
@@ -636,8 +636,8 @@ function dibujarControles(zona, datos) {
   		{
   			var tecla = (event.keyCode) ? event.keyCode : event.which ;
 	   		if (tecla != 27){
-		   		$('#' + zona + '_icon_maximizar').removeClass('icon-zoom-in');
-		   		$('#' + zona + '_icon_maximizar').addClass('icon-zoom-out');
+		   		$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-in');
+		   		$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-out');
 
 		   		contenedor = document.createElement('div');
 		   		$(contenedor).attr('alt',$('#' + zona).index());
@@ -678,15 +678,15 @@ function dibujarControles(zona, datos) {
   });
   
   function minimizar(zona,contenedor){
- 		$('#' + zona + '_icon_maximizar').removeClass('icon-zoom-out');
-  		$('#' + zona + '_icon_maximizar').addClass('icon-zoom-in');		
+ 		$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-out');
+  		$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-in');		
   		posicion = $(contenedor).attr('alt');
   		if (posicion == 0)
   		$('.area_grafico').eq(posicion).before($('#' + zona));
   		else
   		$('.area_grafico').eq(posicion - 1).after($('#' + zona));
   		$('#contenedor_maximizado').remove();
-  		$('#' + zona).animate({height:370 , width: 370});
+  		$('#' + zona).animate({height:380 , width: 380});
   }
   
   /////////
@@ -853,12 +853,12 @@ function alternar_favorito(zona, id_indicador) {
 
     if (es_favorito) 
 	{
-        $('#' + zona + ' .agregar_como_favorito').html('<i class="icon-star"></i>' + trans.agregar_favorito);
+        $('#' + zona + ' .agregar_como_favorito').html('<i class="glyphicon glyphicon-star"></i>' + trans.agregar_favorito);
         $('#li_fav-' + id_indicador).remove();
     } 
 	else 
 	{
-        $('#' + zona + ' .agregar_como_favorito').html('<i class=" icon-star-empty"></i>' + trans.quitar_favoritos);
+        $('#' + zona + ' .agregar_como_favorito').html('<i class=" glyphicon glyphicon-star-empty"></i>' + trans.quitar_favoritos);
         $('#listado-favoritos').append("<li id='li_fav-" + id_indicador + "'><A data-id='" + id_indicador + "' " +
                 "id='fav-" + id_indicador + "' " +
                 "data-unidad-medida='" + $('#' + zona + ' .titulo_indicador').attr('data-unidad-medida') + "'>" +

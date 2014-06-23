@@ -29,7 +29,6 @@ class OrigenDatos
      * @var string $nombre
      *
      * @ORM\Column(name="nombre", type="string", length=100, nullable=false)
-     * @CustomAssert\AlphanumericPlus(message="AlphanumericPlus.Message")
      */
     private $nombre;
 

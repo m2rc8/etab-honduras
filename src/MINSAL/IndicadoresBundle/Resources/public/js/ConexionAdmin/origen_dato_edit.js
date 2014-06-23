@@ -26,6 +26,7 @@ $(document).ready(function() {
             var $conexiones = $('#' + $id + '_conexiones input:checked');
             if ($('#' + $id + '_sentenciaSql').val() == '' || $conexiones.length == 0) {
                 alert(trans.sentencia_sql_origen_requeridos);
+				jQuery.event.trigger("ajaxStop");
                 return;
             }
 
@@ -81,7 +82,7 @@ $(document).ready(function() {
             var tipos_datos = '';
             if (resp.estado === 'error') {
                 alert(resp.mensaje);
-                $('#mensajito_cambio').html('<DIV class="alert alert-error">' + resp.mensaje + '</DIV>');
+                $('#mensajito_cambio').html('<DIV class="alert alert-danger">' + resp.mensaje + '</DIV>');
             }
             else {
                 $.each(resp.tipos_datos, function(indice, fila) {

@@ -12,7 +12,8 @@
 }
 .CalendarClass
 {
-	width: 465px;
+	width: 100%;
+	border-radius:2px;
 }
 </style>
 	<script>
@@ -26,7 +27,7 @@
 		document.getElementById(uniqid[1]+"_dateOfBirth_month").style.display="none";
 		document.getElementById(uniqid[1]+"_dateOfBirth_year").style.display="none";
 		// se agrega el input text calendar
-		$("#"+idcontrol).append("<div class='CalendarClass'><input type='text' id='dob' readonly='true' /></div>");
+		$("#"+idcontrol).append("<div class='CalendarClass'><input type='text' id='dob' readonly='true' style='width:48%; border-radius:4px; height:35px;'/></div>");
 		// logica del datetimepicker
 		var g=new Date();
 		$("#dob").datepicker({
@@ -69,7 +70,10 @@
 				mes = "0"+mes;
 			$("#dob").val(dia+"/"+mes+"/"+$("#"+uniqid[1]+"_dateOfBirth_year").val());
 		}
-		$("#field_container_"+uniqid[1]+"_groups").append("<div id='micontenido'><input type='button' id='miboton' value='&nbsp; &nbsp; Refrescar Lista' class='btn btn-small' style='margin-left:10px; margin-top:5px'></div>");
+		$("#field_container_"+uniqid[1]+"_groups").append("<div id='micontenido'><button type='button' id='miboton'  class='btn btn-small sonata-ba-action' style='margin-left:10px; margin-top:5px'><i class='glyphicon glyphicon-refresh'></i> Refrescar Lista </button></div>");
+		$(".icon-plus").attr("class","glyphicon glyphicon-plus-sign");
+		$( "#"+uniqid[1]+"_groups").attr("class","unstyled col-md-8");
+		
 		$("#miboton").click(function(e){
 		    
 			var checkboxes = $( "#"+uniqid[1]+"_groups li" ).length;
@@ -82,6 +86,7 @@
 			 	}
 			}
 			
+			
 			var url="{{path('_inicio')}}migroup/"+uniqid[1]+"/"+cont;
 			$.ajax({
 			type: "GET",
@@ -92,19 +97,30 @@
 				$("#field_widget_"+uniqid[1]+"_groups").html(dato);
 			});
 		});
-		/*var url=$(".sonata-ba-action").attr("href");
+		var url=$(".sonata-ba-action").attr("href");
 		//$(".sonata-ba-action").attr("href","");
 		//$(".sonata-ba-action").attr("onclick","");
-		$(".sonata-ba-action").click(function(e){
-			var $dialog = $('#micontenido').dialog({ autoOpen: false, modal: true, title: "Some title" }); 
-			$dialog.dialog('open'); 
-alert(url);
+		var url=$(".sonata-ba-action").attr("href");
+		$(".sonata-ba-action").attr("onclick","return false;");
+		$(".sonata-ba-action").click(function(e)
+		{
+			var $dialog = $('<div id="mimodificacion"></div>')
+             .load(url)
+             .dialog({
+                    autoOpen: false,
+                    title: "Grupos",
+                    width: 50+"%",
+                    height: screen.height-392
+             });
+ 
+       		$dialog.dialog('open');
 			return false;
-		});*/
+		});
+		
 		
 	});
-	
 	</script>
 {% endblock %}
+
 
  

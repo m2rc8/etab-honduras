@@ -7,7 +7,7 @@
 {% block content %}
 	{{ parent() }}  
 	{% if error %}
-    	<div class="alert alert-error">{{ error }}</div>
+    	<div class="alert alert-danger">{{ error }}</div>
 	{%endif%}
 	{% if bien %}
     	<div class="alert alert-success">{{ bien }}</div>

@@ -118,7 +118,7 @@ sonata_admin:
 
         # default actions templates, should extend a global templates
         list:    IndicadoresBundle:CRUD:list.html.twig
-        show:    SonataAdminBundle:CRUD:show.html.twig
+        show:    IndicadoresBundle:CRUD:show.html.twig
         edit:    IndicadoresBundle:CRUD:edit.html.twig
         # se personalizó la plantilla de borrar
         #delete:  IndicadoresBundle:CRUD:delete.html.twig        

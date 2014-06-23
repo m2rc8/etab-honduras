@@ -74,8 +74,8 @@ $(document).ready(function() {
                         '</DIV>'+
                         '<h6 class="filtros_dimensiones"></h6>' +
                         '<div class="controles btn-toolbar"></div>' +
-                        '<div class="row-fluid info" ></div>' +
-                        '<div class="row-fluid row_grafico" >' +
+                        '<div class="info" ></div>' +
+                        '<div class="row_grafico" >' +
                             '<div class="grafico" ></div>' +
                         '</div>' +                        
                     '</DIV>';         

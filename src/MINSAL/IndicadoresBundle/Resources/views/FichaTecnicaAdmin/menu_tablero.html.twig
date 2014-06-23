@@ -1,12 +1,12 @@
-<div id='menu_sala' class='btn-toolbar' data-spy="affix" data-offset-top="150">
-    <div class="accordion-heading btn-group">
-        <a class="btn accordion-toggle" data-toggle="collapse"  href="#collapseOne" title="{{'_ocultar/mostrar_menu_principal_'|trans}}">
-            <i class="icon-resize-full"></i>
+<div id='menu_sala' class='btn-toolbar' data-spy="affix" data-offset-top="150" style="margin-top:5px; margin-bottom:5px;">
+    <div class="panel-group-heading btn-group">
+        <a class="btn panel-group-toggle" data-toggle="collapse"  href="#collapseOne" title="{{'_ocultar/mostrar_menu_principal_'|trans}}">
+            <i class="glyphicon glyphicon-resize-full"></i>
         </a>
     </div>
     <div class='btn-group'>
         <a href='#' class="btn dropdown-toggle" data-toggle="dropdown" >
-            <i class="icon-th"></i>{{'_sala_'|trans}}
+            <i class="glyphicon glyphicon-th"></i>{{'_sala_'|trans}}
             <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
@@ -38,7 +38,7 @@
     </div>
     <div class='btn-group'>
         <a class="btn dropdown-toggle btn-success" data-toggle="dropdown" >
-            <i class="icon-align-left"></i>{{"indicadores"|trans}}
+            <i class="glyphicon glyphicon-align-left"></i>{{"indicadores"|trans}}
             <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
@@ -90,13 +90,13 @@
         </li >
         {% endif %}        
         </ul>
-        <div class='btn-group btn-group-lg' style="width:100%">
-        <form class="form-search" style="margin-left:5px; margin-bottom:0px;">
-		    <div class="input-prepend" style="width:100%">
-		        <button type="button" class="btn btn-default"><i class="icon-search"></i></button>
-		        <input type="text" id="search_" style="width:100%">
+        </div>
+        <div class='btn-group col-lg-4'>
+        <form class="bs-example bs-example-form " role="form" >
+		    <div class="input-prepend input-group" >
+		        <span class="input-group-addon btn-info"><i class="glyphicon glyphicon-search"></i></span>
+		        <input type="text" id="search_" class="form-control" placeholder="Buscar...">
 		    </div>
 		</form>
-		</div>
     </div>
 </div>

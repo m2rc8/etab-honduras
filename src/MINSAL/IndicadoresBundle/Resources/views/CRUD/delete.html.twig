@@ -6,13 +6,13 @@
     <div class="sonata-actions">
         {% if admin.hasroute('list') and admin.isGranted('LIST')%}
             <a class="btn sonata-action-element" href="{{ admin.generateUrl('list') }}">
-                <i class="icon-list"></i>
+                <i class="glyphicon glyphicon-list"></i>
                 {{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}
             </a>
         {% endif %}
         {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
             <a class="btn sonata-action-element" href="{{ admin.generateUrl('create') }}">
-                <i class="icon-plus-sign"></i>
+                <i class="glyphicon glyphicon-plus-sign"></i>
                 {{ 'link_action_create'|trans({}, 'SonataAdminBundle') }}
             </a>
         {% endif %}
@@ -30,14 +30,14 @@
                 <input type="hidden" value="DELETE" name="_method" />
 
                 <button type="submit" class="btn btn-danger" />
-                    <i class="icon-trash"></i>
+                    <i class="glyphicon glyphicon-trash"></i>
                     {{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}
                 </button>
 
                 {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object) %}
                     {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
                     <a class="btn btn-success" href="{{ admin.generateObjectUrl('edit', object) }}">
-                        <i class="icon-edit"></i>
+                        <i class="glyphicon glyphicon-edit"></i>
                         {{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}
                     </a>
                 {% endif %}

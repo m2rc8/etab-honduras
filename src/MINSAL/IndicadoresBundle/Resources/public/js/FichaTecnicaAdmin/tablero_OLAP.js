@@ -5,7 +5,7 @@ $(document).ready(function() {
         $('#div_carga').hide();
     });    
             
-    capa = $("div.tablero .row-fluid");
+    capa = $("div.tablero .row");
     var posicion = capa.position();
     capa.css({'position': 'absolute',
         'bottom': '15px',

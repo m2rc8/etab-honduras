@@ -119,7 +119,7 @@ class CargarOrigenDatoConsumer implements ConsumerInterface
                 foreach ($fila as $k => $v) {
                     // Quitar caracteres no permitidos que podrian existir en el nombre de campo (tildes, eñes, etc)
                     //Verificar si ya está en UTF-8, si no, codificarlo
-                    $nueva_fila[$campos_sig[$util->slug($k)]] = trim(mb_check_encoding($v, 'UTF-8') ? $v : utf8_encode($v));
+                    //$nueva_fila[$campos_sig[$util->slug($k)]] = trim(mb_check_encoding($v, 'UTF-8') ? $v : utf8_encode($v));
                 }
                 //Agregar el nombre de la conexión como campo
                 $nueva_fila['origen_dato'] = $nombre_conexion;

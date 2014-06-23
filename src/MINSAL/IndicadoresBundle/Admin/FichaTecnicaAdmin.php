@@ -47,16 +47,19 @@ class FichaTecnicaAdmin extends Admin
                 ->add('confiabilidad', null, array('label' => $this->getTranslator()->trans('confiabilidad'), 'required' => false))
                 ->add('observacion', 'textarea', array('label' => $this->getTranslator()->trans('_observacion_'), 'required' => false))
                 ->end()
-                ->with($this->getTranslator()->trans('alertas'))
-                ->add('alertas', 'sonata_type_collection', array(
+            ->with($this->getTranslator()->trans('alertas'))
+                ->add('alertas', 'sonata_type_collection', 
+				array(				
                     'label' => $this->getTranslator()->trans('alertas'),
-                    'required' => true), array(
+                    'required' => true), 
+				array(
+					'class'=>'form-control',
                     'edit' => 'inline',
                     'inline' => 'table',
-                    'sortable' => 'position'
+                    'sortable' => 'position'									
                 ))
                 ->end()
-                ->with($this->getTranslator()->trans('_dimensiones_'))
+             ->with($this->getTranslator()->trans('_dimensiones_'))
                 ->add('camposIndicador', null, array('label' => $this->getTranslator()->trans('campos_indicador')))
                 ->end();
         $acciones = explode('/', $this->getRequest()->server->get("REQUEST_URI"));
@@ -294,7 +297,7 @@ class FichaTecnicaAdmin extends Admin
                 break;
         }
     }
-
+	
     /**
      * @return \Sonata\AdminBundle\Datagrid\ProxyQueryInterface
      */

@@ -134,6 +134,7 @@ function ascenderNivelDimension(zona, nivel) {
 function filtroRuta(filtros_obj) {
     var ruta = '';
     //var filtros_obj = );
+	
     var cant_obj = filtros_obj.length;
     $.each(filtros_obj, function(i, obj) {
         if (i == (cant_obj - 1))
@@ -188,6 +189,7 @@ function dibujarGrafico(zona, dimension) {
     if (dimension === null)
         return;
     var filtro = $('#' + zona + ' .filtros_dimensiones').attr('data');
+	
     //validar las entradas de las fechas
     var patron = /^\d{4}-\d{2}$/;
     var filtrofecha = {};
@@ -359,7 +361,7 @@ function cerrarMenus() {
 }
 
 function construir_tabla_datos(zona, datos) {
-    var tabla_datos = '<TABLE class="table" >';
+    var tabla_datos = '<TABLE class="table table-bordered table-striped" >';
     $.each(datos, function(i, fila) {
         if (i === 0) {
             // Los nombres de los campos
@@ -398,7 +400,7 @@ function dibujarControles(zona, datos) {
             .attr('filtro-elementos', '')
             .attr('rangos_alertas', JSON.stringify(datos.rangos));
 
-    var combo_dimensiones = trans.cambiar_dimension + ":<SELECT class='dimensiones' name='dimensiones'>";
+    var combo_dimensiones = trans.cambiar_dimension + ":<SELECT class='dimensiones form-control' name='dimensiones'>";
     $.each(datos.dimensiones, function(codigo, datosDimension) {
         combo_dimensiones += "<option value='" + codigo + "' data-escala='" + datosDimension.escala +
                 "' data-x='" + datosDimension.origenX +
@@ -407,14 +409,14 @@ function dibujarControles(zona, datos) {
     });
     combo_dimensiones += "</SELECT>";
 
-    var combo_tipo_grafico = trans.tipo_grafico + ": <SELECT class='tipo_grafico_principal'  ></SELECT>";
+    var combo_tipo_grafico = trans.tipo_grafico + ": <SELECT class='tipo_grafico_principal form-control'  ></SELECT>";
 
-    var combo_ordenar_por_dimension = trans.ordenar_x + ": <SELECT class='ordenar_dimension'>" +
+    var combo_ordenar_por_dimension = trans.ordenar_x + ": <SELECT class='ordenar_dimension form-control'>" +
             "<OPTION VALUE='-1'></OPTION>" +
             "<OPTION VALUE='desc'>" + trans.descendente + "</OPTION>" +
             "<OPTION VALUE='asc'>" + trans.ascendente + "</OPTION>" +
             "</SELECT>";
-    var combo_ordenar_por_medida = trans.ordenar_y + ": <SELECT class='ordenar_medida'>" +
+    var combo_ordenar_por_medida = trans.ordenar_y + ": <SELECT class='ordenar_medida form-control'>" +
             "<OPTION VALUE='-1'></OPTION>" +
             "<OPTION VALUE='desc'>" + trans.descendente + "</OPTION>" +
             "<OPTION VALUE='asc'>" + trans.ascendente + "</OPTION>" +
@@ -433,7 +435,7 @@ function dibujarControles(zona, datos) {
      
     var opciones_dimension = '<div class="btn-group dropdown sobre_div">' +
             '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' + trans.dimension_opciones + '">' +
-            '<i class="icon-check"></i>' +
+            '<i class="glyphicon glyphicon-check"></i>' +
             '</button>' +
             '<ul class="opciones_dimension dropdown-menu" role="menu" >' +
             '<li><A >' + combo_dimensiones + '</A></li>' +
@@ -445,7 +447,7 @@ function dibujarControles(zona, datos) {
 			
 	opciones_dimension+='<div class="btn-group dropdown sobre_div">' +
             '<button class="btn btn-info dropdown-toggle" id="'+ zona +'_toimage" data-toggle="dropdown" title="' + trans.exportar_imagen + '">' +
-            '<i class="icon-camera"></i>' +
+            '<i class="glyphicon glyphicon-camera"></i>' +
             '</button>' +
             '<div class="opciones_dimension dropdown-menu" role="menu"  id="'+ zona +'_image">' +          
             '</div>' +
@@ -453,29 +455,29 @@ function dibujarControles(zona, datos) {
 
     var opciones = '<div class="btn-group dropdown sobre_div">' +
             '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' + trans.opciones + '">' +
-            '<i class="icon-cog"></i>' +
+            '<i class="glyphicon glyphicon-cog"></i>' +
             '</button>' +
             '<ul class="dropdown-menu" role="menu" >' +
             '<li><A class="ver_ficha_tecnica" ' + 
-            ' ><i class="icon-briefcase"></i> ' + trans.ver_ficha_tecnica + '</A></li>' +
-            '<li><A class="ver_tabla_datos" ><i class="icon-list-alt" ></i> ' + trans.tabla_datos + ' </A></li>' +
-            '<li><A class="ver_sql" ><i class="icon-eye-open" ></i> ' + trans.ver_sql + ' </A></li>' +
-           // '<li><A class="ver_imagen" ><i class="icon-picture"></i> ' + trans.descargar_grafico + '</A></li>' +
-            '<li><A class="quitar_indicador" ><i class="icon-remove-sign"></i> ' + trans.quitar_indicador + '</A></li>' +
+            ' ><i class="glyphicon glyphicon-briefcase"></i> ' + trans.ver_ficha_tecnica + '</A></li>' +
+            '<li><A class="ver_tabla_datos" ><i class="glyphicon glyphicon-list-alt" ></i> ' + trans.tabla_datos + ' </A></li>' +
+            '<li><A class="ver_sql" ><i class="glyphicon glyphicon-eye-open" ></i> ' + trans.ver_sql + ' </A></li>' +
+           // '<li><A class="ver_imagen" ><i class="glyphicon glyphicon-picture"></i> ' + trans.descargar_grafico + '</A></li>' +
+            '<li><A class="quitar_indicador" ><i class="glyphicon glyphicon-remove-sign"></i> ' + trans.quitar_indicador + '</A></li>' +
             '<li><A class="agregar_como_favorito" data-indicador="' + datos.id_indicador + '" >';
     if ($('#fav-' + datos.id_indicador).length === 0)
-        opciones += '<i class="icon-star"></i> ' + trans.agregar_favorito + '</A></li>';
+        opciones += '<i class="glyphicon glyphicon-star"></i> ' + trans.agregar_favorito + '</A></li>';
     else
-        opciones += '<i class="icon-star-empty"></i> ' + trans.quitar_favoritos + '</A></li>';
+        opciones += '<i class="glyphicon glyphicon-star-empty"></i> ' + trans.quitar_favoritos + '</A></li>';
     opciones += '</ul>' +
             '</div>';
     var opciones_indicador = '<div class="btn-group sobre_div">' +
             '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' + trans.opciones_grafico + '">' +
-            '<i class="icon-signal"></i>' +
+            '<i class="glyphicon glyphicon-signal"></i>' +
             '</button>' +
             '<ul class="dropdown-menu" role="menu" >' +
             '<li><label>&nbsp;</label></li>' +
-            //'<li><A class="zoom">Zoom <i class="icon-zoom-in"></i></A></li>' +
+            //'<li><A class="zoom">Zoom <i class="glyphicon glyphicon-zoom-in"></i></A></li>' +
             '<li><A >' + combo_ordenar_por_medida + '</A></li>' +
             '<li><A >' + combo_ordenar_por_dimension + '</A></li>' +
             '<li><A >' + combo_tipo_grafico + '</A></li>'
@@ -513,13 +515,13 @@ function dibujarControles(zona, datos) {
     $('#' + zona + ' .titulo_indicador').attr('data-max_rango', max_rango);
     alertas += '<TR><TD bgcolor="lightblue"></TD>' +
             '<TD colspan="3">' + trans.rango_no_especificado + '</TD>'
-    '</TR></TBODY><TABLE>';
+    '</TR></TBODY><TABLE class="table table-bordered table-striped">';
     $('#' + zona + ' .alertas').html('');
     $('#' + zona + ' .grafico').html('');
     if (rangos_alertas.length > 0) {
         opciones_indicador += '<li><A >' +
                 trans.max_escala_y +
-                ": <SELECT class='max_y'>" +
+                ": <SELECT class='max_y form-control'>" +
                 "<OPTION VALUE='indicador' selected='selected'>" + trans.max_indicador + "</OPTION>" +
                 "<OPTION VALUE='rango_alertas'>" + trans.max_rango_alertas + "</OPTION>" +
                 "</SELECT>" +
@@ -528,7 +530,7 @@ function dibujarControles(zona, datos) {
 
         $('#' + zona + ' .controles').append('<div class="btn-group sobre_div">' +
                 '<a class="btn btn-warning dropdown-toggle" data-toggle="dropdown" title="' + trans.alertas_indicador + '">' +
-                '<i class="icon-exclamation-sign"></i>' +
+                '<i class="glyphicon glyphicon-exclamation-sign"></i>' +
                 '</a>' +
                 '<ul class="dropdown-menu">' +
                 alertas +
@@ -615,17 +617,17 @@ function dibujarControles(zona, datos) {
     
    //EDITADO PARA EL BOTON DE MAXIMIZAR
    /////////
-   opciones_maximizar = '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' 
-  	 + trans.maximizar + '" id="'+ zona +'_maximizar">' +    '<i class="icon-zoom-in" id= "'
-  	 + zona +'_icon_maximizar"> </i></button>'
+   opciones_maximizar = '<div class="btn-group dropdown sobre_div"><button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' 
+  	 + trans.maximizar + '" id="'+ zona +'_maximizar">' +    '<i class="glyphicon glyphicon-zoom-in" id= "'
+  	 + zona +'_icon_maximizar"> </i></button></div>'
       	
   $('#' + zona + ' .controles').append(opciones_maximizar);
   $('#' + zona + ' .controles').append('<div class="btn-group dropdown sobre_div">' +
             '<button class="btn btn-info dropdown-toggle" id="'+ zona +'_ultima_lectura" data-toggle="dropdown" title="' + trans.notas_lectura + '">' +
-            '<i class="icon-calendar"></i>' +
+            '<i class="glyphicon glyphicon-calendar"></i>' +
             '</button>' +
 			'<ul class="dropdown-menu"><li>' +
-            '<div id="'+ zona +'_minota">' +          
+            '<div id="'+ zona +'_minota" class="col-lg-12">' +          
             '</div></li></ul>' +
             '</div>');
 			
@@ -636,29 +638,29 @@ function dibujarControles(zona, datos) {
 		var origen=datos.origen_dato_;
 		for(data in origen)
 		{
-			variable_+='<table class="dataTable"><tr><th><h3 class="popover-title">Variable '+((data*1)+1)+'</h3></th></tr><tr><th width="20%">'+
-			trans.last_confiable+':</th><td>'+origen[data].origen_dato_confiabilidad+'</td></tr><tr><th>'+
-			trans.last_nombre+' :</th><td>'+origen[data].origen_dato_nombre+'</td></tr><tr><th>'+
-			trans.last_fuente+' :</th><td>'+origen[data].origen_dato_fuente+'</td></tr><tr><th>'+			
-			trans.last_origen+' :</th><td>'+origen[data].origen_dato_origen+'</td></tr><tr><th>'+
-			trans.last_conexion+' :</th><td>'+origen[data].origen_dato_conexion+'</td></tr><tr><th>'+
-			trans.last_responsable+' :</th><td>'+origen[data].origen_dato_responsable+'</td></tr></table>';
+			variable_+='<table class="table table-bordered table-striped"><tr><th colspan=2><h3 class="popover-title">Variable '+((data*1)+1)+'</h3></th></tr><tr><th width="20%">'+
+			trans.last_confiable+'</th><td>'+origen[data].origen_dato_confiabilidad+'</td></tr><tr><th>'+
+			trans.last_nombre+' </th><td>'+origen[data].origen_dato_nombre+'</td></tr><tr><th>'+
+			trans.last_fuente+' </th><td>'+origen[data].origen_dato_fuente+'</td></tr><tr><th>'+			
+			trans.last_origen+' </th><td>'+origen[data].origen_dato_origen+'</td></tr><tr><th>'+
+			trans.last_conexion+' </th><td>'+origen[data].origen_dato_conexion+'</td></tr><tr><th>'+
+			trans.last_responsable+' </th><td>'+origen[data].origen_dato_responsable+'</td></tr></table>';
 		}
-		$("#"+ zona +"_minota").html('<h3 class="popover-title">'+trans.notas_lectura+'</h3><div class="popover-content"><table class="dataTable"><tr><th>'+
-		trans.indicador+' :</th><td>'+datos.nombre_indicador+'</td></tr><tr><th>'+
-		trans.last_reading+' :</th><td>'+datos.ultima_lectura+' (dd/mm/aaaa hh:mm:ss)</td></tr><tr><th>'+
-		trans.last_update+' :</th><td>'+datos.origen_dato_actualizacion+' (dd/mm/aaaa hh:mm:ss)</td></tr><tr><th colspan=2>'+
+		$("#"+ zona +"_minota").html('<label class="popover-title col-lg-12">'+trans.notas_lectura+'</label><div class="popover-content"><table class="table table-bordered table-striped"><tr><th>'+
+		trans.indicador+' </th><td>'+datos.nombre_indicador+'</td></tr><tr><th>'+
+		trans.last_reading+' </th><td>'+datos.ultima_lectura+' (dd/mm/aaaa hh:mm:ss)</td></tr><tr><th>'+
+		trans.last_update+' </th><td>'+datos.origen_dato_actualizacion+' (dd/mm/aaaa hh:mm:ss)</td></tr><tr><th colspan=2>'+
 		variable_
 		+'</th></tr></table></div>');
 		
-		var windowH = $(window).height();
         $("#"+ zona +"_minota").css({'max-height':($(window).height()-400)+'px'});
+		$("#"+ zona +"_minota").css({'width':($(window).width()/2.5)+'px'});
         $("#"+ zona +"_minota").css({'overflow':'auto'});
 	});
 	//({title: trans.ultima_lectura, content: trans.ultima_lectura_exp});
 	
    $('#' + zona + '_maximizar').click(function(){
-  	if ($('#' + zona + '_icon_maximizar').hasClass('icon-zoom-out'))
+  	if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out'))
   		{
   		   minimizar(zona,contenedor);
   		}
@@ -666,8 +668,8 @@ function dibujarControles(zona, datos) {
   		{
   			var tecla = (event.keyCode) ? event.keyCode : event.which ;
 	   		if (tecla != 27){
-		   		$('#' + zona + '_icon_maximizar').removeClass('icon-zoom-in');
-		   		$('#' + zona + '_icon_maximizar').addClass('icon-zoom-out');
+		   		$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-in');
+		   		$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-out');
 		   		
 		   		contenedor = document.createElement('div');
 		   		$(contenedor).attr('alt',$('#' + zona).index());
@@ -708,8 +710,8 @@ function dibujarControles(zona, datos) {
   })
   
   function minimizar(zona,contenedor){
- 		$('#' + zona + '_icon_maximizar').removeClass('icon-zoom-out');
-  		$('#' + zona + '_icon_maximizar').addClass('icon-zoom-in');		
+ 		$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-out');
+  		$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-in');		
   		posicion = $(contenedor).attr('alt');
   		if (posicion == 0)
   		$('.area_grafico').eq(posicion).before($('#' + zona));
@@ -832,7 +834,7 @@ function dibujarControles(zona, datos) {
             $('#sql').html(resp);
             //Dejar solo el código html de la tabla, quitar todo lo demás
 
-            $('#sql').html('<table>' + $('#sql table').html() + '</table>');
+            $('#sql').html('<table class="table table-bordered table-striped">' + $('#sql table').html() + '</table>');
             $('#sql .sonata-ba-view-title').remove();
             $('#sql table').append('<thead><TR><TH>Campo</TH><TH>Descripcion</TH></TR></thead>');
             $('#sql table').dataTable({
@@ -882,10 +884,10 @@ function alternar_favorito(zona, id_indicador) {
     $('#cantidad_favoritos').html(cant_favoritos);
 
     if (es_favorito) {
-        $('#' + zona + ' .agregar_como_favorito').html('<i class="icon-star"></i>' + trans.agregar_favorito);
+        $('#' + zona + ' .agregar_como_favorito').html('<i class="glyphicon glyphicon-star"></i>' + trans.agregar_favorito);
         $('#li_fav-' + id_indicador).remove();
     } else {
-        $('#' + zona + ' .agregar_como_favorito').html('<i class=" icon-star-empty"></i>' + trans.quitar_favoritos);
+        $('#' + zona + ' .agregar_como_favorito').html('<i class=" glyphicon glyphicon-star-empty"></i>' + trans.quitar_favoritos);
         $('#listado-favoritos').append("<li id='li_fav-" + id_indicador + "'><A data-id='" + id_indicador + "' " +
                 "id='fav-" + id_indicador + "' " +
                 "data-unidad-medida='" + $('#' + zona + ' .titulo_indicador').attr('data-unidad-medida') + "'>" +
@@ -941,7 +943,8 @@ function recuperarDimensiones(id_indicador, datos) {
             } else {
                 dibujarControles(zona_g, resp);
                 if (datos !== null) {
-                    if (JSON.stringify(datos.filtro) !== '""') {
+                    if (JSON.stringify(datos.filtro) !== '""') 
+					{
                         var $filtro = $('#' + zona_g + ' .filtros_dimensiones');
                         $filtro.attr('data', datos.filtro);
                         filtro_obj = jQuery.parseJSON($filtro.attr('data'));
