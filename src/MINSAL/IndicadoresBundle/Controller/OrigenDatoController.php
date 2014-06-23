@@ -82,7 +82,7 @@ class OrigenDatoController extends Controller
         foreach ($resultado['datos'] as $fila) {
             $nueva_fila = array();
             foreach ($fila as $k => $v)
-                $nueva_fila[$k] = $v;//trim(mb_check_encoding($v, 'UTF-8') ? $v : utf8_encode($v));
+                $nueva_fila[$k] = trim(mb_check_encoding($v, 'UTF-8') ? $v : utf8_encode($v));
             $datos_aux[] = $nueva_fila;
         }
         $resultado['datos'] = $datos_aux;
@@ -321,7 +321,7 @@ class OrigenDatoController extends Controller
             $aux[$n] = '';
         foreach (array_slice($resultado['datos'], 0, 10) as $fila)
             foreach ($fila as $k => $v)
-                $aux[$util->slug($k)] .= $v. ', ';  //trim(mb_check_encoding($v, 'UTF-8') ? $v : utf8_encode($v))
+                $aux[$util->slug($k)] .= trim(mb_check_encoding($v, 'UTF-8') ? $v : utf8_encode($v)) . ', ';
         $resultado['datos'] = $aux;
 
         return new Response(json_encode($resultado));
