@@ -38,7 +38,8 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
     var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
     
     // Dibuja el gráfico
-    this.dibujar = function() {
+    this.dibujar = function() 
+	{
         $('#' + ubicacion + ' .grafico').html('');
             var svg = d3.select("#" + ubicacion + ' .grafico')
                 .append("svg")

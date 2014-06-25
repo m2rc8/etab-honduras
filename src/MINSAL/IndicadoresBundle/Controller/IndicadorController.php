@@ -35,18 +35,22 @@ class IndicadorController extends Controller
         $resp = array();
         $em = $this->getDoctrine()->getManager();
 		
-        if ($fichaTec) {
+        if ($fichaTec) 
+		{
             $resp['nombre_indicador'] = $fichaTec->getNombre();
             $resp['id_indicador'] = $fichaTec->getId();
             $resp['unidad_medida'] = $fichaTec->getUnidadMedida();
 			$resp["origen_dato_actualizacion"]= date('d/m/Y H:i:s',$fichaTec->getUpdatedAt()->getTimestamp());
             if ($fichaTec->getCamposIndicador() != '') {
                 $campos = explode(',', str_replace(array("'", ' '), array('', ''), $fichaTec->getCamposIndicador()));
-            } else {
+            } 
+			else 
+			{
                 $campos = array();
             }
             $dimensiones = array();
-            foreach ($campos as $campo) {
+            foreach ($campos as $campo) 
+			{
                 $significado = $em->getRepository('IndicadoresBundle:SignificadoCampo')
                         ->findOneByCodigo($campo);
                 if (count($significado->getTiposGraficosArray()) > 0) {
@@ -58,7 +62,8 @@ class IndicadorController extends Controller
                 }
             }
             $rangos_alertas_aux = array();
-            foreach ($fichaTec->getAlertas() as $k => $rango) {
+            foreach ($fichaTec->getAlertas() as $k => $rango) 
+			{
                 $rangos_alertas_aux[$rango->getLimiteSuperior()]['limite_sup'] = $rango->getLimiteSuperior();
                 $rangos_alertas_aux[$rango->getLimiteSuperior()]['limite_inf'] = $rango->getLimiteInferior();
                 $rangos_alertas_aux[$rango->getLimiteSuperior()]['color'] = $rango->getColor()->getCodigo();
@@ -66,7 +71,8 @@ class IndicadorController extends Controller
             }
             ksort($rangos_alertas_aux);
             $rangos_alertas = array();
-            foreach ($rangos_alertas_aux as $rango) {
+            foreach ($rangos_alertas_aux as $rango) 
+			{
                 $rangos_alertas[] = $rango;
             }
             $resp['rangos'] = $rangos_alertas;
@@ -80,7 +86,8 @@ class IndicadorController extends Controller
             foreach($fichaTec->getVariables() as $var)
 			{
                 $fecha_lectura = $em->getRepository('IndicadoresBundle:OrigenDatos')->getUltimaActualizacion($var->getOrigenDatos());
-                if ($fecha_lectura < $ultima_lectura){
+                if ($fecha_lectura < $ultima_lectura)
+				{
                     $ultima_lectura = $fecha_lectura;
                 }
 				$conexion="Excel o csv";
@@ -109,11 +116,14 @@ class IndicadorController extends Controller
             $resp['ultima_lectura'] = date('d/m/Y H:i:s', $fichaTec->getUltimaLectura()->getTimestamp());
             $resp['resultado'] = 'ok';
 			
-        } else {
+        } 
+		else 
+		{
             $resp['resultado'] = 'error';
         }
         $response = new Response(json_encode($resp));
-        if ($this->get('kernel')->getEnvironment() != 'dev') {
+        if ($this->get('kernel')->getEnvironment() != 'dev') 
+		{
             $response->setMaxAge($this->container->getParameter('indicador_cache_consulta'));
         }
 		
@@ -132,10 +142,12 @@ class IndicadorController extends Controller
         
         if ($filtro == null or $filtro == '')
             $filtros = null;
-        else {
+        else 
+		{
 
             $filtrObj = json_decode($filtro);
-            foreach ($filtrObj as $f) {
+            foreach ($filtrObj as $f) 
+			{
                 $filtros_dimensiones[] = $f->codigo;
                 $filtros_valores[] = $f->valor;
             }
@@ -168,14 +180,18 @@ class IndicadorController extends Controller
         // Adecuar el arreglo para luego ordenarlo
         $datos_aux = array();
 
-        if ($elementos != '') {
+        if ($elementos != '') 
+		{
             $elementos = trim($elementos, '&');
             $datos_a_mostrar = explode('&', $elementos);
             foreach ($datos as $k => $fila)
-                if (in_array($fila['category'], $datos_a_mostrar)) {
+                if (in_array($fila['category'], $datos_a_mostrar)) 
+				{
                     $datos_aux[] = $fila;
                 }
-        } else {
+        }
+		else 
+		{
             $max = count($datos);
             $hasta = ($hasta == '' or $hasta > $max) ? $max : $hasta;
             $desde = ($desde == '' or $desde <= 0) ? 0 : $desde - 1;
@@ -207,14 +223,18 @@ class IndicadorController extends Controller
         // Adecuar el arreglo para luego ordenarlo
         $datos_aux = array();
 
-        if ($elementos != '') {
+        if ($elementos != '') 
+		{
             $elementos = trim($elementos, '&');
             $datos_a_mostrar = explode('&', $elementos);
             foreach ($datos as $k => $fila)
-                if (in_array($fila['category'], $datos_a_mostrar)) {
+                if (in_array($fila['category'], $datos_a_mostrar)) 
+				{
                     $datos_aux[] = $fila;
                 }
-        } else {
+        } 
+		else 
+		{
             $max = count($datos);
             $hasta = ($hasta == '' or $hasta > $max) ? $max : $hasta;
             $desde = ($desde == '' or $desde <= 0) ? 0 : $desde - 1;
@@ -251,13 +271,18 @@ class IndicadorController extends Controller
                 ->findOneBy(array('codigo' => $dimension));
 
         $mapa = $significado->getNombreMapa();
-        if ($mapa != '') {
-            try {
+        if ($mapa != '') 
+		{
+            try 
+			{
                 $mapa = $this->renderView('IndicadoresBundle:Indicador:' . $mapa . $tipo . '.json.twig');
-            } catch (\Exception $e) {
+            } 
+			catch (\Exception $e) 
+			{
                 $mapa = json_encode(array('features' => ''));
             }
-        } else
+        } 
+		else
             $mapa = json_encode(array('features' => ''));
         $headers = array('Content-Type' => 'application/json');
         $response = new Response($mapa, 200, $headers);

@@ -33,7 +33,8 @@ file that was distributed with this source code.
         <form action="{{ admin.generateUrl('batch', {'filter': admin.filterParameters}) }}" method="POST" >
             <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}" />
         {% endif %}
-            <table class="table table-bordered table-striped">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-condensed">
                 {% block table_header %}
                     <thead>
                         <tr class="sonata-ba-list-field-header">
@@ -143,6 +144,7 @@ file that was distributed with this source code.
 
                 {% endblock %}
             </table>
+            </div>
         {% if admin.hasRoute('batch') %}
         </form>
         {% endif %}

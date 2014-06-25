@@ -21,8 +21,15 @@ file that was distributed with this source code.
 {% block stylesheets %}
     {{ parent() }}
 <style>
-.table {  table-layout:fixed; }
+.table {  table-layout:fixed; width:100%}
 .table td { 
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	cursor:default;
+}
+
+.table th { 
 	overflow:hidden;
 	text-overflow:ellipsis;
 	white-space:nowrap;
@@ -30,6 +37,7 @@ file that was distributed with this source code.
 }
 .table th:nth-child(1) {width: 30px;}
 .table th:last-child {width: 150px;}
+
 </style>  
 {% endblock %} 
 {% block actions %}

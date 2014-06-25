@@ -100,6 +100,14 @@
     </div>
     {% endif %}
 {% endfor %}
+	<div class='btn-group col-lg-4'>
+        <form class="bs-example bs-example-form " role="form" >
+		    <div class="input-prepend input-group" >
+		        <span class="input-group-addon btn-info"><i class="glyphicon glyphicon-search"></i></span>
+		        <input type="text" id="search_" class="form-control" placeholder="Buscar...">
+		    </div>
+		</form>
+    </div>
 
 
 {% if indicadores_no_clasificados|length > 0 %}

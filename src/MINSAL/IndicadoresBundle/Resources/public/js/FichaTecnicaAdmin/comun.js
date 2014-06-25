@@ -15,13 +15,16 @@ var max_zonas = 3;
 
 var color = d3.scale.category20();    //builtin range of colors
 
-function colores_alertas(zona, indice, i) {
+function colores_alertas(zona, indice, i) 
+{
 
     var rangos_alertas = JSON.parse($('#' + zona + ' .titulo_indicador').attr('rangos_alertas'));
     if (rangos_alertas.length === 0)
         return color(i);
-    else {
-        for (ii = 0; ii < rangos_alertas.length; ii++) {
+    else 
+	{
+        for (ii = 0; ii < rangos_alertas.length; ii++) 
+		{
             if (indice <= rangos_alertas[ii].limite_sup)
                 return rangos_alertas[ii].color;
         }
@@ -29,7 +32,8 @@ function colores_alertas(zona, indice, i) {
     }
 }
 
-function dibujarGraficoPrincipal(zona, tipo) {
+function dibujarGraficoPrincipal(zona, tipo) 
+{
 	//en el caso de que se recuperen tipos de graficos null
 	//se asignan directamente a tipo columnas
 	if (tipo == null)
@@ -46,7 +50,8 @@ function dibujarGraficoPrincipal(zona, tipo) {
     var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
     construir_tabla_datos(zona, datasetPrincipal);
 }
-function aplicarFormato() {
+function aplicarFormato() 
+{
     d3.selectAll(".axis path, .axis line")
             .attr('fill', 'none')
             .attr('stroke', 'black');
@@ -63,7 +68,8 @@ function aplicarFormato() {
 
     d3.selectAll(".x g text").attr("transform", "rotate(45)").attr('x', 7).attr('y', 10).attr('text-anchor', 'start');
 }
-function crearGraficoObj(zona, tipo) {
+function crearGraficoObj(zona, tipo) 
+{
     var grafico;
     var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
     if (tipo == 'pastel')
@@ -91,15 +97,16 @@ function crearGraficoObj(zona, tipo) {
 
     return grafico;
 }
-function ascenderNivelDimension(zona, nivel) {
+function ascenderNivelDimension(zona, nivel) 
+{
     var ultimo,
             ruta = '',
             $filtro = $('#' + zona + ' .filtros_dimensiones'),
             filtros_obj = jQuery.parseJSON($filtro.attr('data'));
 
     var nuevo_filtro = [{}];
-    $.each(filtros_obj, function(i, obj) {
-
+    $.each(filtros_obj, function(i, obj) 
+	{
         if (i <= nivel) {
             nuevo_filtro[i] = obj;
             if (i == nivel)
@@ -107,7 +114,8 @@ function ascenderNivelDimension(zona, nivel) {
             else
                 ruta += '<A data="' + i + '">' + obj.etiqueta + ': ' + obj.valor + '</A> / ';
         }
-        else {
+        else 
+		{
             // Los que estén a la derecha del seleccionado deben volver al control de dimensiones                        
             $('#' + zona + ' .dimensiones').append("<OPTION VALUE='" + obj.codigo + "'>" + obj.etiqueta + "</OPTION>");
             if (i == parseInt(nivel) + 1)
@@ -121,7 +129,8 @@ function ascenderNivelDimension(zona, nivel) {
     $filtro.html(ruta);
     $filtro.attr('data', JSON.stringify(nuevo_filtro));
 
-    $('#' + zona + ' .filtros_dimensiones A').click(function() {
+    $('#' + zona + ' .filtros_dimensiones A').click(function() 
+	{
         ascenderNivelDimension(zona, $(this).attr('data'));
     });
 
@@ -131,12 +140,13 @@ function ascenderNivelDimension(zona, nivel) {
     $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
 }
 
-function filtroRuta(filtros_obj) {
+function filtroRuta(filtros_obj) 
+{
     var ruta = '';
     //var filtros_obj = );
-	
     var cant_obj = filtros_obj.length;
-    $.each(filtros_obj, function(i, obj) {
+    $.each(filtros_obj, function(i, obj) 
+	{
         if (i == (cant_obj - 1))
             ruta += obj.etiqueta + ': ' + obj.valor;
         else
@@ -144,15 +154,17 @@ function filtroRuta(filtros_obj) {
     });
     return ruta;
 }
-function descenderNivelDimension(zona, category) {
-    if ($('#' + zona + ' .dimensiones option').length <= 1) {
+function descenderNivelDimension(zona, category) 
+{
+    if ($('#' + zona + ' .dimensiones option').length <= 1) 
+	{
         alert(trans.no_mas_niveles);
         return;
     }
     var $dimension = $('#' + zona + ' .dimensiones option:selected');
     var $filtro = $('#' + zona + ' .filtros_dimensiones');
     var separador1 = '',
-            separador2 = '';
+        separador2 = '';
 
     // Construir la cadena de filtros
     var filtros = $filtro.attr('data');
@@ -175,7 +187,8 @@ function descenderNivelDimension(zona, category) {
     //Borrar la opcion del control de dimensiones
     $dimension.remove();
 
-    $('#' + zona + ' .filtros_dimensiones A').click(function() {
+    $('#' + zona + ' .filtros_dimensiones A').click(function() 
+	{
         ascenderNivelDimension(zona, $(this).attr('data'));
     });
 
@@ -184,8 +197,9 @@ function descenderNivelDimension(zona, category) {
     $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
     $('#' + zona + '.ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
 }
-
-function dibujarGrafico(zona, dimension) {
+//dibujar...
+function dibujarGrafico(zona, dimension) 
+{
     if (dimension === null)
         return;
     var filtro = $('#' + zona + ' .filtros_dimensiones').attr('data');
@@ -205,8 +219,8 @@ function dibujarGrafico(zona, dimension) {
     
     $.getJSON(Routing.generate('indicador_datos',{id: $('#' + zona + ' .titulo_indicador').attr('data-id'), dimension: dimension}),
     {filtro: filtro, ver_sql: false, filtrofecha : filtrofecha},
-    function(resp) {
-    	    	
+    function(resp) 
+	{
     	///////crear la cadena con el rango de datos
     	////
     	mensajerango = "";
@@ -235,7 +249,7 @@ function dibujarGrafico(zona, dimension) {
                 //$('#filtro_por_fecha'+zona).text(trans.filtro_fecha+" - Rango disponible("+$('#'+zona).attr("rangoanio")+")");
 	        $('#filtro_por_fecha'+zona).removeAttr("disabled");
 	    }
-            else
+        else
 	    {
 	    	//$('#fechainicio'+zona).datepicker("option", "disabled", true);
 	        //$('#fechafin'+zona).datepicker("option", "disabled", true);
@@ -248,7 +262,8 @@ function dibujarGrafico(zona, dimension) {
                     && $('#' + zona).attr('orden') !== null
                     && $('#' + zona).attr('orden') !== '')
             {
-                if ($('#' + zona).attr('orden-aplicado') !== 'true') {
+                if ($('#' + zona).attr('orden-aplicado') !== 'true') 
+				{
                     var ordenobj = JSON.parse($('#' + zona).attr('orden'));
                     datos = JSON.stringify(ordenarArreglo(resp.datos, ordenobj[0].tipo, ordenobj[0].modo));
                     $('DIV.zona_actual').attr('orden-aplicado', 'true');
@@ -268,7 +283,8 @@ function dibujarGrafico(zona, dimension) {
 
 }
 
-function ordenarDatos(zona, ordenar_por, modo_orden) {
+function ordenarDatos(zona, ordenar_por, modo_orden) 
+{
     if (modo_orden === '-1')
         return;
     if (ordenar_por === 'dimension')
@@ -284,22 +300,26 @@ function ordenarDatos(zona, ordenar_por, modo_orden) {
     construir_tabla_datos(zona, datasetPrincipal);
     aplicarFormato();
 }
-
-function aplicarFiltro(zona) {
-    
+//filtro...
+function aplicarFiltro(zona) 
+{
     //datasetPrincipal = datasetPrincipal_bk;
     $('#' + zona).attr('datasetPrincipal', $('#' + zona).attr('datasetPrincipal_bk'));
     
     var elementos = '';
     var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
 
-    $('#' + zona + ' .capa_dimension_valores input:checked').each(function() {
+    $('#' + zona + ' .capa_dimension_valores input:checked').each(function() 
+	{
         elementos += $(this).val() + '&';
     });
     $.post(Routing.generate('indicador_datos_filtrar'),
-            {datos: datasetPrincipal, desde: $('#' + zona + ' .filtro_desde').val(), hasta: $('#' + zona + ' .filtro_hasta').val(),
-                elementos: elementos},
-    function(resp) {
+    {
+		datos: datasetPrincipal, desde: $('#' + zona + ' .filtro_desde').val(), hasta: $('#' + zona + ' .filtro_hasta').val(),
+        elementos: elementos
+	},
+    function(resp) 
+	{
         $('#' + zona).attr('datasetPrincipal', JSON.stringify(resp.datos));
         dibujarGraficoPrincipal(zona, $('#' + zona + ' .tipo_grafico_principal').val());
     }, 'json');
@@ -307,37 +327,47 @@ function aplicarFiltro(zona) {
     $('#' + zona + ' .titulo_indicador').attr('filtro-elementos', '');
 }
 
-function controles_filtros(zona) {
+function controles_filtros(zona) 
+{
     var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
 
-    var lista_datos_dimension = '<DIV class="filtro_elementos"><input type="button" class="btn aplicar_filtro" value="' + trans.filtrar + '"/>' +
-            '<input type="button" class="btn quitar_filtro" value="' + trans.quitar_filtro + '"/></DIV>';
-    lista_datos_dimension += '<DIV class="capa_dimension_valores span12" >' + trans.filtrar_por_elemento + '<BR>';
-    $.each(datasetPrincipal, function(i, dato) {
+    var lista_datos_dimension = '<a class="filtro_elementos"><input type="button" class="btn aplicar_filtro" value="' + trans.filtrar + '"/>' +
+            '&nbsp;<input type="button" class="btn quitar_filtro" value="' + trans.quitar_filtro + '"/></a>';
+    
+	lista_datos_dimension += '<DIV class="capa_dimension_valores span12" >' + trans.filtrar_por_elemento + '<BR>';
+    
+	$.each(datasetPrincipal, function(i, dato) 
+	{
         lista_datos_dimension += '<label class="forcheckbox" for="categorias_a_mostrar' + zona + i + '" ><input type="checkbox" id="categorias_a_mostrar' + zona + i + '" ' +
                 'name="categorias_a_mostrar[]" value="' + dato.category + '" /> ' + dato.category + '</label>';
     });
+	
     lista_datos_dimension += '</DIV>';
 
     $('#' + zona + ' .lista_datos_dimension').html(lista_datos_dimension);       
     
     // Corrige un error de bootstrap para permitir usar controles dentro de un dropdown
-    $('.dropdown-menu SELECT, .dropdown-menu LABEL, .dropdown-menu INPUT').click(function(event) {
+    $('.dropdown-menu SELECT, .dropdown-menu LABEL, .dropdown-menu INPUT').click(function(event) 
+	{
         $(this).focus();
         event.stopPropagation();
     });    
     //Corrige un error de bootstrap para que funcione un menu dropdown en tabletas
-    $('body').on('touchstart.dropdown', '.dropdown-menu', function(e) {
+    $('body').on('touchstart.dropdown', '.dropdown-menu', function(e) 
+	{
         e.stopPropagation();
     }); 
     
-    $('#' + zona + ' .aplicar_filtro').click(function() {
+    $('#' + zona + ' .aplicar_filtro').click(function() 
+	{
         aplicarFiltro(zona);
     });
-    $('#' + zona + ' .quitar_filtro').click(function() {
+    $('#' + zona + ' .quitar_filtro').click(function() 
+	{
         $('#' + zona + ' .filtro_desde').val('');
         $('#' + zona + ' .filtro_hasta').val('');
-        $('#' + zona + ' .capa_dimension_valores input:checked').each(function() {
+        $('#' + zona + ' .capa_dimension_valores input:checked').each(function() 
+		{
             $(this).attr('checked', false);
         });
         //datasetPrincipal = datasetPrincipal_bk;
@@ -345,28 +375,36 @@ function controles_filtros(zona) {
         dibujarGraficoPrincipal(zona, $('#' + zona + ' .tipo_grafico_principal').val());
     });
     if ($('#' + zona + ' .titulo_indicador').attr('filtro-elementos') !== undefined
-            && $('#' + zona + ' .titulo_indicador').attr('filtro-elementos') !== '') {
+            && $('#' + zona + ' .titulo_indicador').attr('filtro-elementos') !== '') 
+	{
         var filtroElementos = $('#' + zona + ' .titulo_indicador').attr('filtro-elementos').split(',');
-        for (var j = 0; j < filtroElementos.length; j++) {
+        for (var j = 0; j < filtroElementos.length; j++) 
+		{
             $('#' + zona + ' .capa_dimension_valores input[value="' + filtroElementos[j] + '"]').attr('checked', true);
         }
         aplicarFiltro(zona);
     }
 }
 
-function cerrarMenus() {
-    $('.open').each(function(i, nodo) {
+function cerrarMenus() 
+{
+    $('.open').each(function(i, nodo) 
+	{
         $(nodo).removeClass('open');
     })
 }
 
-function construir_tabla_datos(zona, datos) {
+function construir_tabla_datos(zona, datos) 
+{
     var tabla_datos = '<TABLE class="table table-bordered table-striped" >';
-    $.each(datos, function(i, fila) {
-        if (i === 0) {
+    $.each(datos, function(i, fila) 
+	{
+        if (i === 0) 
+		{
             // Los nombres de los campos
             tabla_datos += '<THEAD><TR>';
-            for (var campo in fila) {
+            for (var campo in fila) 
+			{
 
                 if (campo === 'category')
                     campo = $('#' + zona + ' .dimension').html();
@@ -389,7 +427,8 @@ function construir_tabla_datos(zona, datos) {
     $('#' + zona + ' .info').html(tabla_datos);
 }
 
-function dibujarControles(zona, datos) {
+function dibujarControles(zona, datos) 
+{
 	//////agregar un nuevo atributo con el nombre del indicador
 	////
     $('#' + zona + ' .titulo_indicador').html(datos.nombre_indicador)
@@ -400,8 +439,9 @@ function dibujarControles(zona, datos) {
             .attr('filtro-elementos', '')
             .attr('rangos_alertas', JSON.stringify(datos.rangos));
 
-    var combo_dimensiones = trans.cambiar_dimension + ":<SELECT class='dimensiones form-control' name='dimensiones'>";
-    $.each(datos.dimensiones, function(codigo, datosDimension) {
+    var combo_dimensiones ='<label class="control-label required col-lg-2">'+ trans.cambiar_dimension + ":</label> <SELECT class='dimensiones form-control' name='dimensiones'>";
+    $.each(datos.dimensiones, function(codigo, datosDimension) 
+	{
         combo_dimensiones += "<option value='" + codigo + "' data-escala='" + datosDimension.escala +
                 "' data-x='" + datosDimension.origenX +
                 "' data-y='" + datosDimension.origenY +
@@ -409,28 +449,28 @@ function dibujarControles(zona, datos) {
     });
     combo_dimensiones += "</SELECT>";
 
-    var combo_tipo_grafico = trans.tipo_grafico + ": <SELECT class='tipo_grafico_principal form-control'  ></SELECT>";
+    var combo_tipo_grafico ='<label class="control-label required col-lg-2">'+ trans.tipo_grafico + ":</label> <SELECT class='tipo_grafico_principal form-control'  ></SELECT>";
 
-    var combo_ordenar_por_dimension = trans.ordenar_x + ": <SELECT class='ordenar_dimension form-control'>" +
+    var combo_ordenar_por_dimension ='<label class="control-label required col-lg-2">'+ trans.ordenar_x + ":</label> <SELECT class='ordenar_dimension form-control'>" +
             "<OPTION VALUE='-1'></OPTION>" +
             "<OPTION VALUE='desc'>" + trans.descendente + "</OPTION>" +
             "<OPTION VALUE='asc'>" + trans.ascendente + "</OPTION>" +
             "</SELECT>";
-    var combo_ordenar_por_medida = trans.ordenar_y + ": <SELECT class='ordenar_medida form-control'>" +
+    var combo_ordenar_por_medida ='<label class="control-label required col-lg-2">'+ trans.ordenar_y + ":</label> <SELECT class='ordenar_medida form-control'>" +
             "<OPTION VALUE='-1'></OPTION>" +
             "<OPTION VALUE='desc'>" + trans.descendente + "</OPTION>" +
             "<OPTION VALUE='asc'>" + trans.ascendente + "</OPTION>" +
             "</SELECT>";
-    var filtro_posicion = trans.filtro_posicion + " " + trans.desde +
-            "<INPUT class='valores_filtro filtro_desde' type='text' length='5' value=''> " + trans.hasta +
-            "<INPUT class='valores_filtro filtro_hasta' type='text' length='5' value=''> ";
+    var filtro_posicion = trans.filtro_posicion + " " +'<label class="control-label required col-lg-2">'+ trans.desde +
+            "</label><INPUT class='valores_filtro filtro_desde' type='text' length='5' value=''> " +'<label class="control-label required col-lg-2">'+ trans.hasta +
+            "</label><INPUT class='valores_filtro filtro_hasta' type='text' length='5' value=''> ";
     
     /////quitar el filtro por posicion
     filtro_posicion = "";
     //////agregar filtros por fecha
-    var filtro_fecha = '<input type="checkbox" id="filtro_por_fecha'+zona+'" /><label for="filtro_por_fecha'+zona+'">' + trans.filtro_fecha +'</label><br/><div id="div_rango_fechas'+zona+'" style="display:none;clear:both"> '+ trans.desde +
-    " <INPUT class='valores_filtro fecha_desde' id='fechainicio"+zona+"' type='month' style='width:180px;' /><br/>" + trans.hasta +
-    " <INPUT class='valores_filtro fecha_hasta' id='fechafin"+zona+"' type='month'  style='width:180px;'/>" + 
+    var filtro_fecha = '<input type="checkbox" id="filtro_por_fecha'+zona+'" /><label for="filtro_por_fecha'+zona+'">' + trans.filtro_fecha +'</label><br/><div id="div_rango_fechas'+zona+'" class="form-horizontal"> <label class="control-label required col-lg-2"> '+ trans.desde +
+    " </label> <INPUT class='valores_filtro fecha_desde form-control' id='fechainicio"+zona+"' type='month' style='width:180px;' /><label class='control-label required col-lg-2'>" + trans.hasta +
+    "</label> <INPUT class='valores_filtro fecha_hasta form-control' id='fechafin"+zona+"' type='month'  style='width:180px;'/>" + 
     ' <input type="button" class="btn" id="btn_filtrar_fecha'+zona+'" value="' + trans.filtrar + '"/></div>';
      
     var opciones_dimension = '<div class="btn-group dropdown sobre_div">' +
@@ -498,7 +538,8 @@ function dibujarControles(zona, datos) {
             '<TBODY>';
 
     var max_rango = 0;
-    $.each(rangos_alertas, function(i, rango) {
+    $.each(rangos_alertas, function(i, rango) 
+	{
         var comentario_rango = '';
         if (rango.comentario === null)
             comentario_rango = '';
@@ -518,10 +559,12 @@ function dibujarControles(zona, datos) {
     '</TR></TBODY><TABLE class="table table-bordered table-striped">';
     $('#' + zona + ' .alertas').html('');
     $('#' + zona + ' .grafico').html('');
-    if (rangos_alertas.length > 0) {
-        opciones_indicador += '<li><A >' +
-                trans.max_escala_y +
-                ": <SELECT class='max_y form-control'>" +
+    
+	if (rangos_alertas.length > 0) 
+	{
+        opciones_indicador += '<li><A>' +
+                '<label class="control-label required col-lg-2">'+trans.max_escala_y +
+                ":</label> <SELECT class='max_y form-control'>" +
                 "<OPTION VALUE='indicador' selected='selected'>" + trans.max_indicador + "</OPTION>" +
                 "<OPTION VALUE='rango_alertas'>" + trans.max_rango_alertas + "</OPTION>" +
                 "</SELECT>" +
@@ -536,7 +579,9 @@ function dibujarControles(zona, datos) {
                 alertas +
                 '</ul>' +
                 '</div>');
-    } else {
+    } 
+	else 
+	{
         opciones_indicador += '</ul></div>';
         $('#' + zona + ' .controles').append(opciones_indicador);
     }
@@ -549,7 +594,8 @@ function dibujarControles(zona, datos) {
     //$('#fechainicio').datepicker({ altField: "#fechainicio"});
     //$('#fechafin').datepicker({ altField: "#fechafin"});
     
-		$("#"+zona+"_toimage").click(function(e) {
+		$("#"+zona+"_toimage").click(function(e) 
+		{
             $("#"+zona+"_image").html('<canvas id="'+zona+'canvas" style="display:none"></canvas><img id="'+zona+'laimage" style="clear:both;display:none;">');
 			
 			// se obtiene el uniqid que genera en auto symfony al create			
@@ -568,8 +614,8 @@ function dibujarControles(zona, datos) {
 
 			var image = new Image;
 			image.src = url;
-			image.onload = function() {
-
+			image.onload = function() 
+			{
 				var canvas = document.getElementById(zona+"canvas");
 				canvas.width = image.width;
 				canvas.height = image.height;
@@ -591,22 +637,25 @@ function dibujarControles(zona, datos) {
 			};
 			
         });
-        $('#filtro_por_fecha'+zona).change(function(){
-    	if (this.checked == true)
-    	{
-    		$('#div_rango_fechas'+zona).css({'display':'inline'});
-    	}
-    	else
-    	{
-    		$('#div_rango_fechas'+zona).css({'display':'none'});
-    	}
-    });
+        $('#filtro_por_fecha'+zona).change(function()
+		{
+			if (this.checked == true)
+			{
+				$('#div_rango_fechas'+zona).css({'display':'inline'});
+			}
+			else
+			{
+				$('#div_rango_fechas'+zona).css({'display':'none'});
+			}
+		});
     
-    $('#btn_filtrar_fecha'+zona).click(function(){
+    $('#btn_filtrar_fecha'+zona).click(function()
+	{
         if ($('#fechainicio'+zona).val() != '' && $('#fechafin'+zona).val() != '')
         {
             setTiposGraficos(zona);
-            if ($('#' + zona + ' .tipo_grafico_principal').val() != null) {
+            if ($('#' + zona + ' .tipo_grafico_principal').val() != null) 
+			{
                 $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
                 $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
                 dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
@@ -633,7 +682,8 @@ function dibujarControles(zona, datos) {
 			
   //'<a id="'+zona+'_ultima_lectura" data-placement="bottom" data-toggle="popover" class="btn-small btn alinear btn btn-info dropdown-toggle" href="#" >'+datos.ultima_lectura+'</a>');
    
-    $('#'+zona+'_ultima_lectura').click(function(){
+    $('#'+zona+'_ultima_lectura').click(function()
+	{
 		var variable_="";
 		var origen=datos.origen_dato_;
 		for(data in origen)
@@ -646,6 +696,7 @@ function dibujarControles(zona, datos) {
 			trans.last_conexion+' </th><td>'+origen[data].origen_dato_conexion+'</td></tr><tr><th>'+
 			trans.last_responsable+' </th><td>'+origen[data].origen_dato_responsable+'</td></tr></table>';
 		}
+		
 		$("#"+ zona +"_minota").html('<label class="popover-title col-lg-12">'+trans.notas_lectura+'</label><div class="popover-content"><table class="table table-bordered table-striped"><tr><th>'+
 		trans.indicador+' </th><td>'+datos.nombre_indicador+'</td></tr><tr><th>'+
 		trans.last_reading+' </th><td>'+datos.ultima_lectura+' (dd/mm/aaaa hh:mm:ss)</td></tr><tr><th>'+
@@ -661,55 +712,60 @@ function dibujarControles(zona, datos) {
 	
    $('#' + zona + '_maximizar').click(function(){
   	if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out'))
-  		{
-  		   minimizar(zona,contenedor);
-  		}
+	{
+	   minimizar(zona,contenedor);
+	}
   	else
-  		{
-  			var tecla = (event.keyCode) ? event.keyCode : event.which ;
-	   		if (tecla != 27){
-		   		$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-in');
-		   		$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-out');
-		   		
-		   		contenedor = document.createElement('div');
-		   		$(contenedor).attr('alt',$('#' + zona).index());
-		   		$(contenedor).css({'position':'absolute','left':'0px','top':'0px','zIndex':'9999' ,'width':'100%','height':'100%','background-color':'#F4F3FA','display':'none'});
-		   		$(contenedor).attr('id','contenedor_maximizado');
-		   		$(contenedor).append($('#' + zona));
-		   		
-		   		scapemsg = document.createElement('div');
-		   		$(scapemsg).css({'position':'absolute',
-		   						'right':'15px',
-		   						'-webkit-border-radius': '10px',
-		   					    'border-radius': '10px',
-		   					    'background-color': 'rgba(200, 200, 200, .5)',		   					 
-		   					    'color': 'rgba(133, 133, 123, .5)',
-		   					    'padding':'10px',
-		   					    'font-color':'black',
-		   					    'font-size':'18px',
-		   					    'font-weight':'bold',
-		   						'top':'15px'});
-		   		
-		   		$(scapemsg).html(trans.teclaescape);
-		   		$(contenedor).append(scapemsg);
-		   		
-		   		$(document.body).append($(contenedor));
-		   		$(contenedor).fadeIn('slow',function(){
-		   			$('#' + zona).animate({height:$(document).height()-20 , width: $(document).width()-20});
-		       //     dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
-		   		});
-	   		}
-  		}
+  	{
+		var tecla = (event.keyCode) ? event.keyCode : event.which ;
+		if (tecla != 27)
+		{
+			$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-in');
+			$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-out');
+			
+			contenedor = document.createElement('div');
+			$(contenedor).attr('alt',$('#' + zona).index());
+			$(contenedor).css({'position':'absolute','left':'0px','top':'0px','zIndex':'9999' ,'width':'100%','height':'100%','background-color':'#F4F3FA','display':'none'});
+			$(contenedor).attr('id','contenedor_maximizado');
+			$(contenedor).append($('#' + zona));
+			
+			scapemsg = document.createElement('div');
+			$(scapemsg).css({'position':'absolute',
+							'right':'15px',
+							'-webkit-border-radius': '10px',
+							'border-radius': '10px',
+							'background-color': 'rgba(200, 200, 200, .5)',		   					 
+							'color': 'rgba(133, 133, 123, .5)',
+							'padding':'10px',
+							'font-color':'black',
+							'font-size':'18px',
+							'font-weight':'bold',
+							'top':'15px'});
+			
+			$(scapemsg).html(trans.teclaescape);
+			$(contenedor).append(scapemsg);
+			
+			$(document.body).append($(contenedor));
+			$(contenedor).fadeIn('slow',function()
+			{
+				$('#' + zona).animate({height:$(document).height()-20 , width: $(document).width()-20});
+		   //     dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
+			});
+		}
+	}
   });
 
-  $(document.body).keyup(function(){
-	   var tecla = (event.keyCode) ? event.keyCode : event.which ;
-	   if (tecla == 27){
-		      minimizar(zona,contenedor)
-		   }
+  $(document.body).keyup(function()
+  {
+		var tecla = (event.keyCode) ? event.keyCode : event.which ;
+		if (tecla == 27)
+		{
+			minimizar(zona,contenedor)
+		}
   })
   
-  function minimizar(zona,contenedor){
+  function minimizar(zona,contenedor)
+  {
  		$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-out');
   		$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-in');		
   		posicion = $(contenedor).attr('alt');
@@ -718,7 +774,7 @@ function dibujarControles(zona, datos) {
   		else
   		$('.area_grafico').eq(posicion - 1).after($('#' + zona));
   		$('#contenedor_maximizado').remove();
-  		$('#' + zona).animate({height:370 , width: 370});
+  		$('#' + zona).animate({height:380 , width: 380});
   }
   
   /////////
@@ -727,6 +783,7 @@ function dibujarControles(zona, datos) {
     $('#' + zona + ' .max_y').change(function() {
         dibujarGraficoPrincipal(zona, $('#' + zona + ' .tipo_grafico_principal').val());
     });
+	
     $('#' + zona + ' .ordenar_medida').change(function() {
         ordenarDatos(zona, 'medida', $(this).val());
     });
@@ -737,7 +794,8 @@ function dibujarControles(zona, datos) {
 
     setTiposGraficos(zona);
 
-    $('#' + zona + ' .dimensiones').change(function() {
+    $('#' + zona + ' .dimensiones').change(function() 
+	{
         setTiposGraficos(zona);
         if ($('#' + zona + ' .tipo_grafico_principal').val() != null) {
             $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
@@ -750,6 +808,7 @@ function dibujarControles(zona, datos) {
     $('#' + zona + ' .tipo_grafico_principal').change(function() {
         dibujarGraficoPrincipal(zona, $(this).val());
     });
+	
     $('#' + zona + ' .agregar_como_favorito').click(function() {
         alternar_favorito(zona, $(this).attr('data-indicador'));
         cerrarMenus();
@@ -866,16 +925,19 @@ function dibujarControles(zona, datos) {
     });
 }
 
-function setTiposGraficos(zona) {
+function setTiposGraficos(zona) 
+{
     var tipos_graficos = '';
     var graficos = jQuery.parseJSON($('#' + zona + ' .dimensiones option:selected').attr('data-graficos'));
-    $.each(graficos, function(i, grafico) {
+    $.each(graficos, function(i, grafico) 
+	{
         tipos_graficos += "<OPTION VALUE='" + grafico.codigo + "'>" + grafico.descripcion + "</OPTION>";
     });
     $('#' + zona + ' .tipo_grafico_principal').html(tipos_graficos);
 }
 
-function alternar_favorito(zona, id_indicador) {
+function alternar_favorito(zona, id_indicador) 
+{
     //Revisar si ya es favorito
     var es_favorito;
     ($('#fav-' + id_indicador).length === 0) ? es_favorito = false : es_favorito = true;
@@ -883,10 +945,13 @@ function alternar_favorito(zona, id_indicador) {
     cant_favoritos = (es_favorito) ? cant_favoritos - 1 : cant_favoritos + 1;
     $('#cantidad_favoritos').html(cant_favoritos);
 
-    if (es_favorito) {
+    if (es_favorito) 
+	{
         $('#' + zona + ' .agregar_como_favorito').html('<i class="glyphicon glyphicon-star"></i>' + trans.agregar_favorito);
         $('#li_fav-' + id_indicador).remove();
-    } else {
+    } 
+	else 
+	{
         $('#' + zona + ' .agregar_como_favorito').html('<i class=" glyphicon glyphicon-star-empty"></i>' + trans.quitar_favoritos);
         $('#listado-favoritos').append("<li id='li_fav-" + id_indicador + "'><A data-id='" + id_indicador + "' " +
                 "id='fav-" + id_indicador + "' " +
@@ -906,14 +971,16 @@ function alternar_favorito(zona, id_indicador) {
     );
 }
 
-function limpiarZona(zona) {
+function limpiarZona(zona) 
+{
     $('#' + zona + ' .controles').html('');
     $('#' + zona + ' .filtros_dimensiones').attr('data', '');
     $('#' + zona + ' .filtros_dimensiones').html('');
     $('#' + zona).attr('orden', null);
 }
 
-function limpiarZona2(zona) {
+function limpiarZona2(zona) 
+{
     limpiarZona(zona);
     $('#' + zona + ' .titulo_indicador')
             .html('')
@@ -929,7 +996,8 @@ function limpiarZona2(zona) {
     $('#' + zona + ' .controlesDimension').html('');
     $('#' + zona + ' .titulo').hide();
 }
-function recuperarDimensiones(id_indicador, datos) {
+function recuperarDimensiones(id_indicador, datos) 
+{
     var zona_g = $('DIV.zona_actual').attr('id');
     limpiarZona(zona_g);
     $.getJSON(
@@ -937,12 +1005,17 @@ function recuperarDimensiones(id_indicador, datos) {
     function(resp) {
         //Construir el campo con las dimensiones disponibles
 
-        if (resp.resultado === 'ok') {
-            if (resp.dimensiones == '') {
+        if (resp.resultado === 'ok') 
+		{
+            if (resp.dimensiones == '') 
+			{
                 alert(trans.no_graficos_asignados);
-            } else {
+            } 
+			else 
+			{
                 dibujarControles(zona_g, resp);
-                if (datos !== null) {
+                if (datos !== null) 
+				{
                     if (JSON.stringify(datos.filtro) !== '""') 
 					{
                         var $filtro = $('#' + zona_g + ' .filtros_dimensiones');
@@ -951,7 +1024,8 @@ function recuperarDimensiones(id_indicador, datos) {
                         var ruta = filtroRuta(filtro_obj);
                         $filtro.html(ruta);
 
-                        for (i = 0; i < filtro_obj.length; i++) {
+                        for (i = 0; i < filtro_obj.length; i++) 
+						{
                             $('#' + zona_g + ' .dimensiones')
                                     .children('option[value=' + filtro_obj[i].codigo + ']')
                                     .remove();
@@ -977,7 +1051,8 @@ function recuperarDimensiones(id_indicador, datos) {
     });
 }
 
-function ordenarArreglo(datos, ordenar_por, modo_orden) {
+function ordenarArreglo(datos, ordenar_por, modo_orden) 
+{
     if (ordenar_por === 'dimension')
         var datos_ordenados = datos.sort(
                 (modo_orden === 'asc') ?

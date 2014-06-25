@@ -41,9 +41,8 @@ class FichaTecnica
      * @ORM\Column(name="tema", type="text", nullable=false)
      * @Assert\Length(
      *      min = "3",
-     *      max = "150"
+     *      max = "500"
      * )
-     * @CustomAssert\AlphanumericPlus(message="AlphanumericPlus.Message")
      */
     private $tema;
 

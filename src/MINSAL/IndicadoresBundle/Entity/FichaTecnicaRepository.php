@@ -30,9 +30,11 @@ class FichaTecnicaRepository extends EntityRepository
         //Verificar si existe la tabla
         $existe = true;
         $acumulado = $fichaTecnica->getEsAcumulado();
-        try {
+        try 
+		{
             $em->getConnection()->query("select count(*) from tmp_ind_$nombre_indicador");
-        } catch (\Doctrine\DBAL\DBALException $e) {
+        } catch (\Doctrine\DBAL\DBALException $e) 
+		{
             $existe = false;
         }
         if ($fichaTecnica->getUpdatedAt() != '' and $fichaTecnica->getUltimaLectura() != '' and $existe == true and $acumulado == false) {
