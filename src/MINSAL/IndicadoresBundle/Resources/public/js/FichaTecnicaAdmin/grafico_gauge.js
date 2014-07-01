@@ -76,7 +76,7 @@ graficoGauge = function(ubicacion, datos, colorChosen, categoryChoosen) {
 		  svg.append("g")
 		          .attr("class", "gauge")
 		          .call(gauge);
-			svg.on("click",function(){
+			svg.on("dblclick",function(){
 				descenderNivelDimension(ubicacion, datasetPrincipal_bk[0].category);
 			});
 			

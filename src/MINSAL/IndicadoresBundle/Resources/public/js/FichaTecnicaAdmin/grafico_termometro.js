@@ -77,7 +77,7 @@ graficoTermometro = function(ubicacion, datos, colorChosen, categoryChoosen) {
 		          .attr("class", "lineargauge")
 		          .call(gauge);
 		  
-			svg.on("click",function(){
+			svg.on("dblclick",function(){
 				descenderNivelDimension(ubicacion, datasetPrincipal_bk[0].category);
 			});
 			

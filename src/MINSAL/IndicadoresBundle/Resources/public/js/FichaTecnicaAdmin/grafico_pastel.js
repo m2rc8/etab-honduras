@@ -42,7 +42,7 @@ graficoPastel = function(ubicacion, datos, color_grafico, categoryChoosen) {
                 .on("mouseover", mouseover)
                 .on("mouseout", mouseout)
                 ;
-        arcs.on("click", function(d, i) {
+        arcs.on("dblclick", function(d, i) {
             descenderNivelDimension(ubicacion, d.data.category);
         });
 
@@ -85,9 +85,9 @@ graficoPastel = function(ubicacion, datos, color_grafico, categoryChoosen) {
         })
                 //.text(function(d) { return formatAsPercentage(d.value); })
                 .text(function(d) {
-            return d.data.category;
+            return d.data.category+" : "+d.data.measure;
         })
-                ;
+		.attr('fill', '#ccc');
 
         // Computes the label angle of an arc, converting from radians to degrees.
         function angle(d) {

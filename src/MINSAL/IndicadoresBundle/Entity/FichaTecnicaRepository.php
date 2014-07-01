@@ -287,7 +287,7 @@ class FichaTecnicaRepository extends EntityRepository
         return $sql;
     }
 
-    public function calcularIndicador(FichaTecnica $fichaTecnica, $dimension, $filtro_registros = null, $ver_sql = false)
+    public function calcularIndicador(FichaTecnica $fichaTecnica, $dimension, $filtro_registros = null, $ver_sql = false, $filtrofecha)
     {
         $util = new \MINSAL\IndicadoresBundle\Util\Util();
         $acumulado = $fichaTecnica->getEsAcumulado();
@@ -333,6 +333,7 @@ class FichaTecnicaRepository extends EntityRepository
 			FROM pg_class c, pg_attribute a 
 			WHERE a.attrelid = c.oid and a.attnum > 0 
 			AND c.relname='".$tabla_indicador."' and a.attname in ('anio','mes')")->fetchAll();
+			
         } catch (\PDOException $e) {
             return $e->getMessage();
         } catch (\Doctrine\DBAL\DBALException $e) {
@@ -351,6 +352,16 @@ class FichaTecnicaRepository extends EntityRepository
                 }else
                 {
                     $filtroporfecha .= " and anio between ".$filtrofecha['aniomin']." and ".$filtrofecha['aniomax'];
+					$scampo="SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='$tabla_indicador' AND COLUMN_NAME ='mes'";
+					$reg = $this->getEntityManager()->getConnection()->executeQuery($scampo)->fetch();
+					if($reg)
+					$filtroporfecha = " and cast(concat('01-',mes,'-',anio) as date) between cast(concat('01-','".$filtrofecha['mesmin']."','-','".$filtrofecha['aniomin']."') as date) and cast(concat('01-','".$filtrofecha['mesmax']."','-','".$filtrofecha['aniomax']."') as date)";
+					
+					$scampo="SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='$tabla_indicador' AND COLUMN_NAME ='id_mes'";
+					$reg = $this->getEntityManager()->getConnection()->executeQuery($scampo)->fetch();
+					if($reg)
+					$filtroporfecha = " and cast(concat('01-',id_mes,'-',anio) as date) between cast(concat('01-','".$filtrofecha['mesmin']."','-','".$filtrofecha['aniomin']."') as date) and cast(concat('01-','".$filtrofecha['mesmax']."','-','".$filtrofecha['aniomax']."') as date)";
+					
                     $camposrangos .= $filtrofecha['aniomin']." as min_anio, ".$filtrofecha['aniomax']." as max_anio, ";
                 }
             }
@@ -372,7 +383,7 @@ class FichaTecnicaRepository extends EntityRepository
         {
         	array_push($colstemp, $col['nombrecampo']);
         }
-                
+         
         //Verificar si es un catálogo
         $rel_catalogo = '';
         $otros_campos = '';
@@ -387,9 +398,9 @@ class FichaTecnicaRepository extends EntityRepository
             $grupo_extra = ', B.id ';
         }
 
-        $sql = "SELECT $camposrangos $dimension AS category, $otros_campos $variables_query, round(($formula)::numeric,2) AS measure
-            FROM $tabla_indicador A" . $rel_catalogo;
+        $sql = "SELECT $camposrangos $dimension AS category, $otros_campos $variables_query, round(($formula)::numeric,2) AS measure FROM $tabla_indicador A" . $rel_catalogo;
         $sql .= ' WHERE 1=1 ' . $evitar_div_0 . $filtroporfecha;
+		
         if ($filtro_registros != null) {
             foreach ($filtro_registros as $campo => $valor) {
                 //Si el filtro es un catálogo, buscar su id correspondiente

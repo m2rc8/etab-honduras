@@ -89,10 +89,24 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
                 .append("title")
                 .text(function(d) {
             return d.category + ": " + d.measure;
-        })
-                ;
+        });
+		
+		plot.selectAll("text")
+           .data(currentDatasetChart)
+	       .enter()
+			.append("text")
+					.text(function(d) {
+				return d.measure;
+			})
+			.attr('x', function(d,i){return (i)*(width/currentDatasetChart.length)+(width/currentDatasetChart.length)/2;})
+			.attr('y', function(d){a= yScale(parseFloat(d.measure))+15; if(a<0) a=0; return a;})
+			.attr('text-anchor', 'middle')
+			.attr('font-size', 12)
+			.attr('font-family', 'arial')
+			.attr('fill', '#000')
+			.attr("font-weight","bold");
 
-        plot.selectAll(".dot").on("click", function(d, i) {
+        plot.selectAll(".dot").on("dblclick", function(d, i) {
             descenderNivelDimension(ubicacion, d.category);
         });
     };

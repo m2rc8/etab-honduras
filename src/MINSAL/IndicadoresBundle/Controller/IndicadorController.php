@@ -151,7 +151,7 @@ class IndicadorController extends Controller
                 $filtros_dimensiones[] = $f->codigo;
                 $filtros_valores[] = $f->valor;
             }
-            $filtros = array_combine($filtros_dimensiones, $filtros_valores);
+            $filtros = array_combine($filtros_dimensiones, $filtros_valores);			
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -194,8 +194,7 @@ class IndicadorController extends Controller
 		{
             $max = count($datos);
             $hasta = ($hasta == '' or $hasta > $max) ? $max : $hasta;
-            $desde = ($desde == '' or $desde <= 0) ? 0 : $desde - 1;
-
+            $desde = ($desde == '' or $desde <= 0) ? 0 : $desde - 1;			
             $cantidad = $hasta - $desde;
             $datos_aux = array_slice($datos, $desde, $cantidad, true);
         }
