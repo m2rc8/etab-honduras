@@ -699,5 +699,4 @@ return $result;
 		$response=new Response(json_encode($indicadores_por_usuario));
 		return $response;
     }
-  
 }//end class

@@ -81,7 +81,6 @@ class FichaTecnicaRepository extends EntityRepository
                     ;";
                 }
             }
-
             //Crear la estructura de la tabla asociada a la variable
             $tabla = strtolower($variable->getIniciales());
             $sql .= ' CREATE TEMP TABLE IF NOT EXISTS ' . $tabla . '(';
@@ -400,6 +399,7 @@ class FichaTecnicaRepository extends EntityRepository
 
         $sql = "SELECT $camposrangos $dimension AS category, $otros_campos $variables_query, round(($formula)::numeric,2) AS measure FROM $tabla_indicador A" . $rel_catalogo;
         $sql .= ' WHERE 1=1 ' . $evitar_div_0 . $filtroporfecha;
+		$orderid="";
 		
         if ($filtro_registros != null) {
             foreach ($filtro_registros as $campo => $valor) {
@@ -407,11 +407,12 @@ class FichaTecnicaRepository extends EntityRepository
                 $significado = $this->getEntityManager()->getRepository('IndicadoresBundle:SignificadoCampo')
                         ->findOneBy(array('codigo' => $campo));
                 $catalogo = $significado->getCatalogo();
-                $sql_ctl = '';
+                $sql_ctl = ''; 
+				
                 if ($catalogo != '') {
-                    $sql_ctl = "SELECT id FROM $catalogo WHERE descripcion ='$valor'";
+                    $sql_ctl = "SELECT id FROM $catalogo WHERE descripcion ='$valor' order by id";
                     $reg = $this->getEntityManager()->getConnection()->executeQuery($sql_ctl)->fetch();
-                    $valor = $reg['id'];
+                    $valor = $reg['id'];					
                 }
                 $sql .= " AND A." . $campo . " = '$valor' ";
             }
@@ -420,9 +421,12 @@ class FichaTecnicaRepository extends EntityRepository
             GROUP BY $dimension $grupo_extra
             HAVING (($formula)::numeric) > 0
             ORDER BY $dimension";*/
+		if(stripos(strtoupper($sql),"CTL_MES"))
+		$orderid="id, ";
         $sql .= "            
             GROUP BY $dimension $grupo_extra            
-            ORDER BY $dimension";
+            ORDER BY $orderid $dimension";
+			
         try {
             if ($ver_sql == true)
                 return $sql;

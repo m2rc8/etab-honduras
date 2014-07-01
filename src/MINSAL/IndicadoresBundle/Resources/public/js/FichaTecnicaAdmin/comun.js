@@ -640,42 +640,54 @@ function dibujarControles(zona, datos)
 			{
 				valor='<svg viewBox="-20 0 800 500" preserveAspectRatio="none" id="ChartPlot" version="1.1" xmlns="http://www.w3.org/2000/svg">'+$("#"+zona+" #viewport").html()+'</svg>';
 				$("#"+zona+"lasvg").append(valor);
-			}			
-			
-			var svg = document.querySelector( "#"+zona+" #ChartPlot" );
-			var svgData = new XMLSerializer().serializeToString( svg );
+			}									
+			valor=window.btoa( valor );
 			
 			var img = document.getElementById(zona+"laimage");
-			img.setAttribute( "src", "data:image/svg+xml;base64," + window.btoa( valor )) ;
+			img.setAttribute( "src", "data:image/svg+xml;base64," +valor) ;
 			 	    
 			img.onload =new function()
 			{
-				var a = document.getElementById(zona+"esvg")
+				var a = document.getElementById(zona+"esvg");
 				a.download = "etab.png";
-				a.href = "data:image/svg+xml;base64," + window.btoa( valor );		  
+				a.href = "data:image/svg+xml;base64," +valor;		  
 				
 				var o = document.getElementById(zona+"open")
-				o.href = "data:image/svg+xml;base64," + window.btoa( valor );	
+				o.href = "data:image/svg+xml;base64," +valor ;	
 				
 				img.style.display = "block";								
 				
 			};
-			var image = new Image();
-  			image.setAttribute( "src", "data:image/svg+xml;base64," + window.btoa( valor )) ;
+			var image = document.getElementById(zona+"laimage");
+			var canvas = document.getElementById(zona+"canvas");
+			canvas.width = image.width;
+			canvas.height = image.height;
+			if (canvas.getContext) 
+			{
+				image.onload=new function () 
+				{
+					var ctx = canvas.getContext("2d");               
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+					ctx.drawImage(image, 0, 0);
+					var p = document.getElementById(zona+"epng")
+					p.download = "etab.png";
+					p.href = canvas.toDataURL("image/png");	
+				
+			  	};
+			}
 			
-			image.onload =new function()
+			/*image.onload =new function()
 			{
 				var canvas = document.getElementById(zona+"canvas");
 				canvas.width = image.width;
 				canvas.height = image.height;
 				var context = canvas.getContext('2d');
-				context.drawImage(image, 0, 0);		
+				context.drawImage(img, 0, 0);		
 				
 				var p = document.getElementById(zona+"epng")
 				p.download = "etab.png";
 				p.href = canvas.toDataURL("image/png");						
-			};			
-			
+			};						
 						
 			/*
 			var blob = new Blob([Array(valor)], {type: 'image/svg+xml'});
@@ -830,7 +842,7 @@ function dibujarControles(zona, datos)
 			$("#svg-pan-zoom-controls").remove();
 			panZoom = Object.create(svgPanZoom);
 			panZoom.init({
-			  'selector': "#"+zona+" #ChartPlot",
+			  'selector': "#"+zona+" svg",
 			  'zoomEnabled': true ,
 			  'controlIconsEnabled': true 
 			});
@@ -869,7 +881,7 @@ function dibujarControles(zona, datos)
 		
 		panZoom.disablePan();
 		panZoom.disableZoom();
-		panZoom.resetZoom("#"+zona+" #ChartPlot");
+		panZoom.resetZoom("#"+zona+" svg");
 		$('#' + zona+' .grafico').html('');
 		$("#svg-pan-zoom-controls").remove();
 		delete panZoom;
