@@ -58,7 +58,7 @@ file that was distributed with this source code.
             <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>     
 
-            {% include (['IndicadoresBundle::messages_js.html.twig']|join) %}
+            {% include (['indicadoresBundle::messages_js.html.twig']|join) %}
         {% endblock %}
 
         <title>
@@ -114,7 +114,7 @@ file that was distributed with this source code.
                         </div>
                     {% block logo %}
                         {# <a href="{{ url('sonata_admin_dashboard') }}" class="navbar-brand"> #}
-                            <img src="{{ asset('bundles/Indicadores/images/logo_salud.png') }}"  />
+                            <img src="{{ asset('bundles/indicadores/images/logo_salud.png') }}"  />
                         {# </a> #}
                     {% endblock %}
                     {% if admin_pool is defined %}
