@@ -421,7 +421,7 @@ class FichaTecnicaRepository extends EntityRepository
             GROUP BY $dimension $grupo_extra
             HAVING (($formula)::numeric) > 0
             ORDER BY $dimension";*/
-		if(stripos(strtoupper($sql),"CTL_MES"))
+		if(stripos(strtoupper($sql),"CTL_MES")||stripos(strtoupper($sql),"CTL_MESES"))
 		$orderid="id, ";
         $sql .= "            
             GROUP BY $dimension $grupo_extra            

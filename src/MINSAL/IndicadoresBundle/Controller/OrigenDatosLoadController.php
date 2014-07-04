@@ -2,7 +2,7 @@
 
 namespace MINSAL\IndicadoresBundle\Controller;
 
-use Sonata\AdminBundle\Controller\CRUDController as Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +14,7 @@ use MINSAL\IndicadoresBundle\Entity\ReporteActualizacion;
 
 //use Symfony\Component\Console\Input\ArrayInput;
 
-class OrigenDatosAdminController extends Controller
+class OrigenDatosLoadController extends Controller
 {
     public function batchActionCrearPivoteIsRelevant(array $normalizedSelectedIds, $allEntitiesSelected)
     {
@@ -128,8 +128,9 @@ class OrigenDatosAdminController extends Controller
         return true;
     }
 
-    public function batchActionLoadData($idx = null,$dir="")
+    public function batchActionLoadData($idx = null)
     {
+		$limites = NULL;
         //Mardar a la cola de carga de datos cada origen seleccionado
         $parameterBag = $this->get('request')->request;
         $em = $this->getDoctrine()->getManager();
@@ -232,7 +233,7 @@ class OrigenDatosAdminController extends Controller
             if ($carga_directa) {
                 $mess = $em->getRepository('IndicadoresBundle:OrigenDatos')->cargarCatalogo($origenDato);
                 if ($mess !== true) {
-                    $this->addFlash('sonata_flash_error', $mess);
+                    //$this->addFlash('sonata_flash_error', $mess);
 
                     // Crear el registro para el reporte de actualizacion
                     $reporteActualizacion = new ReporteActualizacion;
@@ -244,8 +245,7 @@ class OrigenDatosAdminController extends Controller
 
                     $em->persist($reporteActualizacion);
                     $em->flush();
-					if($dir=="")
-                    return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+					
                 } else {
                     // Crear el registro para el reporte de actualizacion
                     $reporteActualizacion = new ReporteActualizacion;
@@ -262,63 +262,30 @@ class OrigenDatosAdminController extends Controller
                 $this->get('old_sound_rabbit_mq.cargar_origen_datos_producer')
                         ->publish(serialize($msg));
         }
-        $this->addFlash('sonata_flash_success', $this->get('translator')->trans('flash_batch_load_data_success'));
-		if($dir=="")
-        return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
-		else return $this->get('translator')->trans('flash_batch_load_data_success');
+		return $this->get('translator')->trans('flash_batch_load_data_success');
     }
 
-    public function mergeSaveAction()
+
+
+	/**
+     * @Route("/admin/origendatos/load_data_ajax", name="load_data_ajax", options={"expose"=true})
+     */
+	public function load_data_ajax()
     {
-        $req = $this->getRequest();
-        $opciones = $req->get('fusionar');
-        $em = $this->getDoctrine()->getManager();
-
-        //Crear el origen
-        $origenDato = new OrigenDatos();
-        $origenDato->setNombre($req->get('nombre'));
-        $origenDato->setDescripcion($req->get('descripcion'));
-        if ($req->get('es_pivote') == 1)
-            $origenDato->setEsPivote(true);
-        else
-            $origenDato->setEsFusionado(true);
-
-        foreach ($req->get('origenes_fusionados') as $k => $origen_id) {
-            $origenFu = $em->find('IndicadoresBundle:OrigenDatos', $origen_id);
-            $origenDato->addFusione($origenFu);
-        }
-
-        $campos_fusionados = '';
-        foreach ($req->get('campos_fusionar') as $campo) {
-            $obj = json_decode($campo);
-            $campos_fusionados .= "'" . $obj->nombre . "',";
-        }
-        $campos_fusionados = trim($campos_fusionados, ',');
-        $origenDato->setCamposFusionados($campos_fusionados);
-
-        $em->persist($origenDato);
-        $em->flush();
-
-        if ($req->get('es_pivote') == 1)
-            $this->addFlash('sonata_flash_success', $origenDato->getNombre() . ' ' . $this->get('translator')->trans('_origen_pivote_creado_'));
-        else
-            $this->addFlash('sonata_flash_success', $origenDato->getNombre() . ' ' . $this->get('translator')->trans('fusion.origen_fusionado_creado'));
-
-        return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
-    }
-
-    public function loadDataAction()
-    {
-        $id = $this->getRequest()->get('id');
-        $origen = $this->getDoctrine()->getManager()->find('IndicadoresBundle:OrigenDatos', $id);
-        $valid = $this->batchActionLoadDataIsRelevant(array($id));
-        if($valid === true)
-            return $this->batchActionLoadData(array($id));
-        else 
+		try 
 		{
-            $this->addFlash('sonata_flash_error', $origen->getNombre() . ': ' . $this->get('translator')->trans('origen_no_configurado'));
-
-            return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
-        }
+            $id = $this->getRequest()->get('id');
+			$origen = $this->getDoctrine()->getManager()->find('IndicadoresBundle:OrigenDatos', $id);
+			$valid = $this->batchActionLoadDataIsRelevant(array($id));
+			if($valid === true)            
+				return new Response(json_encode(array("save"=>true,"message"=>$this->batchActionLoadData(array($id)))));
+			else 
+			{
+				return new Response(json_encode(array("save"=>false,"message"=>$this->get('translator')->trans('origen_no_configurado'))));
+			}
+        } catch (\Doctrine\DBAL\DBALException $e) 
+		{
+            return new Response(json_encode(array("save"=>false,"message"=>$e->getMessage())));
+        }        
     }
 }

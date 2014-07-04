@@ -18,9 +18,9 @@ class FuenteDatoAdmin extends Admin
 
     protected function configureFormFields(FormMapper $formMapper)
     {
-        $formMapper
-            ->add('contacto', null, array('label'=> $this->getTranslator()->trans('contacto')))
-            ->add('establecimiento', null, array('label'=> $this->getTranslator()->trans('establecimiento')))
+        $formMapper            
+            ->add('establecimiento', null, array('label'=> $this->getTranslator()->trans('last_fuente')))
+			->add('contacto', null, array('label'=> $this->getTranslator()->trans('contacto')))
             ->add('correo', null, array('label'=> $this->getTranslator()->trans('correo_electronico')))
             ->add('telefono', null, array('label'=> $this->getTranslator()->trans('telefono')))
             ->add('cargo', null, array('label'=> $this->getTranslator()->trans('cargo')))
@@ -34,15 +34,15 @@ class FuenteDatoAdmin extends Admin
     {
         $datagridMapper
             ->add('contacto', null, array('label'=> $this->getTranslator()->trans('contacto')))
-            ->add('establecimiento',null, array('label'=> $this->getTranslator()->trans('establecimiento')))
+            ->add('establecimiento',null, array('label'=> $this->getTranslator()->trans('last_fuente')))
         ;
     }
 
     protected function configureListFields(ListMapper $listMapper)
     {
-        $listMapper
-            ->addIdentifier('contacto', null, array('label'=> $this->getTranslator()->trans('contacto')))
-            ->add('establecimiento', null, array('label'=> $this->getTranslator()->trans('nombre_establecimiento')))
+        $listMapper            
+            ->addIdentifier('establecimiento', null, array('label'=> $this->getTranslator()->trans('last_fuente')))
+			->add('contacto', null, array('label'=> $this->getTranslator()->trans('contacto')))
             ->add('correo', null, array('label'=> $this->getTranslator()->trans('correo_electronico')))
             ->add('telefono', null, array('label'=> $this->getTranslator()->trans('telefono')))
             ->add('cargo', null, array('label'=> $this->getTranslator()->trans('cargo')))
@@ -59,13 +59,13 @@ class FuenteDatoAdmin extends Admin
     	$obj = new \MINSAL\IndicadoresBundle\Entity\FuenteDato;
     	 
     	$rowsRD = $this->getModelManager()->findBy('IndicadoresBundle:FuenteDato',
-    			array('contacto' => $object->getContacto()));
+    			array('establecimiento' => $object->getEstablecimiento()));
     
     	if (strpos($pieceAction,'create') !== false) // entra cuando es ALTA
     	{
     		if (count($rowsRD) > 0){
     			$errorElement
-    			->with('contacto')
+    			->with('establecimiento')
     			->addViolation($this->getTranslator()->trans('registro existente, no se puede duplicar'))
     			->end();
     		}
@@ -77,7 +77,7 @@ class FuenteDatoAdmin extends Admin
     			if ($obj->getId() != $pieceId)
     			{
     				$errorElement
-    				->with('contacto')
+    				->with('establecimiento')
     				->addViolation($this->getTranslator()->trans('registro existente, no se puede duplicar'))
     				->end();
     			}

@@ -5,19 +5,8 @@
         <parameter key="admin_max_per_page_number">10</parameter>
     </parameters>
     <services>
-        <service id="sonata.admin.responsable_dato" class="MINSAL\IndicadoresBundle\Admin\ResponsableDatoAdmin">
-            <tag name="sonata.admin" 
-                 manager_type="orm" 
-                 group="catalogos" 
-                 label="responsable_datos-eTAB"
-            />
-            <argument />
-            <argument>MINSAL\IndicadoresBundle\Entity\ResponsableDato</argument>
-            <argument>SonataAdminBundle:CRUD</argument>
-            <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
-        </service>
-        
-        <service id="sonata.admin.fuente_dato" class="MINSAL\IndicadoresBundle\Admin\FuenteDatoAdmin">
+	
+		<service id="sonata.admin.fuente_dato" class="MINSAL\IndicadoresBundle\Admin\FuenteDatoAdmin">
             <tag name="sonata.admin" 
                  manager_type="orm" 
                  group="catalogos" 
@@ -28,6 +17,18 @@
             <argument>SonataAdminBundle:CRUD</argument>
             <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
         </service>
+		
+        <service id="sonata.admin.responsable_dato" class="MINSAL\IndicadoresBundle\Admin\ResponsableDatoAdmin">
+            <tag name="sonata.admin" 
+                 manager_type="orm" 
+                 group="catalogos" 
+                 label="responsable_datos-eTAB"
+            />
+            <argument />
+            <argument>MINSAL\IndicadoresBundle\Entity\ResponsableDato</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
+            <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
+        </service>                
         
         <service id="sonata.admin.responsable_indicador" class="MINSAL\IndicadoresBundle\Admin\ResponsableIndicadorAdmin">
             <tag name="sonata.admin" 
