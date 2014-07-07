@@ -73,7 +73,7 @@ $(document).ready(function() {
                             "<span>("+trans.por+" <span class='dimension' ></span>)</span>"+
                         '</DIV>'+
                         '<h6 class="filtros_dimensiones"></h6>' +
-                        '<div class="controles btn-toolbar"></div>' +
+                        '<div class="controles btn-toolbar" style="margin-bottom:30px"></div>' +
                         '<div class="info" ></div>' +
                         '<div class="row_grafico" >' +
                             '<div class="grafico" ></div>' +

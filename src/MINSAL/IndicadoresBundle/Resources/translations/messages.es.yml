@@ -261,6 +261,7 @@ javascript:
   pastel: 'Pastel'
   mapa: 'Mapa'
   lineas: 'Lineas'
+  refrescar: 'Recargar'
   guardar_imagen: 'De clic derecho sobre la imagen, luego elija "Guardar imagen como..."'
   _nada_encontrado_ : 'No se encontraron resultados'
   _mostrando_n_de_n_: 'Mostrando desde _START_ hasta _END_ de _TOTAL_ registros'

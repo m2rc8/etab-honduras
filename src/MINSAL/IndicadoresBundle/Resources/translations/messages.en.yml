@@ -257,6 +257,7 @@ javascript:
   pastel: 'Cake'
   mapa: 'Map'
   lineas: 'Lines'
+  refrescar: 'Reload'
   guardar_imagen: 'Right click on the image, then choose "Save Image As ..."'
   _nada_encontrado_ : 'Nothing found - sorry'
   _mostrando_n_de_n_: 'Showing _START_ to _END_ of _TOTAL_ records'

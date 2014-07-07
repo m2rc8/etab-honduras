@@ -2,28 +2,28 @@ graficoPastel = function(ubicacion, datos, color_grafico, categoryChoosen) {
     this.tipo = 'pastel';
     
     var width = 350,
-            height = 250,
-            outerRadius = Math.min(width, height) / 2,
-            innerRadius = outerRadius * .999,
-            // for animation
-            innerRadiusFinal = outerRadius * .5,
-            innerRadiusFinal3 = outerRadius * .45
-            ;
+		height = 250,
+		outerRadius = Math.min(width, height) / 2,
+		innerRadius = outerRadius * .999,
+		// for animation
+		innerRadiusFinal = outerRadius * .5,
+		innerRadiusFinal3 = outerRadius * .45
+		;
+		
 
     this.dibujar = function() {
         $('#' + ubicacion + ' .grafico').html('');
         var vis = d3.select('#' + ubicacion + ' .grafico')
                 .append("svg:svg")              //create the SVG element inside the <body>
-                .data([datos])                   //associate our data with the document
+                .data([datos])                  //associate our data with the document
                 .attr("viewBox", '-5 0 440 310')
                 .attr("preserveAspectRatio", 'none')
                 .append("svg:g")                //make a group to hold our pie chart
                 .attr("transform", "translate(" + parseFloat(outerRadius + 30) + "," + outerRadius + ")")    //move the center of the pie chart from 0, 0 to radius, radius
                 .attr("id", "ChartPlot")
                 ;
-
-        var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
-                .outerRadius(outerRadius).innerRadius(innerRadius);
+		
+        var arc = d3.svg.arc().outerRadius(outerRadius).innerRadius(innerRadius);
 
         // for animation
         var arcFinal = d3.svg.arc().innerRadius(innerRadiusFinal).outerRadius(outerRadius);
@@ -33,7 +33,7 @@ graficoPastel = function(ubicacion, datos, color_grafico, categoryChoosen) {
                 .value(function(d) {
             return parseFloat(d.measure);
         });    //we must tell it out to access the value of each element in our data array
-
+		
         var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
                 .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties) 
                 .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array

@@ -46,6 +46,28 @@ function dibujarGraficoPrincipal(zona, tipo) {
 
     var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
     construir_tabla_datos(zona, datasetPrincipal);
+	
+	if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out'))
+	{
+		if (typeof (event) != "undefined")
+		{
+			if($("#svg-pan-zoom-controls"))
+			$("#svg-pan-zoom-controls").remove();
+			panZoom = Object.create(svgPanZoom);
+			panZoom.init({
+			  'selector': "#"+zona+" #ChartPlot",
+			  'zoomEnabled': true ,
+			  'controlIconsEnabled': true 
+			});
+			var matrix="matrix(2,0,0,2,"+$(document).width()/3.5+","+$(document).height()/4.5+")";
+			$("#"+zona+" #viewport").attr("transform",matrix);
+
+			var tra="translate("+($(document).width()-130)+" "+($(document).height()-200)+" ) scale(0.75)";
+			$("#svg-pan-zoom-controls").attr("transform",tra);
+			var hei="height:"+($(document).height()-120)+"px;";
+			$("#"+zona+" .grafico").attr("style",hei);
+		}
+	}
 }
 function aplicarFormato() {
     d3.selectAll(".axis path, .axis line")
@@ -287,20 +309,30 @@ function aplicarFiltro(zona) {
     
     //datasetPrincipal = datasetPrincipal_bk;
     $('#' + zona).attr('datasetPrincipal', $('#' + zona).attr('datasetPrincipal_bk'));
-    
     var elementos = '';
     var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
 
-    $('#' + zona + ' .capa_dimension_valores input:checked').each(function() {
+    $('#' + zona + ' .capa_dimension_valores input:checked').each(function() 
+	{
         elementos += $(this).val() + '&';
     });
-    $.getJSON(Routing.generate('indicador_datos_filtrar_public'),
-      //  {filtro: filtro, ver_sql: true},
-        
-    //$.post(Routing.generate('indicador_datos_filtrar'),
-            {datos: datasetPrincipal, desde: $('#' + zona + ' .filtro_desde').val(), hasta: $('#' + zona + ' .filtro_hasta').val(),
-                elementos: elementos},
-    function(resp) {
+	
+	var desde="",hasta="";
+	/*if($('#filtro_por_fecha'+zona).is(':checked'))
+	{
+		if ($('#fechainicio'+zona).val() != '' && $('#fechafin'+zona).val() != '')
+		{
+			desde=$('#' + zona + ' .fecha_desde').val();
+			hasta=$('#' + zona + ' .fecha_hasta').val();
+		}
+	}*/
+	
+    $.post(Routing.generate('indicador_datos_filtrar'),
+    {
+		datos: datasetPrincipal, desde: desde, hasta: hasta, elementos: elementos
+	},
+    function(resp) 
+	{
         $('#' + zona).attr('datasetPrincipal', JSON.stringify(resp.datos));
         dibujarGraficoPrincipal(zona, $('#' + zona + ' .tipo_grafico_principal').val());
     }, 'json');
@@ -430,10 +462,10 @@ function dibujarControles(zona, datos) {
     /////quitar el filtro por posicion
     filtro_posicion = "";
     //////agregar filtros por fecha
-    var filtro_fecha = '<input type="checkbox" id="filtro_por_fecha'+zona+'" /><label for="filtro_por_fecha'+zona+'">' + trans.filtro_fecha +'</label><br/><div id="div_rango_fechas'+zona+'" style="display:none;clear:both"> '+ trans.desde +
-    " <INPUT class='valores_filtro fecha_desde' id='fechainicio"+zona+"' type='month' style='width:180px;' /><br/>" + trans.hasta +
-    " <INPUT class='valores_filtro fecha_hasta' id='fechafin"+zona+"' type='month'  style='width:180px;'/>" + 
-    ' <input type="button" class="btn" id="btn_filtrar_fecha'+zona+'" value="' + trans.filtrar + '"/></div>';
+    var filtro_fecha = '<input type="checkbox" id="filtro_por_fecha'+zona+'" /><label for="filtro_por_fecha'+zona+'">' + trans.filtro_fecha +'</label><br/><div id="div_rango_fechas'+zona+'" class="form-horizontal" style="display:none"> <label class="control-label required col-lg-2"> '+ trans.desde +
+    " </label> <INPUT class='valores_filtro fecha_desde form-control' id='fechainicio"+zona+"' type='month' style='width:220px;' /><label class='control-label required col-lg-2'>" + trans.hasta +
+    "</label> <INPUT class='valores_filtro fecha_hasta form-control' id='fechafin"+zona+"' type='month'  style='width:220px;'/>" + 
+    '<input type="button" class="btn" id="btn_filtrar_fecha'+zona+'" value="' + trans.filtro_fecha + ' "/></div>';
     
     var opciones_dimension = '<div class="btn-group dropdown sobre_div">' +
             '<button class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="' + trans.dimension_opciones + '">' +
@@ -553,27 +585,75 @@ function dibujarControles(zona, datos) {
     ////
     //$('#fechainicio'+zona).datepicker({ navigationAsDateFormat: true , dateFormat: "mm-yy", constrainInput: true});
     //$('#fechafin'+zona).datepicker({ navigationAsDateFormat: true , dateFormat: "mm-yy", constrainInput: true});
-    $("#"+zona+"_toimage").click(function(e) {
-            $("#"+zona+"_image").html('<canvas id="'+zona+'canvas" style="display:none"></canvas><img id="'+zona+'laimage" style="clear:both;display:none;">');
+    $("#"+zona+"_toimage").click(function(e) 
+		{
+            $("#"+zona+"_image").html('<canvas id="'+zona+'canvas" style="display:none"></canvas><img id="'+zona+'laimage" style="clear:both;display:none;" ><a class="btn btn-info dropdown-toggle" id="'+zona+'esvg">SVG</a> <a class="btn btn-primary dropdown-toggle btn-small" id="'+zona+'open" target="_blank"><i class="glyphicon glyphicon-open"></i></a> <a class="btn btn-info dropdown-toggle" id="'+zona+'epng">PNG</a><div id="'+zona+'lasvg" style="display:none"></div>');
 			
 			// se obtiene el uniqid que genera en auto symfony al create			
 			$("svg").attr({ version: '1.1' , xmlns:"http://www.w3.org/2000/svg"});
 			var valor = $("#"+zona+" .grafico").html();
-			/*var data   = valor;
-			var DOMURL = window.URL || window.webkitURL || window;
-
-			var svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
-			var url = DOMURL.createObjectURL(svg);
-						
-			document.getElementById(zona+"laimagen").src=url;*/
 			
+			if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out'))
+			{
+				valor='<svg viewBox="-20 0 800 500" preserveAspectRatio="none" id="ChartPlot" version="1.1" xmlns="http://www.w3.org/2000/svg">'+$("#"+zona+" #viewport").html()+'</svg>';
+				$("#"+zona+"lasvg").append(valor);
+			}									
+			valor=window.btoa( valor );
+			
+			var img = document.getElementById(zona+"laimage");
+			img.setAttribute( "src", "data:image/svg+xml;base64," +valor) ;
+			 	    
+			img.onload =new function()
+			{
+				var a = document.getElementById(zona+"esvg");
+				a.download = "etab.png";
+				a.href = "data:image/svg+xml;base64," +valor;		  
+				
+				var o = document.getElementById(zona+"open")
+				o.href = "data:image/svg+xml;base64," +valor ;	
+				
+				img.style.display = "block";								
+				
+			};
+			var image = document.getElementById(zona+"laimage");
+			var canvas = document.getElementById(zona+"canvas");
+			canvas.width = image.width;
+			canvas.height = image.height;
+			if (canvas.getContext) 
+			{
+				image.onload=new function () 
+				{
+					var ctx = canvas.getContext("2d");               
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+					ctx.drawImage(image, 0, 0);
+					var p = document.getElementById(zona+"epng")
+					p.download = "etab.png";
+					p.href = canvas.toDataURL("image/png");	
+				
+			  	};
+			}
+			
+			/*image.onload =new function()
+			{
+				var canvas = document.getElementById(zona+"canvas");
+				canvas.width = image.width;
+				canvas.height = image.height;
+				var context = canvas.getContext('2d');
+				context.drawImage(img, 0, 0);		
+				
+				var p = document.getElementById(zona+"epng")
+				p.download = "etab.png";
+				p.href = canvas.toDataURL("image/png");						
+			};						
+						
+			/*
 			var blob = new Blob([Array(valor)], {type: 'image/svg+xml'});
 			var url = URL.createObjectURL(blob);
 
 			var image = new Image;
 			image.src = url;
-			image.onload = function() {
-
+			image.onload = function() 
+			{
 				var canvas = document.getElementById(zona+"canvas");
 				canvas.width = image.width;
 				canvas.height = image.height;
@@ -592,7 +672,7 @@ function dibujarControles(zona, datos) {
 			  v.style.display = "block";
 
 
-			};
+			};*/
 			
         });
     $('#filtro_por_fecha'+zona).change(function(){
@@ -606,11 +686,13 @@ function dibujarControles(zona, datos) {
     	}
     });
     
-    $('#btn_filtrar_fecha'+zona).click(function(){
+    $('#btn_filtrar_fecha'+zona).click(function()
+	{
         if ($('#fechainicio'+zona).val() != '' && $('#fechafin'+zona).val() != '')
         {
             setTiposGraficos(zona);
-            if ($('#' + zona + ' .tipo_grafico_principal').val() != null) {
+            if ($('#' + zona + ' .tipo_grafico_principal').val() != null) 
+			{
                 $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
                 $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
                 dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
@@ -666,7 +748,24 @@ function dibujarControles(zona, datos) {
 		   			$('#' + zona).animate({height:$(document).height()-20 , width: $(document).width()-20});
 		       //     dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
 		   		});
-	   		}
+				if (typeof (event) == "undefined")
+				aplicarFiltro(zona);
+				if($("#svg-pan-zoom-controls"))
+				$("#svg-pan-zoom-controls").remove();
+				panZoom = Object.create(svgPanZoom);
+				panZoom.init({
+				  'selector': "#"+zona+" svg",
+				  'zoomEnabled': true ,
+				  'controlIconsEnabled': true 
+				});
+				var matrix="matrix(2,0,0,2,"+$(document).width()/3.5+","+$(document).height()/4.5+")";
+				$("#"+zona+" #viewport").attr("transform",matrix);
+	
+				var tra="translate("+($(document).width()-130)+" "+($(document).height()-200)+" ) scale(0.75)";
+				$("#svg-pan-zoom-controls").attr("transform",tra);
+				var hei="height:"+($(document).height()-120)+"px;";
+				$("#"+zona+" .grafico").attr("style",hei);
+				}
   		}
   });
 
@@ -686,7 +785,19 @@ function dibujarControles(zona, datos) {
   		else
   		$('.area_grafico').eq(posicion - 1).after($('#' + zona));
   		$('#contenedor_maximizado').remove();
-  		$('#' + zona).animate({height:380 , width: 380});
+  		$('#' + zona).animate({height:400 , width: 400});
+		
+		panZoom.disablePan();
+		panZoom.disableZoom();
+		panZoom.resetZoom("#"+zona+" svg");
+		$('#' + zona+' .grafico').html('');
+		$("#svg-pan-zoom-controls").remove();
+		delete panZoom;
+  		$('#contenedor_maximizado').remove();
+		$('#' + zona+' .grafico').animate({height:245 , width: 375});
+		$('#' + zona).animate({height:400 , width: 400});
+		$("#"+zona+"lasvg").html("");
+		aplicarFiltro(zona);
   }
   
   /////////

@@ -51,6 +51,28 @@ function dibujarGraficoPrincipal(zona, tipo)
 
     var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
     construir_tabla_datos(zona, datasetPrincipal);
+	
+	if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out'))
+	{
+		if (typeof (event) != "undefined")
+		{
+			if($("#svg-pan-zoom-controls"))
+			$("#svg-pan-zoom-controls").remove();
+			panZoom = Object.create(svgPanZoom);
+			panZoom.init({
+			  'selector': "#"+zona+" #ChartPlot",
+			  'zoomEnabled': true ,
+			  'controlIconsEnabled': true 
+			});
+			var matrix="matrix(2,0,0,2,"+$(document).width()/3.5+","+$(document).height()/4.5+")";
+			$("#"+zona+" #viewport").attr("transform",matrix);
+
+			var tra="translate("+($(document).width()-130)+" "+($(document).height()-200)+" ) scale(0.75)";
+			$("#svg-pan-zoom-controls").attr("transform",tra);
+			var hei="height:"+($(document).height()-120)+"px;";
+			$("#"+zona+" .grafico").attr("style",hei);
+		}
+	}
 }
 function aplicarFormato() 
 {
@@ -198,28 +220,6 @@ function descenderNivelDimension(zona, category)
     $('#' + zona).attr('orden', null);
     $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
     $('#' + zona + '.ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
-	
-	if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out'))
-	{
-		if (typeof (event) != "undefined")
-		{
-			if($("#svg-pan-zoom-controls"))
-			$("#svg-pan-zoom-controls").remove();
-			panZoom = Object.create(svgPanZoom);
-			panZoom.init({
-			  'selector': "#"+zona+" #ChartPlot",
-			  'zoomEnabled': true ,
-			  'controlIconsEnabled': true 
-			});
-			var matrix="matrix(2,0,0,2,"+$(document).width()/3.5+","+$(document).height()/4.5+")";
-			$("#"+zona+" #viewport").attr("transform",matrix);
-
-			var tra="translate("+($(document).width()-130)+" "+($(document).height()-200)+" ) scale(0.75)";
-			$("#svg-pan-zoom-controls").attr("transform",tra);
-			var hei="height:"+($(document).height()-120)+"px;";
-			$("#"+zona+" .grafico").attr("style",hei);
-		}
-	}
 	
 }
 //dibujar...
@@ -761,7 +761,17 @@ function dibujarControles(zona, datos)
             '</div></li></ul>' +
             '</div>');
 			
+	
+	$('#' + zona + ' .controles').append('<div class="btn-group dropdown sobre_div">' +
+            '<button class="btn btn-info dropdown-toggle" id="'+ zona +'_refresh" data-toggle="dropdown" title="' + trans.refrescar + '">' +
+            '<i class="glyphicon glyphicon-refresh"></i>' +
+            '</button>' +			
+            '</div>');
+			
   //'<a id="'+zona+'_ultima_lectura" data-placement="bottom" data-toggle="popover" class="btn-small btn alinear btn btn-info dropdown-toggle" href="#" >'+datos.ultima_lectura+'</a>');
+  	$('#'+zona +'_refresh').click(function(e) {
+    	recuperarDimensiones($('#' + zona + ' .titulo_indicador').attr('data-id'),null);
+	});
    
     $('#'+zona+'_ultima_lectura').click(function()
 	{
@@ -887,7 +897,7 @@ function dibujarControles(zona, datos)
 		delete panZoom;
   		$('#contenedor_maximizado').remove();
 		$('#' + zona+' .grafico').animate({height:245 , width: 375});
-		$('#' + zona).animate({height:380 , width: 380});
+		$('#' + zona).animate({height:400 , width: 400});
 		$("#"+zona+"lasvg").html("");
 		aplicarFiltro(zona);
   }

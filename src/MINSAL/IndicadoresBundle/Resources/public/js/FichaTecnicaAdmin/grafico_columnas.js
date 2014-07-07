@@ -95,8 +95,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 		plot.selectAll("text")
            .data(currentDatasetChart)
 	       .enter()
-			.append("text")
-					.text(function(d) {
+		   .append("text").text(function(d) {
 				return d.measure;
 			})
 			.attr('x', function(d,i){return (i)*(width/currentDatasetChart.length)+(width/currentDatasetChart.length)/2;})
