@@ -29,7 +29,8 @@ graficoPastel = function(ubicacion, datos, color_grafico, categoryChoosen) {
         var arcFinal = d3.svg.arc().innerRadius(innerRadiusFinal).outerRadius(outerRadius);
         var arcFinal3 = d3.svg.arc().innerRadius(innerRadiusFinal3).outerRadius(outerRadius);
 
-        var pie = d3.layout.pie()           //this will create arc data for us given a list of values
+        var pie = d3.layout.pie()
+				         //this will create arc data for us given a list of values
                 .value(function(d) {
             return parseFloat(d.measure);
         });    //we must tell it out to access the value of each element in our data array
@@ -58,8 +59,8 @@ graficoPastel = function(ubicacion, datos, color_grafico, categoryChoosen) {
             });
 
         arcs.attr("d", arc)     //this creates the actual SVG path using the associated data (pie) with the arc drawing function
-                .append("svg:title") //mouseover title showing the figures
-                .text(function(d) {
+			.append("svg:title") //mouseover title showing the figures
+			.text(function(d) {
             return d.data.category + ": " + d.data.measure;
         });
 

@@ -52,8 +52,9 @@ function dibujarGraficoPrincipal(zona, tipo)
     var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
     construir_tabla_datos(zona, datasetPrincipal);
 	
-	if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out'))
+	if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out')||getCookieS("zoom"+zona)=='1')
 	{
+		$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-out');
 		if (typeof (event) != "undefined")
 		{
 			if($("#svg-pan-zoom-controls"))
@@ -801,13 +802,16 @@ function dibujarControles(zona, datos)
 	});
 	//({title: trans.ultima_lectura, content: trans.ultima_lectura_exp});
 	
-   $('#' + zona + '_maximizar').click(function(){
-  	if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out'))
+   $('#' + zona + '_maximizar').click(function()
+   {	   
+  	if($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out')||getCookieS("zoom"+zona)=='1')
 	{
-	   minimizar(zona,contenedor);
+		document.cookie="zoom"+zona+"=0";		
+	   	minimizar(zona,contenedor);
 	}
   	else
-  	{		
+  	{	
+		document.cookie="zoom"+zona+"=1";	
 		if (typeof (event) == "undefined")
     		var tecla = 0;
 		else
@@ -1198,4 +1202,16 @@ function ordenarArreglo(datos, ordenar_por, modo_orden)
                 }
         );
     return datos_ordenados;
+}
+
+function getCookieS(cname)
+{
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0; i<ca.length; i++) 
+	{
+		var c = ca[i].trim();
+		if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+	}
+	return "";
 }
