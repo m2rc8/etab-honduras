@@ -31,7 +31,6 @@ class FichaTecnica
      *      min = "3",
      *      max = "150"
      * )
-     * @CustomAssert\AlphanumericPlus(message="AlphanumericPlus.Message")
      */
     private $nombre;
 
