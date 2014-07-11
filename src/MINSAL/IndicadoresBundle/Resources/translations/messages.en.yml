@@ -299,6 +299,8 @@ _tipo_no_corresponde_con_datos_: 'The selected type is not suitable for the fiel
 _sala_: 'Room'
 _salas_: 'Rooms'
 _agregar_area_grafico_: 'Add graphic area'
+_agregar_filtro_: 'Classification'
+_quitar_area_grafico_: 'Remove graphic Area'
 _search_buscar_: 'Search'
 _guardar_sala_: 'Save room'
 _sala_situacional_: 'Situation Room'

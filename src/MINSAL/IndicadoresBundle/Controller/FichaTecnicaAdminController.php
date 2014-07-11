@@ -50,13 +50,32 @@ class FichaTecnicaAdminController extends Controller
                 $usuarioSalas[$sala->getGrupoIndicadores()->getId()] = $sala->getGrupoIndicadores();
             } 
         }
+		
+		$salasXusuario=array();
+		$i=0;
+		foreach ($usuarioSalas as $sala) {
+            $salasXusuario[$i]['datos_sala'] = $sala;
+            $salasXusuario[$i]['indicadores_sala'] = $em->getRepository('IndicadoresBundle:GrupoIndicadores')
+                    ->getIndicadoresSala($sala);
+            $i++;
+        }
         //Salas asignadas al grupo al que pertenece el usuario
+		$salasXgrupoTemp=array();
         foreach ($usuario->getGroups() as $grp){
             foreach ($grp->getSalas() as $sala){
                 $usuarioSalas[$sala->getId()] = $sala;
+				$salasXgrupoTemp[]=$sala;
             }
         }
-        
+        $salasXgrupo=array();
+		$i=0;
+		foreach ($salasXgrupo as $sala) {
+            $salasXgrupo[$i]['datos_sala'] = $sala;
+            $salasXgrupo[$i]['indicadores_sala'] = $em->getRepository('IndicadoresBundle:GrupoIndicadores')
+                    ->getIndicadoresSala($sala);
+            $i++;
+        }
+		
         $i = 0;
         $salas = array();
         foreach ($usuarioSalas as $sala) {
@@ -113,11 +132,13 @@ class FichaTecnicaAdminController extends Controller
                 $indicadores_no_clasificados[] = $ind;
             }
         }
-
+		
         return $this->render('IndicadoresBundle:FichaTecnicaAdmin:tablero.html.twig', array(
                     'categorias' => $categorias_indicador,
                     'clasificacionUso' => $clasificacionUso,
                     'salas' => $salas,
+					'salasXusuario' => $salasXusuario,
+					'salasXgrupo' => $salasXgrupo,
                     'indicadores_no_clasificados' => $indicadores_no_clasificados
         ));
     }

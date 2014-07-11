@@ -5,6 +5,13 @@ $(document).ready(function() {
     //Si se despliega algún menú dentro del gráfico se modifica un atributo
     //ccs para que se muestre correctamente se regresa a su modo normal cuando el menú se cierra
     //para esto fue necesario reescribir unos métodos de jQuery
+	var cookies = document.cookie.split(";");
+	for(var i=0; i < cookies.length; i++) {
+		var equals = cookies[i].indexOf("=");
+		var name = equals > -1 ? cookies[i].substr(0, equals) : cookies[i];		
+		document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+	}
+						
     (function(){
         var methods = ["addClass", "toggleClass", "removeClass"]; //métodos a sobreescribir
         $.map(methods, function(method){
@@ -36,9 +43,15 @@ $(document).ready(function() {
         handle: '.titulo',                
     });
     $( "#sala" ).disableSelection();
-        
+       
     $('A.indicador').click(function() {
-        dibujarIndicador($(this).attr('data-id'));
+		if($("#"+this.id).attr("class")=="indicador list-group-item active")
+			$("#"+this.id).removeClass("list-group-item active");
+		else
+		{
+			$("#"+this.id).addClass("list-group-item active");
+			dibujarIndicador($(this).attr('data-id'));
+		}
     });
 
     function dibujarIndicador(id_indicador) {
@@ -47,6 +60,10 @@ $(document).ready(function() {
 
     $('#agregar_fila').click(function() {
         sala_agregar_fila();        
+    });
+	
+	$('#quitar_fila').click(function() {
+        sala_quitar_fila();        
     });
 
     $('#quitar_indicador').click(function() {
@@ -84,6 +101,12 @@ $(document).ready(function() {
         $('DIV.area_grafico').click(function() {
             zona_elegir(this);
         });
+    }
+	
+	function sala_quitar_fila() {
+        var cant = $('DIV.area_grafico').length;
+		if(parseInt(cant)>1)
+        $('#grafico_' + parseInt(cant)).remove();                
     }
 
     $('#guardar_sala').click(function() {
@@ -139,30 +162,47 @@ $(document).ready(function() {
     });
 
     $('.salas-id').click(function() {
-        $('#nombre_sala').attr('id-sala', $(this).attr('sala-id'));
-        $('#nombre_sala').val($(this).attr('sala-nombre'));
-        $('#nombre_sala2').html('<h4>Nombre de sala: ' + $(this).attr('sala-nombre') + '</h4>');
-
-        var graficos = JSON.parse($(this).attr('data'));
-        var max_id = 0;
-        for (i = 0; i < graficos.length; i++) {
-            if (parseInt(graficos[i].posicion) > max_id)
-                max_id = graficos[i].posicion;
-        }
-
-        $('#sala').html('');
-        
-        var filas = Math.ceil(max_id / 3);
-        for (i = 1; i <= max_id; i++) {
-            sala_agregar_fila();
-        }
-        
-        for (i = 0; i < graficos.length; i++) {
-            $('DIV.zona_actual').removeClass('zona_actual');
-            $('#grafico_' + graficos[i].posicion).addClass('zona_actual');
-
-            recuperarDimensiones(graficos[i].idIndicador, graficos[i]);
-        }
+		var id=this.id.split("_");
+		id=id[1];
+		if($("#a_"+id).attr("class")=="salas-id list-group-item active"||
+		   $("#b_"+id).attr("class")=="salas-id list-group-item active"||
+		   $("#c_"+id).attr("class")=="salas-id list-group-item active")
+		{  
+			$("#a_"+id).removeClass("list-group-item active");
+			$("#b_"+id).removeClass("list-group-item active");
+			$("#c_"+id).removeClass("list-group-item active");
+		}
+		else
+		{
+			$("#a_"+id).addClass("list-group-item active");
+			$("#b_"+id).addClass("list-group-item active");
+			$("#c_"+id).addClass("list-group-item active");
+			
+			$('#nombre_sala').attr('id-sala', $(this).attr('sala-id'));
+			$('#nombre_sala').val($(this).attr('sala-nombre'));
+			$('#nombre_sala2').html('<h4>Nombre de sala: ' + $(this).attr('sala-nombre') + '</h4>');
+	
+			var graficos = JSON.parse($(this).attr('data'));
+			var max_id = 0;
+			for (i = 0; i < graficos.length; i++) {
+				if (parseInt(graficos[i].posicion) > max_id)
+					max_id = graficos[i].posicion;
+			}
+	
+			$('#sala').html('');
+			
+			var filas = Math.ceil(max_id / 3);
+			for (i = 1; i <= max_id; i++) {
+				sala_agregar_fila();
+			}
+			
+			for (i = 0; i < graficos.length; i++) {
+				$('DIV.zona_actual').removeClass('zona_actual');
+				$('#grafico_' + graficos[i].posicion).addClass('zona_actual');
+	
+				recuperarDimensiones(graficos[i].idIndicador, graficos[i]);
+			}
+		}
     });   
     
 });

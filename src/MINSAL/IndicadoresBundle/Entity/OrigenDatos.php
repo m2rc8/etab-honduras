@@ -742,5 +742,5 @@ class OrigenDatos
     public function removeReporteActualizacione(\MINSAL\IndicadoresBundle\Entity\ReporteActualizacion $reporteActualizaciones)
     {
         $this->reporteActualizaciones->removeElement($reporteActualizaciones);
-    }
+    }		
 }

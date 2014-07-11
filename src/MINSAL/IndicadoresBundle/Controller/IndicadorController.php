@@ -40,7 +40,7 @@ class IndicadorController extends Controller
             $resp['nombre_indicador'] = $fichaTec->getNombre();
             $resp['id_indicador'] = $fichaTec->getId();
             $resp['unidad_medida'] = $fichaTec->getUnidadMedida();
-			if(strlen($fichaTec->getUpdatedAt())>5)
+			if($fichaTec->getUpdatedAt()!="")
 			$resp["origen_dato_actualizacion"]= date('d/m/Y H:i:s',$fichaTec->getUpdatedAt()->getTimestamp());
             if ($fichaTec->getCamposIndicador() != '') {
                 $campos = explode(',', str_replace(array("'", ' '), array('', ''), $fichaTec->getCamposIndicador()));
@@ -307,15 +307,109 @@ class IndicadorController extends Controller
      * @ParamConverter("clasificacion", options={"mapping": {"codigo_clasificacion": "codigo"}})
      */
     public function changeClasificacionUsoAction(ClasificacionUso $clasificacion)
-    {
-        $request = $this->getRequest();
-        $em = $this->getDoctrine()->getManager();
-        $usuario = $this->getUser();
-        $usuario->setClasificacionUso($clasificacion);
-        $em->persist($usuario);
-        $em->flush();
-
-        return $this->redirect($request->headers->get('referer'));
+    {		
+		$request = $this->getRequest();
+		$em = $this->getDoctrine()->getManager();
+		$usuario = $this->getUser();
+		if($request->get("che")=="che")
+		{
+			$usuario = $this->getUser();
+        	$clasificacionUso = $em->getRepository("IndicadoresBundle:ClasificacionUso")->findAll();
+			$usuarioIndicadores = ($usuario->hasRole('ROLE_SUPER_ADMIN')) ?
+                //$em->getRepository("IndicadoresBundle:FichaTecnica")->findAll() :
+                $this->get('doctrine')->getManager()->createQuery('SELECT c FROM IndicadoresBundle:FichaTecnica c ORDER BY c.nombre ASC')->getResult() :
+                $usuario->getIndicadores();
+				
+			$indicadoresPorGrupo = array();
+			foreach ($usuario->getGroups() as $grp){            
+				foreach ($grp->getIndicadores() as $indicadores_grupo){
+					$indicadoresPorGrupo[] = $indicadores_grupo;
+				}
+			}
+		
+			$indicadores_por_usuario = array();
+			$indicadores_clasificados = array();
+			foreach ($usuarioIndicadores as $ind) {
+				$indicadores_por_usuario[] = $ind->getId();
+			}
+			
+			foreach ($indicadoresPorGrupo as $ind){
+				$indicadores_por_usuario[] = $ind->getId();
+			}
+		
+			$indicadores_no_clasificados = array();
+			foreach ($usuarioIndicadores as $ind) {
+				if (!in_array($ind->getId(), $indicadores_clasificados)) {
+					$indicadores_no_clasificados[] = $ind;
+				}
+			}
+			foreach ($indicadoresPorGrupo as $ind) {
+				if (!in_array($ind->getId(), $indicadores_clasificados)) {
+					$indicadores_no_clasificados[] = $ind;
+				}
+			}
+			$no_clasificados=array();
+			foreach($indicadores_no_clasificados as $item)			
+				$no_clasificados[]=array("id"=>$item->getId(),"nombre"=>$item->getNombre());
+			return new response(json_encode($no_clasificados));
+		}
+		else
+		{			
+			$usuario->setClasificacionUso($clasificacion);
+			$em->persist($usuario);
+			$em->flush();
+			if($request->get("ajax"))
+			{
+				$clasificacionUso = $em->getRepository("IndicadoresBundle:ClasificacionUso")->findAll();
+				$usuario = $this->getUser();
+				if ($usuario->getClasificacionUso()) {
+					$clasificacionUsoPorDefecto = $usuario->getClasificacionUso();
+				} else {
+					$clasificacionUsoPorDefecto = $clasificacionUso[0];
+				}
+				$categorias = $em->getRepository("IndicadoresBundle:ClasificacionTecnica")->findBy(array('clasificacionUso' => $clasificacionUsoPorDefecto));
+				
+				//Indicadores asignados por usuario
+				$usuarioIndicadores = ($usuario->hasRole('ROLE_SUPER_ADMIN')) ?
+						//$em->getRepository("IndicadoresBundle:FichaTecnica")->findAll() :
+						$this->get('doctrine')->getManager()->createQuery('SELECT c FROM IndicadoresBundle:FichaTecnica c ORDER BY c.nombre ASC')->getResult() :
+						$usuario->getIndicadores();
+				//Indicadores asignadas al grupo al que pertenece el usuario
+				$indicadoresPorGrupo = array();
+				foreach ($usuario->getGroups() as $grp){            
+					foreach ($grp->getIndicadores() as $indicadores_grupo){
+						$indicadoresPorGrupo[] = $indicadores_grupo;
+					}
+				}
+				
+				$indicadores_por_usuario = array();
+				$indicadores_clasificados = array();
+				foreach ($usuarioIndicadores as $ind) {
+					$indicadores_por_usuario[] = $ind->getId();
+				}
+				
+				foreach ($indicadoresPorGrupo as $ind){
+					$indicadores_por_usuario[] = $ind->getId();
+				}
+		
+				$categorias_indicador = array();
+				foreach ($categorias as $cat) {
+					$categorias_indicador[$cat->getId()]['cat'] = $cat;
+					$categorias_indicador[$cat->getId()]['indicadores'] = array();
+					$indicadores_por_categoria = $cat->getIndicadores();
+					foreach ($indicadores_por_categoria as $ind) {
+						if (in_array($ind->getId(), $indicadores_por_usuario)) {
+							$categorias_indicador[$cat->getId()]['indicadores'][] = $ind;
+							$indicadores_clasificados[] =array("id"=> $ind->getId(),"nombre"=>$ind->getNombre());
+						}
+					}
+				}							
+				
+				return new response(json_encode($indicadores_clasificados));
+			}
+			else
+				return $this->redirect($request->headers->get('referer'));
+		}
     }
 
     /**

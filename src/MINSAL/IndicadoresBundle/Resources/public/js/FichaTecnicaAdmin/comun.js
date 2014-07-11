@@ -228,7 +228,8 @@ function dibujarGrafico(zona, dimension)
 {
     if (dimension === null)
         return;
-	
+	$('#' + zona+' .grafico').animate({height:245 , width: 375});
+	$('#' + zona).animate({height:400 , width: 400});
     var filtro = $('#' + zona + ' .filtros_dimensiones').attr('data');
     //validar las entradas de las fechas
     var patron = /^\d{4}-\d{2}$/;
@@ -1129,11 +1130,10 @@ function recuperarDimensiones(id_indicador, datos)
 {
     var zona_g = $('DIV.zona_actual').attr('id');
     limpiarZona(zona_g);
-    $.getJSON(
-            Routing.generate('indicador_dimensiones', {id: id_indicador}),
-    function(resp) {
+    $.getJSON(Routing.generate('indicador_dimensiones', {id: id_indicador}),
+    function(resp) 
+	{
         //Construir el campo con las dimensiones disponibles
-
         if (resp.resultado === 'ok') 
 		{
             if (resp.dimensiones == '') 
@@ -1174,12 +1174,38 @@ function recuperarDimensiones(id_indicador, datos)
                     $('#' + zona_g + ' .tipo_grafico_principal').val(datos.tipoGrafico);
                 }
                 dibujarGrafico(zona_g, $('#' + zona_g + ' .dimensiones').val());
+				
             }
+			$("#"+(zona_g)).removeClass('zona_actual');
+			id=zona_g.split("_");
+			id=parseInt(id[1]);
+
+			if(!document.getElementById("grafico_"+(id+1)))
+			sala_agregar_fila();
+			$("#grafico_"+(id+1)).addClass('zona_actual');
         }
 
-    });
+    });	
 }
+function sala_agregar_fila() {
+	var cant = $('DIV.area_grafico').length;
+	var html =  '<div class="area_grafico" id="grafico_' + parseInt(cant+1) + '" >' +
+					"<DIV class= 'titulo'><span class='titulo_indicador '></span>"+
+						"<span>("+trans.por+" <span class='dimension' ></span>)</span>"+
+					'</DIV>'+
+					'<h6 class="filtros_dimensiones"></h6>' +
+					'<div class="controles btn-toolbar" style="margin-bottom:30px"></div>' +
+					'<div class="info" ></div>' +
+					'<div class="row_grafico" >' +
+						'<div class="grafico" ></div>' +
+					'</div>' +                        
+				'</DIV>';         
 
+	$('#sala').append(html);        
+	$('DIV.area_grafico').click(function() {
+		zona_elegir(this);
+	});
+}
 function ordenarArreglo(datos, ordenar_por, modo_orden) 
 {
     if (ordenar_por === 'dimension')

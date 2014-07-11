@@ -5,98 +5,437 @@
         </a>
     </div>
     <div class='btn-group'>
-        <a href='#' class="btn dropdown-toggle btn-primary" data-toggle="dropdown" >
-            <i class="glyphicon glyphicon-th"></i>{{'_sala_'|trans}}
-            <span class="caret"></span>
+        <a href='#myModalSalas' class="btn dropdown-toggle btn-primary" data-toggle="modal" >
+            <i class="glyphicon glyphicon-th"></i> {{'_sala_'|trans}}
         </a>
-        <ul class="dropdown-menu">
-            <li><A id='agregar_fila' >{{'_agregar_area_grafico_'|trans}}</a></li>
-            <li><A id='quitar_indicador' >{{'_quitar_indicador_'|trans}}</a></li>
-            <li><!-- Button to trigger modal -->
-                <a href="#myModal" data-toggle="modal">{{'_guardar_sala_'|trans}}</a>
-            </li>
-            <li class="dropdown-submenu">
-                <a >
-                    {{'_clasificacion_indicadores_'|trans}}
-                </a>
-                <ul class="dropdown-menu">
-                {% for clasificacion in clasificacionUso %}
-                    {% if clasificacion.codigo == app.user.clasificacionUso.codigo|default('') %}
-                    <li class='active'><A >{{clasificacion.descripcion}}</a></li>
-                    {% else %}
-                    <li ><a href='{{url('change_clasificacion_uso',{codigo_clasificacion:clasificacion.codigo})}}'>{{clasificacion.descripcion}}</a></li>
-                    {% endif %}
-                {% endfor %}
-                </ul>
-            </li>
-            <li class="divider"></li>
-            <li class="nav-header">{{'_salas_'|trans}}</li>
-                {% for sala in salas %}
-            <li><A sala-id='{{sala.datos_sala.id}}' sala-nombre='{{sala.datos_sala.nombre}}' class='salas-id' data="{{sala.indicadores_sala|json_encode()}}">{{sala.datos_sala.nombre}}</A></li>
-                {% endfor %}
-        </ul>
     </div>
+
     <div class='btn-group'>
-        <a class="btn dropdown-toggle btn-success" data-toggle="dropdown" >
-            <i class="glyphicon glyphicon-align-left"></i>{{"indicadores"|trans}}
-            <span class="caret"></span>
+        <a class="btn dropdown-toggle btn-success" href="#myModalMenu" data-toggle="modal" id="mimodal" >
+            <i class="glyphicon glyphicon-align-left"></i> {{"indicadores"|trans}}
         </a>
-        <ul class="dropdown-menu">
-            <li class="dropdown-submenu">
-                <a >{{"favoritos"|trans}} (<span id='cantidad_favoritos'>{{app.user.favoritos|length}}</span>)</a>
-                <ul class="dropdown-menu" id='listado-favoritos'>
-                        {% for indicador in app.user.favoritos %}
-                    <li ><A id='fav-{{indicador.id}}' class='indicador'
-                            data-id='{{indicador.id}}'
-                            data-unidad-medida='{{indicador.unidadMedida}}'>
-                                    {{indicador.nombre}}
-                        </A>
-                    </li>
-                        {% endfor %}
-                </ul>
-            </li>
-
-        {% for categoria in categorias%}
-            {% if categoria.indicadores|length > 0 %}
-            <li class="dropdown-submenu">
-                <a> {{categoria.cat.descripcion}} ({{categoria.indicadores|length}}) </a>
-                <ul class="dropdown-menu scroll-menu" id="max_menu" >
-                    {% for indicador in categoria.indicadores %}
-                    <li ><A id='{{indicador.id}}' class='indicador'
-                            data-id='{{indicador.id}}'
-                            data-unidad-medida='{{indicador.unidadMedida}}'>
-                                            {{indicador.nombre}}
-                        </A>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </li>
-            {% endif %}
-        {% endfor %}
-
-        {% if indicadores_no_clasificados|length > 0 %}
-        <li class="dropdown-submenu">
-            <a>{{"_no_clasificados_"|trans}} (<span id='cantidad_no_clasificados'>{{indicadores_no_clasificados|length}}</span>)</a>
-            <ul class="dropdown-menu" >
-                {% for indicador in indicadores_no_clasificados %}
-                <li ><A id='{{indicador.id}}' class='indicador'
-                        data-id='{{indicador.id}}'
-                        data-unidad-medida='{{indicador.unidadMedida}}'>
-                                    {{indicador.nombre}}
-                    </A>
-                </li>
-                {% endfor %}
-            </ul>
-        </li >
-        {% endif %}        
-        </ul>
+        
         </div>
-        <div class='btn-group col-lg-4'>
+        <div class='btn-group'>
+        	<A id='agregar_fila' class="btn btn-primary" title="{{'_agregar_area_grafico_'|trans}}"><i class="ion-plus"></i></a> 
+            <A id='quitar_fila' class="btn btn-danger" title="{{'_quitar_area_grafico_'|trans}}"><i class="ion-minus"></i></a>
+        </div>
+        <div class='btn-group'>
+            <A id='quitar_indicador' class="btn btn-danger" title="{{'_quitar_indicador_'|trans}}"><i class="fa fa-eraser"></i></a> 
+            <a href="#myModal" data-toggle="modal" class="btn btn-primary" title="{{'_guardar_sala_'|trans}}"><i class="fa fa-save"></i></a>
+        </div>
+        <div class='btn-group col-lg-4' style="margin-left:-9px;">
+        <div class='btn-group'>
         <form class="bs-example bs-example-form " role="form" >
 		    <div class="input-prepend input-group btn-group" >
 		        <span class="input-group-addon btn-info"><i class="glyphicon glyphicon-search"></i></span>
-		        <input type="text" id="search_" class="form-control" placeholder="Buscar...">
+		        <input type="text" id="search_" class="form-control" style="height:30px" placeholder="Buscar...">
 		    </div>
 		</form>
+        </div>
     </div>
 </div>
+
+
+
+
+<!-- Modal Menu-->  
+<div id="myModalMenu" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button><h4 class="modal-tilte">{{"_agregar_filtro_"|trans}} </h4></div>
+        <div class="modal-body">
+        <div class="sonata-ba-form">        
+        <form class="form-horizontal" role="form">
+            <div class="tab-content">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                    <a href="#s53beb59d6d27d_1" data-toggle="tab">
+                    <i class="glyphicon glyphicon-exclamation-sign has-errors hide" data-original-title="" title=""></i>
+                    {{"_agregar_filtro_"|trans}} ({{clasificacionUso|length}})
+                    </a>
+                    </li>
+                    <li>
+                    <a href="#s53beb59d6d27d_2" data-toggle="tab">
+                    <i class="glyphicon glyphicon-exclamation-sign has-errors hide" data-original-title="" title=""></i>
+                    {{"favoritos"|trans}} (<span id='cantidad_favoritos'>{{app.user.favoritos|length}}</span>)
+                    </a>
+                    </li>
+                </ul>
+            
+                <div class="tab-content">
+                    <div class="tab-pane  active" id="s53beb59d6d27d_1">
+                        <fieldset>
+                        <div class="form-group"><br />
+                            <label class="control-label required col-lg-3" for="s53beb59d6d27d_establecimiento">
+                            {{'_clasificacion_indicadores_'|trans}}
+                            </label>
+                            
+                            <div class="col-lg-8">
+                                <select class="form-control" id="clasificacion_00">
+                                <option value="xxx">
+                                	{{"_no_clasificados_"|trans}} (<span id='cantidad_no_clasificados'>{{indicadores_no_clasificados|length}})
+                                </option>
+                                {% for clasificacion in clasificacionUso %}
+                                    {% if clasificacion.codigo == app.user.clasificacionUso.codigo|default('') %}
+                                    <option value="{{clasificacion.codigo}}">
+                                    	{{clasificacion.id}} .- {{clasificacion.descripcion}}
+                                        {% for categoria in categorias%}
+                                            {% if categoria.indicadores|length > 0 and categoria.cat.descripcion==clasificacion.descripcion   %}
+                                                ({{categoria.indicadores|length}})
+                                            {% endif %}
+                                        {% endfor %}
+                                    </option>
+                                    {% else %}
+                                    <option value="{{clasificacion.codigo}}" >
+                                    	{{clasificacion.id}} .- {{clasificacion.descripcion}}                                        
+                                    </option>
+                                    {% endif %}
+                                {% endfor %}
+                               </select>
+                               </div><br /><hr style="width:95%" />
+                           <div id="clasificacion_" class="col-lg-11" style="margin-left:5%">
+                           
+                            {% if indicadores_no_clasificados|length > 0 %}
+                            <div class='btn-group'>
+                            <form class="bs-example bs-example-form " role="form" >
+                                <div class="input-prepend input-group btn-group" >
+                                    <span class="input-group-addon btn-info"><i class="glyphicon glyphicon-search"></i></span>
+                                    <input type="text" id="search_1" class="form-control" style="height:30px" placeholder="Buscar..." autocomplete="off">
+                                </div>
+                            </form>
+                            <script>
+							$(document).ready(function(){
+															
+								$("#search_1").keyup(function(e) {   
+									valor=this.value.toLowerCase();                                                                
+									$('#miclasificacion').find('li').each(function(i,ele)
+									{			
+										var buscar=" "+$.trim($(ele).text().toLowerCase());																								
+										if(buscar.indexOf(valor)<1)
+											$("#miclasificacion li:nth-child("+(i+1)+")").attr("style","display:none");
+										else 
+											$("#miclasificacion li:nth-child("+(i+1)+")").removeAttr("style");
+										if(valor=="")										
+											$("#miclasificacion li:nth-child("+(i+1)+")").removeAttr("style");
+									});
+								});	
+								$("#clasificacion_00").change(function(e) {
+									var valor=this.value.toLowerCase();	
+									che="";
+									if(valor=="xxx")
+									{
+										valor=$("#clasificacion_00 option:nth-child(2)").val();								
+										che="che";
+									}
+									$.ajax({
+										type: "POST",
+										dataType:"JSON",								
+										url:(Routing.generate("change_clasificacion_uso",{codigo_clasificacion:valor})),
+										data:{ajax:"ajax",che:che},
+										success: function(datos) {
+											$("#miclasificacion").html("");
+											var li="";
+											for(var c=0;c<datos.length; c++)
+											{
+												li=li+'<li class="list-group-item"><A id="'+datos[c].id+'" data-id="'+datos[c].id+'" class="indicador" onclick="recuperarDimensiones('+datos[c].id+',null);">'+datos[c].nombre+'</A></li>';
+											}
+											
+											$("#miclasificacion").append(li);
+										}
+									});
+                                    
+                                });	
+							});
+							</script>
+                            </div>
+                                <ul id="miclasificacion" class="list-group" >
+                                    {% for indicador in indicadores_no_clasificados %}
+                                    <li class="list-group-item">
+                                    	<A id='{{indicador.id}}' class='indicador'
+                                            data-id='{{indicador.id}}'
+                                            data-unidad-medida='{{indicador.unidadMedida}}'>
+                                                        {{indicador.nombre}}
+                                        </A>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}        
+                            </ul>
+                           </div>
+                        </div>
+                     </fieldset>
+                  </div>
+                  
+                  <div class="tab-pane" id="s53beb59d6d27d_2">
+                  <fieldset>
+                  	<div class="form-group col-lg-11" style="margin-left:5%">
+                    <br />
+                    <div class='btn-group'>
+                    <form class="bs-example bs-example-form " role="form" >
+                        <div class="input-prepend input-group btn-group" >
+                            <span class="input-group-addon btn-info"><i class="glyphicon glyphicon-search"></i></span>
+                            <input type="text" id="search_2" class="form-control" style="height:30px" placeholder="Buscar...">
+                        </div>
+                    </form>
+                    <script>
+					$(document).ready(function(){
+													
+						$("#search_2").keyup(function(e) {   
+							valor=this.value.toLowerCase();                                                                
+							$('#listado-favoritos').find('li').each(function(i,ele)
+							{			
+								var buscar=" "+$.trim($(ele).text().toLowerCase());																								
+								if(buscar.indexOf(valor)<1)
+									$("#listado-favoritos li:nth-child("+(i+1)+")").attr("style","display:none");
+								else 
+									$("#listado-favoritos li:nth-child("+(i+1)+")").removeAttr("style");
+								if(valor=="")										
+									$("#listado-favoritos li:nth-child("+(i+1)+")").removeAttr("style");
+							});
+						});	
+					});
+					function maximizar()
+					{		
+							var windowH = $(window).height();
+							$('#listado-favoritos').css({'max-height':($(window).height()/2.5)+'px'});
+							$('#listado-favoritos').css({'min-height':'70px'});
+							$('#listado-favoritos').css({'overflow':'auto'});
+							
+							$('#miclasificacion').css({'max-height':($(window).height()/2.5)+'px'});
+							$('#miclasificacion').css({'min-height':'70px'});
+							$('#miclasificacion').css({'overflow':'auto'});
+							
+							$('#misalax').css({'max-height':($(window).height()/2.5)+'px'});
+							$('#misalax').css({'min-height':'70px'});
+							$('#misalax').css({'overflow':'auto'});
+					}
+					window.onresize=maximizar;
+					window.onload=maximizar;
+					</script>
+                    </div>
+                        <ul class="list-group" id='listado-favoritos' >
+                            {% for indicador in app.user.favoritos %}
+                            <li class="list-group-item">
+                            	<A id='fav-{{indicador.id}}' class='indicador'
+                                    data-id='{{indicador.id}}'
+                                    data-unidad-medida='{{indicador.unidadMedida}}'>
+                                    {{indicador.nombre}}
+                                </A>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                     </div>
+                  </fieldset>
+                  </div>
+              </div>
+           </div>
+        </form>
+        </div>        
+    	</div>
+        <div class="modal-footer" style="margin-top:-20px">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{{'_cerrar_'|trans}}</button>
+        </div>
+        
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+<!-- Modal Salas-->  
+<div id="myModalSalas" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    	<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button><h4 class="modal-tilte">{{'_salas_'|trans}} </h4></div>
+        <div class="modal-body">
+        <div class="sonata-ba-form">        
+        <form class="form-horizontal" role="form">
+            <div class="tab-content">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                    <a href="#salas_1" data-toggle="tab">
+                    <i class="glyphicon glyphicon-exclamation-sign has-errors hide" data-original-title="" title=""></i>
+                    {{'_salas_'|trans}} ({{salas|length}})
+                    </a>
+                    </li>
+                    <li>
+                    <a href="#salas_2" data-toggle="tab">
+                    <i class="glyphicon glyphicon-exclamation-sign has-errors hide" data-original-title="" title=""></i>
+                    {{'_salas_'|trans}} X Usuario ({{salasXusuario|length}})
+                    </a>
+                    </li>
+                    <li>
+                    <a href="#salas_3" data-toggle="tab">
+                    <i class="glyphicon glyphicon-exclamation-sign has-errors hide" data-original-title="" title=""></i>
+                    {{'_salas_'|trans}} X Grupo ({{salasXgrupo|length}})
+                    </a>
+                    </li>
+                </ul>
+            
+                <div class="tab-content">
+                    <div class="tab-pane  active" id="salas_1">
+                        <fieldset>
+                        <div class="form-group"><br />                            
+                           <div id="clasificacion_" class="col-lg-11" style="margin-left:5%">
+                            <div class='btn-group'>
+                            <form class="bs-example bs-example-form " role="form" >
+                                <div class="input-prepend input-group btn-group" >
+                                    <span class="input-group-addon btn-info"><i class="glyphicon glyphicon-search"></i></span>
+                                    <input type="text" id="search_3" class="form-control" style="height:30px" placeholder="Buscar..." autocomplete="off">
+                                </div>
+                            </form>
+                            <script>
+							$(document).ready(function(){
+															
+								$("#search_3").keyup(function(e) {   
+									valor=this.value.toLowerCase();                                                                
+									$('#misalax').find('li').each(function(i,ele)
+									{			
+										var buscar=" "+$.trim($(ele).text().toLowerCase());																								
+										if(buscar.indexOf(valor)<1)
+											$("#misalax li:nth-child("+(i+1)+")").attr("style","display:none");
+										else 
+											$("#misalax li:nth-child("+(i+1)+")").removeAttr("style");
+										if(valor=="")										
+											$("#misalax li:nth-child("+(i+1)+")").removeAttr("style");
+									});
+								});	
+								
+							});
+							</script>
+                            </div>
+                                <ul class="list-group" id="misalax">                                    
+                                    {% for sala in salas %}
+                                    <li class="list-group-item">
+                                        <A sala-id='{{sala.datos_sala.id}}' class="salas-id" data="{{sala.indicadores_sala|json_encode()}}" id='a_{{sala.datos_sala.id}}' sala-nombre='{{sala.datos_sala.nombre}}' >
+                                            {{sala.datos_sala.nombre}}
+                                        </A>
+                                    </li>
+                                    {% endfor %}
+                                </ul>                                   
+                           </div>
+                        </div>
+                        
+                     </fieldset>
+                  </div>
+                  
+                  <div class="tab-pane" id="salas_2">
+                  <fieldset>
+                  	<div class="form-group col-lg-11" style="margin-left:5%">
+                    <br />
+                    <div class='btn-group'>
+                    <form class="bs-example bs-example-form " role="form" >
+                        <div class="input-prepend input-group btn-group" >
+                            <span class="input-group-addon btn-info"><i class="glyphicon glyphicon-search"></i></span>
+                            <input type="text" id="search_4" class="form-control" style="height:30px" placeholder="Buscar...">
+                        </div>
+                    </form>
+                    <script>
+					$(document).ready(function(){
+													
+						$("#search_4").keyup(function(e) {   
+							valor=this.value.toLowerCase();                                                                
+							$('#salaXus').find('li').each(function(i,ele)
+							{			
+								var buscar=$.trim($(ele).text().toLowerCase());																								
+								if(buscar.indexOf(valor)<1)
+									$("#salaXus li:nth-child("+(i+1)+")").attr("style","display:none");
+								else 
+									$("#salaXus li:nth-child("+(i+1)+")").removeAttr("style");
+								if(valor=="")										
+									$("#salaXus li:nth-child("+(i+1)+")").removeAttr("style");
+							});
+						});	
+					});
+					
+					</script>
+                    </div>
+                        <ul class="list-group" id='misalax2' >
+                            {% for sala in salasXusuario %}
+                            <li class="list-group-item">
+                                <A sala-id='{{sala.datos_sala.id}}' class="salas-id" data="{{sala.indicadores_sala|json_encode()}}" id='b_{{sala.datos_sala.id}}' sala-nombre='{{sala.datos_sala.nombre}}' >
+                                    {{sala.datos_sala.nombre}}
+                                </A>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                     </div>
+                  </fieldset>
+                  </div>
+                  
+                  
+                  <div class="tab-pane" id="salas_3">
+                  <fieldset>
+                  	<div class="form-group col-lg-11" style="margin-left:5%">
+                    <br />
+                    <div class='btn-group'>
+                    <form class="bs-example bs-example-form " role="form" >
+                        <div class="input-prepend input-group btn-group" >
+                            <span class="input-group-addon btn-info"><i class="glyphicon glyphicon-search"></i></span>
+                            <input type="text" id="search_5" class="form-control" style="height:30px" placeholder="Buscar...">
+                        </div>
+                    </form>
+                    <script>
+					$(document).ready(function(){
+													
+						$("#search_5").keyup(function(e) {   
+							valor=this.value.toLowerCase();                                                                
+							$('#salaXgr').find('li').each(function(i,ele)
+							{			
+								var buscar=$.trim($(ele).text().toLowerCase());																								
+								if(buscar.indexOf(valor)<1)
+									$("#salaXgr li:nth-child("+(i+1)+")").attr("style","display:none");
+								else 
+									$("#salaXgr li:nth-child("+(i+1)+")").removeAttr("style");
+								if(valor=="")										
+									$("#salaXgr li:nth-child("+(i+1)+")").removeAttr("style");
+							});
+						});							
+					});
+					
+					</script>
+                    </div>
+                        <ul class="list-group" id='misalax3' >                        	
+                            {% for sala in salasXgrupo %}
+                            <li class="list-group-item">
+                                <A sala-id='{{sala.datos_sala.id}}' class="salas-id" data="{{sala.indicadores_sala|json_encode()}}" id='c_{{sala.datos_sala.id}}' sala-nombre='{{sala.datos_sala.nombre}}' >
+                                    {{sala.datos_sala.nombre}}
+                                </A>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                     </div>
+                  </fieldset>
+                  </div>
+                  
+                  
+                  
+              </div>
+           </div>
+        </form>
+        </div>        
+    	</div>
+        <div class="modal-footer" style="margin-top:-20px">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{{'_cerrar_'|trans}}</button>
+        </div>
+        
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<style>
+#myModalMenu li, #salas_2 li
+{
+	cursor:pointer;
+}
+#myModalMenu li:hover, #salas_2 li:hover
+{
+	cursor:pointer;
+	background-color:#EBEBEB;	
+}
+#myModalMenu a , #salas_2 a
+{
+	text-decoration:none;
+}
+</style>

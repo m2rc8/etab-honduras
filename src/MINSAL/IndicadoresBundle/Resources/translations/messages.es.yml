@@ -305,6 +305,8 @@ _tipo_no_corresponde_con_datos_: 'El tipo seleccionado no es adecuado para el ca
 _sala_: 'Sala'
 _salas_: 'Salas'
 _agregar_area_grafico_: 'Agregar área gráfico'
+_agregar_filtro_: 'Clasificacion'
+_quitar_area_grafico_: 'Quitar área gráfico'
 _search_buscar_: 'Buscar'
 _guardar_sala_: 'Guardar Sala'
 _sala_situacional_: 'Sala situacional'

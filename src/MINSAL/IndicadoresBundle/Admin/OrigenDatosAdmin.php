@@ -28,7 +28,7 @@ class OrigenDatosAdmin extends Admin
                 ->add('periodicidad', null, array('label' => 'Periodicidad de actualización'))                
                 ->add('ventana', null, array('attr' => array('label' => 'Ventana de actualización', 'min'=>'0')))
 				->add('fechaCorte', null, array('attr' => array('label' => 'Dia de Corte', 'min'=>'1', 'max'=>'30')))
-				->add('actualizacionIncremental', null, array('attr' => array('label' => '¿Es actualización incremental?')))
+				->add('actualizacionIncremental', null, array('attr' => array('label' => '¿Es actualización incremental?')))				
                 ->end()
         ;
         if ($esFusionado == false)
@@ -67,7 +67,7 @@ class OrigenDatosAdmin extends Admin
                 ->add('sentenciaSql', null, array('label' => $this->getTranslator()->trans('sentencia_sql'),
                     'template'=>'IndicadoresBundle:CRUD:list_sentencia_sql.html.twig'))
                 ->add('archivoNombre', null, array('label' => $this->getTranslator()->trans('archivo_asociado')))
-				->add('UltimaLectura', null, array('label' => $this->getTranslator()->trans('archivo_UltimaActualizacion')))
+				->add('ultima_lectura', null, array('label' => $this->getTranslator()->trans('archivo_UltimaActualizacion')))
                 ->add('_action', 'actions', array(
                     'actions' => array(
                         'load_data' => array('template' => 'IndicadoresBundle:OrigenDatosAdmin:list__action_load_data.html.twig')
