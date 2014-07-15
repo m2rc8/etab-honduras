@@ -8,7 +8,7 @@ nombre_establecimiento: 'Nombre del establecimento'
 descripcion: 'Descripción'
 codigo: 'Código'
 uso_catalogo: 'Describirá campos de catálogos'
-no_catalogo_y_describir_catalogo: 'Si se utilizará para describir catálogos no puede tener uno asociado'
+no_catalogo_y_describir_catalogo: 'Está marcada la casilla Describirá campos de catálogos, Por lo tanto, No debe de tener Catálogo asociado'
 formula: 'Fórmula'
 Formula: 'Fórmula'
 ayuda_ingreso_formula: 'Para utilizar variables escriba las iniciales de la variable entre llaves. Ej.: {NAI} / {PTDA} * 100 '
@@ -24,8 +24,8 @@ categoria_indicador: 'Categoría de Indicadores'
 categoria: 'Categoría'
 alertas: 'Alertas'
 indicador: 'Indicador'
-limite_inferior: 'Limite inferior'
-limite_superior: 'Limite superior'
+limite_inferior: 'Límite inferior'
+limite_superior: 'Límite superior'
 color: 'Color'
 indicador_alertas-eTAB: 'Alertas de indicador'
 comentario: 'Comentario'
@@ -34,7 +34,8 @@ campos_indicador: Dimensiones del indicador
 nombre_archivo_mapa: Nombre del archivo del mapa
 cerrar_sesion: 'Cerrar Sesión'
 favoritos: 'Favoritos'
-
+'form_campo_obigatorio': '¡Los campos con * son Obligatorios!'
+'clasificacion_tecnica': 'Clasificacion Tecnica'
 
 
 'clasificacion_tecnica-eTAB' : 'Clasificación Técnica'
@@ -56,19 +57,19 @@ significado: Significado
 'usuario_indicadores-eTAB': 'Usuarios de indicadores'
 'nombre_usuario': Usuario
 
-'responsable_datos-eTAB': 'Responsable Datos'
+'responsable_datos-eTAB': 'Responsable de Datos'
 'Responsable Dato List': 'Responsable de Dato - Listado'
 'Responsable Dato Delete': 'Responsable de Dato - Borrar'
 'Responsable Dato Create': 'Responsable de Dato - Crear'
 'Responsable Dato Edit': 'Responsable de Dato - Editar'
 
-'fuente_datos-eTAB' : 'Fuente Datos'
+'fuente_datos-eTAB' : 'Fuente de Datos'
 'Fuente Dato List': 'Fuente de Dato - Listado'
 'Fuente Dato Delete': 'Fuente de Dato - Borrar'
 'Fuente Dato Create': 'Fuente de Dato - Crear'
 'Fuente Dato Edit': 'Fuente de Dato - Editar'
 
-'responsable_indicador-eTAB': 'Responsable Indicador'
+'responsable_indicador-eTAB': 'Responsable de Indicador'
 'Responsable Indicador List': 'Responsable de Indicador - Listado'
 'Responsable Indicador Delete': 'Responsable de Indicador - Borrar'
 'Responsable Indicador Create': 'Responsable de Indicador - Crear'
@@ -358,7 +359,7 @@ indicadorespublicos: 'Indicadores Publicos'
 lbllenguaje: 'Idioma'
 
 _alerta_limite_inferior_: 'Límite inferior'
-_regresar_menu_principal_: Regresar al men� principal
+_regresar_menu_principal_: Regresar al menu principal
 
 Boletin: Boletin
 'Boletin List': 'Lista de Boletines'
@@ -369,3 +370,5 @@ creado: Creado
 actualizado: Actualizado
 
 filtro_fecha : 'Filtro por Fecha'
+formato_Max: 'El maximo permitido es:'
+btn_close: 'Cerrar'

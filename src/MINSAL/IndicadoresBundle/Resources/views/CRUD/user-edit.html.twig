@@ -16,7 +16,7 @@
 	border-radius:2px;
 }
 </style>
-	<script>
+	<script type="text/javascript">
 	$(function() {
 		// se obtiene el uniqid que genera en auto symfony al create
 		var uniqid = $("[class=form-horizontal]").attr("action").split('=');
@@ -48,8 +48,8 @@
 	      	nextText: 'Sig>',
 			monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
 			monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
-			dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-			dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+			dayNames: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+			dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sa'],
 			onSelect: function(dateText, inst){
 				// al seleccionar una fecha en el calendar se posicionan esos valores en los 3 combos
 				// para que el guardado y lectura sea transparente para el symfony 

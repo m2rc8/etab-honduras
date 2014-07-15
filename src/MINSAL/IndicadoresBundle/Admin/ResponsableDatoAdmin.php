@@ -24,9 +24,7 @@ class ResponsableDatoAdmin extends Admin
             ->add('correo', null, array('label'=> $this->getTranslator()->trans('correo_electronico')))
             ->add('telefono', null, array('label'=> $this->getTranslator()->trans('telefono')))
             ->add('cargo', null, array('label'=> $this->getTranslator()->trans('cargo')))
-            ->setHelps(array(
-                'telefono' => $this->getTranslator()->trans('formato_xxxx-xxxx')
-            ))
+           
         ;
     }
 

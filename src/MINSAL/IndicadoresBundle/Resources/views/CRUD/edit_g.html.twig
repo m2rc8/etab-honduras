@@ -43,7 +43,7 @@ file that was distributed with this source code.
 				
 		$("#"+idcontrol+"_salas ui").attr("class","list-group");
 		$("#"+idcontrol+"_salas li").attr("class","list-group-item");
-		
+		$(".popover").attr("style","top:-100%; margin-left:100%; width:600px; display: block;");
     });
 	</script>
 {% endblock %}
@@ -81,11 +81,16 @@ file that was distributed with this source code.
                     <i class="glyphicon glyphicon-ok"></i>
                     {{ 'btn_create'|trans({}, 'SonataAdminBundle') }}
                 </button>
+                <button type="button" class="btn btn-danger" id="btn_close" >
+                    <i class="fa fa-power-off"></i>
+                    {{ 'btn_close'|trans}}
+                </button>
+                
                 <script>
 				
 				var uniqid = $("[class=form-horizontal]").attr("action").split('=');
 				var idcontrol = uniqid[1];
-				
+				hei=screen.height/7.5;
 				$("#"+idcontrol+"_1 .unstyled").attr("class","unstyled span8");
 				$("#field_dialog_"+idcontrol+"_groups .form-group").attr("class","col-lg-12");
 				$("#field_dialog_"+idcontrol+"_groups input[type=text]").attr("class","form-control");
@@ -100,12 +105,14 @@ file that was distributed with this source code.
 				  '<div class="panel-heading">'+
 					$(".editable h4").html()+
 				  '</div>'+
-				  '<div class="panel-body" style=" max-height:250px; overflow:auto; ">'+
+				  '<div class="panel-body" style=" max-height:'+hei+'px; min-heigt:80px; overflow:auto; ">'+
 					ui+
 				  '</div>'+
 				'</div>');		
 				$(".editable").attr("class","");
-				
+				$("#btn_close").click(function(e) {
+                    $(this).closest('.ui-dialog-content').dialog('close'); 
+                });
                 </script>
 				
             {% endif %}

@@ -21,7 +21,19 @@ file that was distributed with this source code.
     <script>
     $(document).ready(function() {
 		$("input[type='text'],input[type='number'],input[type='password'],input[type='email'],input[type='date'],input[type='url'], textarea, select").addClass("form-control");	
+		
+		var che=true;														
+		$('#list_batch_checkbox, input[name=\'all_elements\']').on("click", function () 
+		{
+			$("input[type='checkbox']").attr('checked', che);
+			if(che)
+				$("input[type='checkbox']").addClass("fa fa-check-square-o");
+			else 
+				$("input[type='checkbox']").removeClass("fa fa-check-square-o");
+			che=!che;
+		});
     });
+	
 	</script>
 {% endblock %}
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}{% endblock %}
@@ -86,19 +98,7 @@ file that was distributed with this source code.
                             <div class="form-inline">
                                 {% if not app.request.isXmlHttpRequest %}
                                     {% if admin.hasRoute('batch') and batchactions|length > 0  %}
-                                        {% block batch %}
-                                            <script type="text/javascript">
-                                                {% block batch_javascript %}
-                                                    jQuery(document).ready(function ($) {
-                                                        $('#list_batch_checkbox').click(function () {
-                                                            $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked')).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
-                                                        });
-                                                        $("td.sonata-ba-list-field-batch input[type='checkbox']").change(function () {
-                                                            $(this).parent().parent().toggleClass('sonata-ba-list-row-selected', $(this).is(':checked'));
-                                                        });
-                                                    });
-                                                {% endblock %}
-                                            </script>
+                                        {% block batch %}                                         
 
                                             {% block batch_actions %}
                                                 <label class="checkbox" for="{{ admin.uniqid }}_all_elements">

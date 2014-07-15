@@ -109,7 +109,7 @@ class FichaTecnicaAdmin extends Admin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-                ->add('nombre', null, array('label' => $this->getTranslator()->trans('nombre')))
+                ->add('nombre', null, array('label' => $this->getTranslator()->trans('nombre_indicador')))
                 ->add('clasificacionTecnica', null, array('label' => $this->getTranslator()->trans('clasificacion_tecnica')))
                 ->add('clasificacionPrivacidad', null, array('label' => $this->getTranslator()->trans('_nivel_de_usuario_')))
         ;
@@ -122,6 +122,8 @@ class FichaTecnicaAdmin extends Admin
                 ->add('tema', null, array('label' => $this->getTranslator()->trans('_interpretacion_')))
                 ->add('concepto', null, array('label' => $this->getTranslator()->trans('concepto')))
                 ->add('camposIndicador', null, array('label' => $this->getTranslator()->trans('campos_indicador')))
+				->add('clasificacionTecnica', null, array('label' => $this->getTranslator()->trans('clasificacion_tecnica')))
+				->add('clasificacionPrivacidad', null, array('label' => $this->getTranslator()->trans('_nivel_de_usuario_')))
                 /*->add('_action', 'actions', array(
                 'actions' => array('reporte' => array('template' => 'IndicadoresBundle:FichaTecnicaAdmin:accion_reporte.html.twig'),
                         )

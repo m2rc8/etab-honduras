@@ -35,7 +35,7 @@ class UserAdmin extends BaseAdmin
             ->add('groups')
             ->add('enabled', null, array('editable' => true))
             ->add('locked', null, array('editable' => true))
-            ->add('createdAt')
+            ->add('createdAt')			
         ;
         /*
         if ($this->isGranted('ROLE_ALLOWED_TO_SWITCH')) {
@@ -81,6 +81,9 @@ class UserAdmin extends BaseAdmin
                     ->add('locale', 'locale', array('required' => false))
                     ->add('timezone', 'timezone', array('required' => false))
                     ->add('phone', null, array('required' => false))
+					->setHelps(array(
+						'username' => $this->getTranslator()->trans('formato_Max')." 8"
+					))
                 ->end()
                 /*->with('Social')
                     ->add('facebookUid', null, array('required' => false))

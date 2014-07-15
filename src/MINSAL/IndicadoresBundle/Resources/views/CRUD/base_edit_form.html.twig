@@ -7,17 +7,19 @@
         </div>
     {% else %}
         
+           
         <form class="form-horizontal" role="form"
               action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
               method="POST"
               {% if not admin_pool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
-              >
+              >            
+        
             {% if form.vars.errors|length > 0 %}
                 <div class="sonata-ba-form-error">
                     {{ form_errors(form) }}
                 </div>
             {% endif %}
-        
+        	
             {% block sonata_pre_fieldsets %}
                 <div class="tab-content">
                     <ul class="nav nav-tabs">
@@ -33,6 +35,11 @@
             {% endblock %}
 
                 <div class="tab-content">
+                <div id="" class="alert alert-info alert-dismissable" >
+                    <i class="fa fa-info"></i>
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <b>{{ "form_campo_obigatorio"|trans}} </b> 
+                </div>
                     {% for name, form_group in admin.formgroups %}
                         <div class="tab-pane {% if loop.first %} active{% endif %}" id="{{ admin.uniqid }}_{{ loop.index }}">
                             <fieldset ><br />

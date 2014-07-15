@@ -59,7 +59,6 @@ class BoletinAdmin extends Admin
     {
         $errorElement
         ->with('nombre')
-        	->addConstraint(new \MINSAL\IndicadoresBundle\Validator\OnlyAlphanumeric())
 	        ->assertLength(array('max' => 100))
     	    ->end()
     	;

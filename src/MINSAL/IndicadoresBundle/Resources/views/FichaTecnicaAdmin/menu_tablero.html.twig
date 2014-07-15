@@ -154,7 +154,7 @@
                                     <li class="list-group-item">
                                     	<A id='{{indicador.id}}' class='indicador'
                                             data-id='{{indicador.id}}'
-                                            data-unidad-medida='{{indicador.unidadMedida}}'>
+                                            data-unidad-medida='{{indicador.unidadMedida}}' style="height:100%; width:100%; display:block;">
                                                         {{indicador.nombre}}
                                         </A>
                                     </li>
@@ -209,6 +209,14 @@
 							$('#misalax').css({'max-height':($(window).height()/2.5)+'px'});
 							$('#misalax').css({'min-height':'70px'});
 							$('#misalax').css({'overflow':'auto'});
+							
+							$('#misalax2').css({'max-height':($(window).height()/2.5)+'px'});
+							$('#misalax2').css({'min-height':'70px'});
+							$('#misalax2').css({'overflow':'auto'});
+							
+							$('#misalax3').css({'max-height':($(window).height()/2.5)+'px'});
+							$('#misalax3').css({'min-height':'70px'});
+							$('#misalax3').css({'overflow':'auto'});
 					}
 					window.onresize=maximizar;
 					window.onload=maximizar;
@@ -219,7 +227,7 @@
                             <li class="list-group-item">
                             	<A id='fav-{{indicador.id}}' class='indicador'
                                     data-id='{{indicador.id}}'
-                                    data-unidad-medida='{{indicador.unidadMedida}}'>
+                                    data-unidad-medida='{{indicador.unidadMedida}}' style="height:100%; width:100%; display:block;">
                                     {{indicador.nombre}}
                                 </A>
                             </li>
@@ -309,7 +317,7 @@
                                 <ul class="list-group" id="misalax">                                    
                                     {% for sala in salas %}
                                     <li class="list-group-item">
-                                        <A sala-id='{{sala.datos_sala.id}}' class="salas-id" data="{{sala.indicadores_sala|json_encode()}}" id='a_{{sala.datos_sala.id}}' sala-nombre='{{sala.datos_sala.nombre}}' >
+                                        <A sala-id='{{sala.datos_sala.id}}' class="salas-id" data="{{sala.indicadores_sala|json_encode()}}" id='a_{{sala.datos_sala.id}}' sala-nombre='{{sala.datos_sala.nombre}}' style="height:100%; width:100%; display:block;">
                                             {{sala.datos_sala.nombre}}
                                         </A>
                                     </li>
@@ -337,15 +345,15 @@
 													
 						$("#search_4").keyup(function(e) {   
 							valor=this.value.toLowerCase();                                                                
-							$('#salaXus').find('li').each(function(i,ele)
+							$('#misalax2').find('li').each(function(i,ele)
 							{			
-								var buscar=$.trim($(ele).text().toLowerCase());																								
+								var buscar=" "+$.trim($(ele).text().toLowerCase());																								
 								if(buscar.indexOf(valor)<1)
-									$("#salaXus li:nth-child("+(i+1)+")").attr("style","display:none");
+									$("#misalax2 li:nth-child("+(i+1)+")").attr("style","display:none");
 								else 
-									$("#salaXus li:nth-child("+(i+1)+")").removeAttr("style");
+									$("#misalax2 li:nth-child("+(i+1)+")").removeAttr("style");
 								if(valor=="")										
-									$("#salaXus li:nth-child("+(i+1)+")").removeAttr("style");
+									$("#misalax2 li:nth-child("+(i+1)+")").removeAttr("style");
 							});
 						});	
 					});
@@ -355,7 +363,7 @@
                         <ul class="list-group" id='misalax2' >
                             {% for sala in salasXusuario %}
                             <li class="list-group-item">
-                                <A sala-id='{{sala.datos_sala.id}}' class="salas-id" data="{{sala.indicadores_sala|json_encode()}}" id='b_{{sala.datos_sala.id}}' sala-nombre='{{sala.datos_sala.nombre}}' >
+                                <A sala-id='{{sala.datos_sala.id}}' class="salas-id" data="{{sala.indicadores_sala|json_encode()}}" id='b_{{sala.datos_sala.id}}' sala-nombre='{{sala.datos_sala.nombre}}' style="height:100%; width:100%; display:block;" >
                                     {{sala.datos_sala.nombre}}
                                 </A>
                             </li>
@@ -382,15 +390,15 @@
 													
 						$("#search_5").keyup(function(e) {   
 							valor=this.value.toLowerCase();                                                                
-							$('#salaXgr').find('li').each(function(i,ele)
+							$('#misalax3').find('li').each(function(i,ele)
 							{			
-								var buscar=$.trim($(ele).text().toLowerCase());																								
+								var buscar=" "+$.trim($(ele).text().toLowerCase());																								
 								if(buscar.indexOf(valor)<1)
-									$("#salaXgr li:nth-child("+(i+1)+")").attr("style","display:none");
+									$("#misalax3 li:nth-child("+(i+1)+")").attr("style","display:none");
 								else 
-									$("#salaXgr li:nth-child("+(i+1)+")").removeAttr("style");
+									$("#misalax3 li:nth-child("+(i+1)+")").removeAttr("style");
 								if(valor=="")										
-									$("#salaXgr li:nth-child("+(i+1)+")").removeAttr("style");
+									$("#misalax3 li:nth-child("+(i+1)+")").removeAttr("style");
 							});
 						});							
 					});
@@ -400,7 +408,7 @@
                         <ul class="list-group" id='misalax3' >                        	
                             {% for sala in salasXgrupo %}
                             <li class="list-group-item">
-                                <A sala-id='{{sala.datos_sala.id}}' class="salas-id" data="{{sala.indicadores_sala|json_encode()}}" id='c_{{sala.datos_sala.id}}' sala-nombre='{{sala.datos_sala.nombre}}' >
+                                <A sala-id='{{sala.datos_sala.id}}' class="salas-id" data="{{sala.indicadores_sala|json_encode()}}" id='c_{{sala.datos_sala.id}}' sala-nombre='{{sala.datos_sala.nombre}}' style="height:100%; width:100%; display:block;">
                                     {{sala.datos_sala.nombre}}
                                 </A>
                             </li>
@@ -425,16 +433,16 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <style>
-#myModalMenu li, #salas_2 li
+#myModalMenu li, #myModalSalas li
 {
 	cursor:pointer;
 }
-#myModalMenu li:hover, #salas_2 li:hover
+#myModalMenu li:hover, #myModalSalas li:hover
 {
 	cursor:pointer;
 	background-color:#EBEBEB;	
 }
-#myModalMenu a , #salas_2 a
+#myModalMenu a , #myModalSalas a
 {
 	text-decoration:none;
 }

@@ -71,7 +71,8 @@ function dibujarGraficoPrincipal(zona, tipo)
 			var tra="translate("+($(document).width()-130)+" "+($(document).height()-200)+" ) scale(0.75)";
 			$("#svg-pan-zoom-controls").attr("transform",tra);
 			var hei="height:"+($(document).height()-120)+"px;";
-			$("#"+zona+" .grafico").attr("style",hei);
+			$("#"+zona+" .grafico").attr("style",hei);			
+			$('#' + zona).attr("style","width:100%; height:100%");
 		}
 	}
 }
@@ -190,7 +191,7 @@ function descenderNivelDimension(zona, category)
     var $filtro = $('#' + zona + ' .filtros_dimensiones');
     var separador1 = '',
         separador2 = '';
-
+	$('#' + zona).attr("style","width:100%; height:100%");
     // Construir la cadena de filtros
     var filtros = $filtro.attr('data');
     var filtro_a_agregar = '{"codigo":"' + $dimension.val() + '",' +
@@ -211,12 +212,11 @@ function descenderNivelDimension(zona, category)
 
     //Borrar la opcion del control de dimensiones
     $dimension.remove();
-
+	
     $('#' + zona + ' .filtros_dimensiones A').click(function() 
 	{
         ascenderNivelDimension(zona, $(this).attr('data'));
     });
-	
 	dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
     $('#' + zona).attr('orden', null);
     $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
@@ -228,8 +228,10 @@ function dibujarGrafico(zona, dimension)
 {
     if (dimension === null)
         return;
+		
 	$('#' + zona+' .grafico').animate({height:245 , width: 375});
 	$('#' + zona).animate({height:400 , width: 400});
+	
     var filtro = $('#' + zona + ' .filtros_dimensiones').attr('data');
     //validar las entradas de las fechas
     var patron = /^\d{4}-\d{2}$/;
@@ -772,6 +774,7 @@ function dibujarControles(zona, datos)
 			
   //'<a id="'+zona+'_ultima_lectura" data-placement="bottom" data-toggle="popover" class="btn-small btn alinear btn btn-info dropdown-toggle" href="#" >'+datos.ultima_lectura+'</a>');
   	$('#'+zona +'_refresh').click(function(e) {
+		$("#"+(zona)).addClass('zona_actual');
     	recuperarDimensiones($('#' + zona + ' .titulo_indicador').attr('data-id'),null);
 	});
    
@@ -864,9 +867,9 @@ function dibujarControles(zona, datos)
 			var matrix="matrix(2,0,0,2,"+$(document).width()/3.5+","+$(document).height()/4.5+")";
 			$("#"+zona+" #viewport").attr("transform",matrix);
 
-			var tra="translate("+($(document).width()-130)+" "+($(document).height()-200)+" ) scale(0.75)";
+			var tra="translate("+($(document).width()-93)+" "+($(document).height()-200)+" ) scale(0.75)";
 			$("#svg-pan-zoom-controls").attr("transform",tra);
-			var hei="height:"+($(document).height()-120)+"px;";
+			var hei="height:"+($(document).height()-83)+"px;";
 			$("#"+zona+" .grafico").attr("style",hei);
 		}
 	}

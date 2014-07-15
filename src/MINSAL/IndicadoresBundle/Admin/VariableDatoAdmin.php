@@ -45,6 +45,7 @@ class VariableDatoAdmin extends Admin
                 ->add('nombre', null, array('label' => $this->getTranslator()->trans('nombre')))
                 ->add('iniciales', null, array('label' => $this->getTranslator()->trans('iniciales')))
                 ->add('idResponsableDato', null, array('label' => $this->getTranslator()->trans('responsable_datos')))
+				->add('idFuenteDato', null, array('label' => $this->getTranslator()->trans('fuente_datos')))
         ;
     }
 

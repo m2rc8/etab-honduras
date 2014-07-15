@@ -280,16 +280,16 @@
             </trans-unit>
             <trans-unit id="73">
                 <source>AlphanumericPlus.Message</source>
-                <target>The string contains one or more illegal characters.</target>
+                <target>The string contains one or more illegal characters: : it can only contain letters, numbers or (. , \' ñ) or accented vowels or diaeresis.</target>
             </trans-unit><trans-unit id="74">
                 <source>CustomIp.Message</source>
-                <target>The string contains one or more illegal characters.</target>
+                <target>The string contains one or more illegal characters: it can only contain letters, numbers or (. \/).</target>
             </trans-unit><trans-unit id="75">
                 <source>OnlyAlphanumeric.Message</source>
-                <target>The string contains one or more illegal characters.</target>
+                <target>The string contains one or more illegal characters: it can only contain letters or numbers.</target>
             </trans-unit>  <trans-unit id="76">
                 <source>ValidHTMLcolor.Message</source>
-                <target>The string contains one or more illegal characters.</target>
+                <target>The string contains one or more illegal characters: it can only contain letters or numbers or #.</target>
             </trans-unit><trans-unit id="77">
                 <source>ValidMail.Message</source>
                 <target>The string is not a valid email account.</target>

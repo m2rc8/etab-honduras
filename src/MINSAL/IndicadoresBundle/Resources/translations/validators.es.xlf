@@ -244,16 +244,16 @@
             </trans-unit>
             <trans-unit id="64">
                 <source>AlphanumericPlus.Message</source>
-                <target>La cadena contiene uno o más caracteres no permitidos.</target>
+                <target>La cadena contiene uno o más caracteres no permitidos: sólo puede contener letras, números o (., \ 'ñ) o vocales o diéresis acentuados. .</target>
             </trans-unit><trans-unit id="65">
                 <source>CustomIp.Message</source>
-                <target>La cadena contiene uno o más caracteres no permitidos.</target>
+                <target>La cadena contiene uno o más caracteres no permitidos: sólo puede contener letras, números o (. \ /). .</target>
             </trans-unit><trans-unit id="66">
                 <source>OnlyAlphanumeric.Message</source>
-                <target>La cadena contiene uno o más caracteres no permitidos.</target>
+                <target>La cadena contiene uno o más caracteres no permitidos: sólo puede contener letras o números .</target>
             </trans-unit><trans-unit id="67">
                 <source>ValidHTMLcolor.Message</source>
-                <target>La cadena contiene uno o más caracteres no permitidos.</target>
+                <target>La cadena contiene uno o más caracteres no permitidos: sólo puede contener letras, números o #..</target>
             </trans-unit><trans-unit id="68">
                 <source>ValidMail.Message</source>
                 <target>La cadena no es un correo electrónico válido.</target>

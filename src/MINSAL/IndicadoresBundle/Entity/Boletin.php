@@ -3,6 +3,7 @@
 namespace MINSAL\IndicadoresBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use MINSAL\IndicadoresBundle\Validator as CustomAssert;
 
 /**
  * Boletin
@@ -25,6 +26,7 @@ class Boletin
      * @var string
      *
      * @ORM\Column(name="nombre", type="string", length=100)
+	 * @CustomAssert\OnlyAlphanumeric(message="OnlyAlphanumeric.Message")
      */
     private $nombre;
 

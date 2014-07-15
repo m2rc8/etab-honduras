@@ -8,7 +8,7 @@ nombre_establecimiento: "Establisment's name"
 descripcion: 'Description'
 codigo: 'Code'
 uso_catalogo: "Will describe catalog's fields"
-no_catalogo_y_describir_catalogo: "If used to describe a catalog, it can't be associated to one"
+no_catalogo_y_describir_catalogo: "This box describes the fields marked catalogs, therefore, should not be associated catalog"
 formula: 'Formula'
 ayuda_ingreso_formula: 'To create/name variables use its initials inside brackets e.g.: {NAI} / {PTDA} * 100 '
 vars_sel_diff_vars_formula: 'Variables used in a formula must match those that were already selected'
@@ -33,6 +33,7 @@ campos_indicador: Dimensions for this indicator
 nombre_archivo_mapa: Map's image file name
 cerrar_sesion: 'Logout'
 favoritos: 'Favourites'
+'form_campo_obigatorio': '¡Fields with * are Required!'
 
 'clasificacion_tecnica-eTAB' : 'Technical Classification'
 'Clasificacion Tecnica List': 'Technical Classification - Listing'
@@ -344,7 +345,7 @@ _cambiar_clave_: Change password
 'origen_dato': 'data_source'
 'responsable_datos': 'manager_source'
 'fuente_datos': 'data_source'
-'clasificacion_tecnica': 'classification_technique'
+'clasificacion_tecnica': 'classification technique'
 'Nombre': 'Name'
 'Tema': 'Topic'
 'Concepto': 'Concept'
@@ -379,3 +380,5 @@ creado: Created
 actualizado: Updated
 
 filtro_fecha : 'Filter by Date'
+formato_Max: 'The maximum allowed is:'
+btn_close: 'Close'
