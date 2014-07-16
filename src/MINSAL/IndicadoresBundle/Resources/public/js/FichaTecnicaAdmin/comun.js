@@ -15,7 +15,37 @@ var zona = 1;
 var max_zonas = 3;
 
 var color = d3.scale.category20();    //builtin range of colors
-
+function indicadorclick(id) 
+{
+	mid=$("#"+id).attr("data-id");
+	if($("#"+id).hasClass("active"))
+	{
+		$("#"+mid).removeClass("active");
+		$("#"+mid).removeClass("btn-success");			
+		$("#"+mid).html('<i class="glyphicon glyphicon-plus"></i>');
+		
+		$("#fav-"+mid).removeClass("active");
+		$("#fav-"+mid).removeClass("btn-success");			
+		$("#fav-"+mid).html('<i class="glyphicon glyphicon-plus"></i>');
+			
+		id=$("span[data-id='"+mid+"']").parent('div').parent('div').attr('id');
+		$(".zona_actual").removeClass("zona_actual");
+		$("#"+id).addClass("zona_actual");
+		limpiarZona2(id);
+		$("#"+id).remove();
+	}
+	else
+	{
+		sala_agregar_fila(); 
+		$("#"+mid).addClass("active btn-success");
+		$("#"+mid).html('<i class="glyphicon glyphicon-ok"></i>');
+		
+		$("#fav-"+mid).addClass("active btn-success");
+		$("#fav-"+mid).html('<i class="glyphicon glyphicon-ok"></i>');
+			
+		recuperarDimensiones($("#"+id).attr('data-id'),null);
+	}
+}
 function colores_alertas(zona, indice, i) 
 {
 
@@ -1183,32 +1213,13 @@ function recuperarDimensiones(id_indicador, datos)
 			id=zona_g.split("_");
 			id=parseInt(id[1]);
 
-			if(!document.getElementById("grafico_"+(id+1)))
-			sala_agregar_fila();
+			
 			$("#grafico_"+(id+1)).addClass('zona_actual');
         }
 
     });	
 }
-function sala_agregar_fila() {
-	var cant = $('DIV.area_grafico').length;
-	var html =  '<div class="area_grafico" id="grafico_' + parseInt(cant+1) + '" >' +
-					"<DIV class= 'titulo'><span class='titulo_indicador '></span>"+
-						"<span>("+trans.por+" <span class='dimension' ></span>)</span>"+
-					'</DIV>'+
-					'<h6 class="filtros_dimensiones"></h6>' +
-					'<div class="controles btn-toolbar" style="margin-bottom:30px"></div>' +
-					'<div class="info" ></div>' +
-					'<div class="row_grafico" >' +
-						'<div class="grafico" ></div>' +
-					'</div>' +                        
-				'</DIV>';         
 
-	$('#sala').append(html);        
-	$('DIV.area_grafico').click(function() {
-		zona_elegir(this);
-	});
-}
 function ordenarArreglo(datos, ordenar_por, modo_orden) 
 {
     if (ordenar_por === 'dimension')

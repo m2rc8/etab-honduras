@@ -44,16 +44,99 @@ $(document).ready(function() {
     });
     $( "#sala" ).disableSelection();
        
-    $('A.indicador').click(function() {
-		if($("#"+this.id).attr("class")=="indicador list-group-item active")
-			$("#"+this.id).removeClass("list-group-item active");
+    $('.indicador').click(function() {
+		mid=$(this).attr("data-id");
+		if($(this).hasClass("active"))
+		{
+			$("#"+mid).removeClass("active");
+			$("#"+mid).removeClass("btn-success");			
+			$("#"+mid).html('<i class="glyphicon glyphicon-plus"></i>');
+			
+			$("#fav-"+mid).removeClass("active");
+			$("#fav-"+mid).removeClass("btn-success");			
+			$("#fav-"+mid).html('<i class="glyphicon glyphicon-plus"></i>');
+			
+			id=$("span[data-id='"+$(this).attr('data-id')+"']").parent('div').parent('div').attr('id');
+			$(".zona_actual").removeClass("zona_actual");
+			$("#"+id).addClass("zona_actual");
+			limpiarZona2(id);
+			$("#"+id).remove();
+		}
 		else
 		{
-			$("#"+this.id).addClass("list-group-item active");
+			sala_agregar_fila(); 
+			
+			$("#"+mid).addClass("active btn-success");
+			$("#"+mid).html('<i class="glyphicon glyphicon-ok"></i>');
+			
+			$("#fav-"+mid).addClass("active btn-success");
+			$("#fav-"+mid).html('<i class="glyphicon glyphicon-ok"></i>');
+			
 			dibujarIndicador($(this).attr('data-id'));
 		}
     });
-
+	$('.salas-id').click(function() {
+		titulo=$(this).attr('sala-nombre');
+		sala=$(this).attr('sala-id');
+		var id=this.id.split("_");
+		id=id[1];
+		if($("#a_"+id).hasClass("active")||$("#b_"+id).hasClass("active")||$("#c_"+id).hasClass("active"))
+		{  
+			$("#a_"+id).removeClass("active");
+			$("#b_"+id).removeClass("active");
+			$("#c_"+id).removeClass("active");
+			
+			$("#a_"+id).removeClass("btn-success");	
+			$("#b_"+id).removeClass("btn-success");	
+			$("#c_"+id).removeClass("btn-success");		
+				
+			$("#a_"+id).html('<i class="glyphicon glyphicon-plus"></i>');
+			$("#b_"+id).html('<i class="glyphicon glyphicon-plus"></i>');
+			$("#c_"+id).html('<i class="glyphicon glyphicon-plus"></i>');
+			$(".area_grafico").remove();
+			$('#nombre_sala2').html('');
+		}
+		else
+		{
+			$('.salas-id').removeClass("btn-success");
+			$('.salas-id').removeClass("active");
+			$('.salas-id').html('<i class="glyphicon glyphicon-plus"></i>');
+			
+			$("#a_"+id).addClass("active btn-success");
+			$("#b_"+id).addClass("active btn-success");
+			$("#c_"+id).addClass("active btn-success");
+			
+			$("#a_"+id).html('<i class="glyphicon glyphicon-ok"></i>');
+			$("#b_"+id).html('<i class="glyphicon glyphicon-ok"></i>');
+			$("#c_"+id).html('<i class="glyphicon glyphicon-ok"></i>');
+			
+			$('#nombre_sala').attr('id-sala', sala);
+			$('#nombre_sala').val(titulo);
+			$('#nombre_sala2').html('<h4>Nombre de sala: ' + titulo + '</h4>');
+	
+			var graficos = JSON.parse($(this).attr('data'));
+			var max_id = 0;
+			for (i = 0; i < graficos.length; i++) {
+				if (parseInt(graficos[i].posicion) > max_id)
+					max_id = graficos[i].posicion;
+			}
+	
+			$('#sala').html('');
+			
+			var filas = Math.ceil(max_id / 3);
+			for (i = 1; i <= max_id; i++) {
+				sala_agregar_fila();
+			}
+			
+			for (i = 0; i < graficos.length; i++) 
+			{
+				$('DIV.zona_actual').removeClass('zona_actual');
+				$("#sala .area_grafico:nth-child("+(i+1)+")").addClass('zona_actual');
+	
+				recuperarDimensiones(graficos[i].idIndicador, graficos[i]);
+			}
+		}
+    });   
     function dibujarIndicador(id_indicador) {
         recuperarDimensiones(id_indicador, null);
     }
@@ -84,8 +167,8 @@ $(document).ready(function() {
     }
 
     function sala_agregar_fila() {
-        var cant = $('DIV.area_grafico').length;
-        var html =  '<div class="area_grafico" id="grafico_' + parseInt(cant+1) + '" >' +
+        var cant = 1  +  Math . floor ( Math . random ()  *  999999999 );
+        var html =  '<div class="area_grafico zona_actual" data-id="'+parseInt(cant+1)+'" id="grafico_' + parseInt(cant+1) + '" >' +
                         "<DIV class= 'titulo'><span class='titulo_indicador '></span>"+
                             "<span>("+trans.por+" <span class='dimension' ></span>)</span>"+
                         '</DIV>'+
@@ -159,50 +242,5 @@ $(document).ready(function() {
             }
 
         });
-    });
-
-    $('.salas-id').click(function() {
-		var id=this.id.split("_");
-		id=id[1];
-		if($("#a_"+id).attr("class")=="salas-id list-group-item active"||
-		   $("#b_"+id).attr("class")=="salas-id list-group-item active"||
-		   $("#c_"+id).attr("class")=="salas-id list-group-item active")
-		{  
-			$("#a_"+id).removeClass("list-group-item active");
-			$("#b_"+id).removeClass("list-group-item active");
-			$("#c_"+id).removeClass("list-group-item active");
-		}
-		else
-		{
-			$("#a_"+id).addClass("list-group-item active");
-			$("#b_"+id).addClass("list-group-item active");
-			$("#c_"+id).addClass("list-group-item active");
-			
-			$('#nombre_sala').attr('id-sala', $(this).attr('sala-id'));
-			$('#nombre_sala').val($(this).attr('sala-nombre'));
-			$('#nombre_sala2').html('<h4>Nombre de sala: ' + $(this).attr('sala-nombre') + '</h4>');
-	
-			var graficos = JSON.parse($(this).attr('data'));
-			var max_id = 0;
-			for (i = 0; i < graficos.length; i++) {
-				if (parseInt(graficos[i].posicion) > max_id)
-					max_id = graficos[i].posicion;
-			}
-	
-			$('#sala').html('');
-			
-			var filas = Math.ceil(max_id / 3);
-			for (i = 1; i <= max_id; i++) {
-				sala_agregar_fila();
-			}
-			
-			for (i = 0; i < graficos.length; i++) {
-				$('DIV.zona_actual').removeClass('zona_actual');
-				$('#grafico_' + graficos[i].posicion).addClass('zona_actual');
-	
-				recuperarDimensiones(graficos[i].idIndicador, graficos[i]);
-			}
-		}
-    });   
-    
+    });       
 });
