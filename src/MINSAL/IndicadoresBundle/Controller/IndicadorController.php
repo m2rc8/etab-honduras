@@ -535,7 +535,50 @@ class IndicadorController extends Controller
 
         return new Response(json_encode($resp));
     }
-    
+    /**
+     * @Route("/sala/eliminar", name="sala_eliminar", options={"expose"=true})
+     */
+    public function eliminaSala()
+    {
+		$lasala=new GrupoIndicadores();
+		$em = $this->getDoctrine()->getManager();
+        $req = $this->getRequest();
+        $resp = array();
+		$em->getConnection()->beginTransaction();
+		$sala = json_decode($req->get('datos'));
+		try {
+			if ($sala->id != '') 
+			{
+				$grupoIndicadores = $em->find('IndicadoresBundle:GrupoIndicadores', $sala->id);
+				//Borrar los indicadores antiguos de la sala				
+				foreach ($grupoIndicadores->getIndicadores() as $ind)
+					$em->remove($ind);							
+					
+				foreach ($grupoIndicadores->getUsuarios() as $ind)
+					$em->remove($ind);
+				
+				$lasala=$em->find('IndicadoresBundle:GrupoIndicadores', $sala->id);
+				$em->remove($lasala);
+					
+				$em->flush();								
+				
+				$resp['estado'] = 'ok';
+				$em->getConnection()->commit();
+			} 
+			else 
+			{
+				$resp['estado'] = 'error';
+			}
+		} 
+		catch (Exception $e) 
+		{
+            $em->getConnection()->rollback();
+            $em->close();
+            $resp['estado'] = 'error';
+            throw $e;
+        }
+		return new Response(json_encode($resp));
+	}
     /**
      * @Route("/usuario/{id}/sala/{id_sala}/{accion}", name="usuario_asignar_sala", options={"expose"=true})
      * @ParamConverter("sala", class="IndicadoresBundle:GrupoIndicadores", options={"id" = "id_sala"})

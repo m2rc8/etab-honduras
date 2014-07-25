@@ -15,6 +15,11 @@ file that was distributed with this source code.
     <script>
     $(document).ready(function() {
     	$(".pagination ul").attr("class","pagination");
+		$(".view_link").addClass("btn-info");
+		$(".view_link").removeClass("view_link");
+		
+		$(".sonata-action-element").addClass("btn-primary");
+		$(".sonata-action-element").removeClass("sonata-action-element");
 		
 		$(".table-responsive .btn-group a").click(function(e) {
 			doi=this;

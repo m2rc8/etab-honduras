@@ -13,7 +13,7 @@ file that was distributed with this source code.
 
 {% block actions %}
     <div class="sonata-actions btn-group">
-        {% include 'SonataAdminBundle:Core:create_button.html.twig' %}
+        {% include 'IndicadoresBundle:Core:create_button.html.twig' %}
     </div>
 {% endblock %}
 {% block javascripts %}
@@ -21,7 +21,7 @@ file that was distributed with this source code.
     <script>
     $(document).ready(function() {
 		$("input[type='text'],input[type='number'],input[type='password'],input[type='email'],input[type='date'],input[type='url'], textarea, select").addClass("form-control");	
-		
+				
 		var che=true;														
 		$('#list_batch_checkbox, input[name=\'all_elements\']').on("click", function () 
 		{
@@ -48,7 +48,7 @@ file that was distributed with this source code.
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-condensed">
                 {% block table_header %}
-                    <thead>
+                    <thead >
                         <tr class="sonata-ba-list-field-header">
                             {% for field_description in admin.list.elements %}
                                 {% if admin.hasRoute('batch') and field_description.getOption('code') == '_batch' and batchactions|length > 0 %}
@@ -178,9 +178,15 @@ file that was distributed with this source code.
                     {% set foo = form.children['_page'].setRendered() %}
                     {{ form_rest(form) }}
 
-                    <input type="submit" class="btn btn-primary" value="{{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}" />
+                    <button type="submit" class="btn btn-primary" >
+                    <i class="glyphicon glyphicon-filter"></i> 
+                    {{ 'btn_filter'|trans({}, 'SonataAdminBundle') }}
+                    </button>
+                
 
-                    <a class="btn btn-info" href="{{ admin.generateUrl('list', {filters: 'reset'}) }}">{{ 'link_reset_filter'|trans({}, 'SonataAdminBundle') }}</a>
+                    <a class="btn btn-info" href="{{ admin.generateUrl('list', {filters: 'reset'}) }}">
+                    <i class="glyphicon glyphicon-retweet"></i> 
+                    {{ 'link_reset_filter'|trans({}, 'SonataAdminBundle') }}</a>
                     </div>
                 </div>
 

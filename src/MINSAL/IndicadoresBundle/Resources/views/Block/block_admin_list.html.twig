@@ -52,12 +52,12 @@ file that was distributed with this source code.
                                 <div class="small-box-footer">
                                     {% if admin.hasroute('create') and admin.isGranted('CREATE') %}
                                         {% if admin.subClasses is empty %}
-                                            <a class="btn" href="{{ admin.generateUrl('create')}}" title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
+                                            <a class="btn btn-default" href="{{ admin.generateUrl('create')}}" title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
                                                 <i class="ion ion-plus"></i>
                                                 
                                             </a>
                                         {% else %}
-                                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
+                                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" title="{% trans from 'SonataAdminBundle' %}link_add{% endtrans %}">
                                                 <i class="ion-plus"></i>
                                                 
                                                 <span class="caret"></span>
@@ -72,7 +72,7 @@ file that was distributed with this source code.
                                         {% endif %}
                                     {% endif %}
                                     {% if admin.hasroute('list') and admin.isGranted('LIST') %}
-                                        <a class="btn" href="{{ admin.generateUrl('list')}}" title="{% trans from 'SonataAdminBundle' %}link_list{% endtrans -%}">
+                                        <a class="btn btn-default" href="{{ admin.generateUrl('list')}}" title="{% trans from 'SonataAdminBundle' %}link_list{% endtrans -%}">
                                             <i class="ion ion-navicon"></i>
                                             
                                         </a>

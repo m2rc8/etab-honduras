@@ -16,6 +16,9 @@ file that was distributed with this source code.
     $(document).ready(function() {
 		var uniqid = $("[class=form-horizontal]").attr("action").split('=');
 		var idcontrol = uniqid[1];
+				
+		$(".sonata-ba-action").addClass("btn-success");
+		$(".sonata-ba-action").removeClass("sonata-ba-action");
 		
     	$(".form-group").attr("class","form-group");
 		$(".unstyled").attr("class","unstyled col-md-12");
@@ -77,7 +80,7 @@ file that was distributed with this source code.
                     {{ 'btn_update'|trans({}, 'SonataAdminBundle') }}
                 </button>
             {% else %}
-                <button type="submit" class="btn" name="btn_create" >
+                <button type="submit" class="btn btn-success" name="btn_create" >
                     <i class="glyphicon glyphicon-ok"></i>
                     {{ 'btn_create'|trans({}, 'SonataAdminBundle') }}
                 </button>
@@ -90,7 +93,7 @@ file that was distributed with this source code.
 				
 				var uniqid = $("[class=form-horizontal]").attr("action").split('=');
 				var idcontrol = uniqid[1];
-				hei=screen.height/7.5;
+				hei=screen.height/5;
 				$("#"+idcontrol+"_1 .unstyled").attr("class","unstyled span8");
 				$("#field_dialog_"+idcontrol+"_groups .form-group").attr("class","col-lg-12");
 				$("#field_dialog_"+idcontrol+"_groups input[type=text]").attr("class","form-control");
@@ -125,7 +128,7 @@ file that was distributed with this source code.
                     <i class="glyphicon glyphicon-edit"></i>
                     {{ 'btn_update_and_edit_again'|trans({}, 'SonataAdminBundle') }}
                 </button>
-                <input type="submit" class="btn" name="btn_update_and_list"
+                <input type="submit" class="btn btn-info" name="btn_update_and_list"
                     value="{{ 'btn_update_and_return_to_list'|trans({}, 'SonataAdminBundle') }}"
                 />
 
@@ -141,10 +144,10 @@ file that was distributed with this source code.
                     <i class="glyphicon glyphicon-ok"></i>
                     {{ 'btn_create_and_edit_again'|trans({}, 'SonataAdminBundle') }}
                 </button>
-                <input type="submit" class="btn" name="btn_create_and_list"
+                <input type="submit" class="btn btn-info" name="btn_create_and_list"
                        value="{{ 'btn_create_and_return_to_list'|trans({}, 'SonataAdminBundle') }}"
                        />
-                <input class="btn" type="submit" name="btn_create_and_create"
+                <input class="btn btn-success" type="submit" name="btn_create_and_create"
                     value="{{ 'btn_create_and_create_a_new_one'|trans({}, 'SonataAdminBundle') }}"
                 />
             {% endif %}

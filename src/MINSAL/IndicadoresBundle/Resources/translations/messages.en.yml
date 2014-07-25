@@ -305,10 +305,12 @@ _Titulo_indicador: 'Add Indicador'
 _quitar_area_grafico_: 'Remove graphic Area'
 _search_buscar_: 'Search'
 _guardar_sala_: 'Save room'
+_cerrar_sala_: 'Close room'
 _sala_situacional_: 'Situation Room'
 _nombre_sala_: Room name
 _cerrar_: Close
 _guardar_cambios_: 'Save Changes'
+_eliminar_cambios_: 'Delete Room'
 _quitar_indicador_: 'Remove indicator'
 _datos_geograficos_: 'Geodata'
 _escala_ : 'Scale'
@@ -383,3 +385,4 @@ actualizado: Updated
 filtro_fecha : 'Filter by Date'
 formato_Max: 'The maximum allowed is:'
 btn_close: 'Close'
+Cargando: 'Loading ...'

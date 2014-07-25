@@ -1,9 +1,12 @@
-{% extends base_template %}
+{% extends 'IndicadoresBundle::standard_layout_public.html.twig' %}
 
 {% block content %}
-    <div class="connection">
-        <form action="{{ path("sonata_user_admin_security_check") }}" method="post">
-
+<p>&nbsp;</p>
+<div class="connection" style=" margin-left:35%; width:26%;">
+    <form action="{{ path("sonata_user_admin_security_check") }}" method="post">  
+    <div class="panel panel-default">
+      <div class="panel-heading"><h4>Login</h4></div>
+      <div class="panel-body">
             {% if error %}
                 <div class="alert alert-danger">{{ error|trans({}, 'SonataUserBundle') }}</div>
             {% endif %}
@@ -30,17 +33,21 @@
                         <input type="password" id="password" name="_password" class="form-control" style="height:45px"/>
                     </div>
                 </div>  
-            <div class="form-group">
-                <label for="remember_me">
-                    <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-                    {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}
-                </label>
-            </div>
-			</div>
-            <div class="panel-footer"> 
-                <input type="submit" class="btn btn-primary" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" />
-            </div>
-            
-        </form>
+                <div class="form-group">
+                    <label for="remember_me">
+                        <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+                        {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}
+                    </label>
+                </div>
+                <div>
+                </div>
+             </div>
+        	
+      </div>
+      <div class="panel-footer">
+      <input type="submit" class="btn btn-primary" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" />
+      </div>
+    </div>
+    </form>
     </div>
 {% endblock content %}

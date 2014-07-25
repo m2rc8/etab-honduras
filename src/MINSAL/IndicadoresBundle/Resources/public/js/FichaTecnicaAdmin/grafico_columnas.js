@@ -2,10 +2,9 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 
     this.tipo = 'columnas';
     var margin = {top: 0, right: 5, bottom: 25, left: 40},
-    width = 390 - margin.left - margin.right,
-            height = 250 - margin.top - margin.bottom,
-            barPadding = 1
-            ;
+    width  = 390 - margin.left - margin.right,
+    height = 250 - margin.top - margin.bottom,
+    barPadding = 1;
 
     var currentDatasetChart = datos;
     var zona = ubicacion;
@@ -44,6 +43,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
             var svg = d3.select("#" + ubicacion + ' .grafico')
                 .append("svg")
                 .attr("viewBox", '-20 0 440 310')
+				.attr("style", 'width:96%')
                 .attr("preserveAspectRatio", 'none')
                 .attr("id", "ChartPlot")
                 ;

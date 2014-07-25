@@ -92,7 +92,7 @@ file that was distributed with this source code.
             {% endif%}#}
         </title>
     </head>
-    <body class="sonata-bc {% if _side_menu is empty %}sonata-ba-no-side-menu{% endif %}">
+    <body class="sonata-bc {% if _side_menu is empty %}sonata-ba-no-side-menu{% endif %}" style="margin-top:50px;">
         {# initialize block value #}
 <!--{% block logo %}
     {# <a href="{{ url('sonata_admin_dashboard') }}" class="navbar-brand"> #}
@@ -209,96 +209,19 @@ file that was distributed with this source code.
   </div><!-- /.container-fluid -->
 </nav>
         <!-- fin menu -->
-        <div class="container-fluid" >
-            {% block notice %}
-                {% for notice_level in ['success','error','info', 'warning'] %}
-                    {% set session_var = 'sonata_flash_' ~ notice_level %}
-                    {% for flash in app.session.flashbag.get(session_var) %}
-                        <div class="alert {{ 'alert-' ~ notice_level }}">
-                            {{ flash|trans([], 'SonataAdminBundle') }}
-                        </div>
-                    {% endfor %}
-                {% endfor %}
-                {% for flashMessage in app.session.flashbag.get('notice') %}
-                    <div class="alert alert-success">
-                        {{ flashMessage|trans }}
-                    </div>
-                {% endfor %}
-            {% endblock %}
-            <div class="row" id='tool_actions'>
-                <div class="col-md-6">
-                    {% if _breadcrumb is not empty or action is defined %}
-                        <ol class="breadcrumb">.
-                            {% if _breadcrumb is empty %}
-                                {% if action is defined %}
-                                    {% for menu in admin.breadcrumbs(action) %}
-                                        {% if not loop.last  %}
-                                            {% if menu.label=='Dashboard' or menu.label=='⌂' %}
-                                                <li><a href="{{ menu.uri }}"><i class="glyphicon glyphicon-home"></i></a><span class="divider">/</span></li>
-                                            {% else %}
-                                                <li><a href="{{ menu.uri }}">{{ menu.label|trans }}</a><span class="divider">/</span></li>
-                                            {% endif %}
-                                        {% else %}
-                                            <li class="active">{{ menu.label }}</li>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endif %}
-                            {% else %}
-                                {{ _breadcrumb|raw }}
-                            {% endif %}
-                        </ol>
-                    {% endif %}
-                </div>
-
-           	 	<div style="float: right">
-                    {%block actions %}{% endblock %}
-                </div>
-            </div>
-			
-            <div class="form-group">
-                {% if _side_menu is not empty %}
-                    <div class="sidebar col-md-2">
-                        <div class="well sonata-ba-side-menu" style="padding: 8px 0;">{{ _side_menu|raw }}</div>
-                    </div>
-                {% endif %}
+                
 
     
-                <div class="content {{ _side_menu is not empty ? ' col-md-10' : 'col-md-12' }}">
+           
                 <div id="div_carga" class='affix'>
                     <div id="cargador"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></div>
                 </div>
-                    {% block sonata_admin_content %}
-
-                        {% if _preview is not empty %}
-                            <div class="sonata-ba-preview">{{ _preview|raw }}</div>
-                        {% endif %}
-
-                        {% if _content is not empty %}
-                            <div class="sonata-ba-content">{{ _content|raw }}</div>
-                        {% endif %}
-
-                        {% if _show is not empty %}
-                            <div class="sonata-ba-show">{{ _show|raw }}</div>
-                        {% endif %}
-
-                        {% if _form is not empty %}
-                            <div class="sonata-ba-form">{{ _form|raw }}</div>
-                        {% endif %}
-
-                        {% if _list_table is not empty or _list_filters is not empty %}
-                            <div class="">
-                                <div class="col-md-10">
-                                    {{ _list_table|raw }}
-                                </div>
-                                <div class="col-md-2">
-                                    {{ _list_filters|raw }}
-                                </div>
-                            </div>
-                        {% endif %}
-
-                    {% endblock %}
-                </div>
-            </div>
+                {% block sonata_admin_content %}
+                    {% if _content is not empty %}
+                        {{ _content|raw }}
+                    {% endif %}
+                {% endblock %}
+           
 
             {% block footer %}
                 <div class="container-fluid"><hr>
@@ -309,6 +232,6 @@ file that was distributed with this source code.
                     </div>        
                 </div>
             {% endblock %}
-        </div>
+       
     </body>
 </html>
