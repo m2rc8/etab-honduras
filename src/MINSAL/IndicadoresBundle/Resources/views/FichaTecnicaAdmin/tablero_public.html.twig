@@ -60,10 +60,10 @@
     </div>
     <div class="collapse navbar-collapse" id="collapseTwo">
     	<ul class="nav navbar-nav">
-        <a class="btn panel-group-toggle btn-info  navbar-btn" data-toggle="collapse"  href="#collapseOne" title="{{'_ocultar/mostrar_menu_principal_'|trans}}">
+        <li><a class="btn panel-group-toggle" data-toggle="collapse"  href="#collapseOne" title="{{'_ocultar/mostrar_menu_principal_'|trans}}">
         <i class="glyphicon glyphicon-resize-full"></i>
-        </a>
-        
+        </a></li>
+        <li>
         <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -80,12 +80,11 @@
             </ul>  
           </li>              
         </ul>
-        
-        
+        </li>
+        <li>
         {% if admin_pool is defined %}
 
             {# MENU PRINCIPAL #}
-            <div  >
                 <ul class="nav">
                     {% block top_bar_before_nav %} {% endblock %}
                     {% block sonata_top_bar_nav %}
@@ -93,8 +92,8 @@
                     {% endblock %}
                     {% block top_bar_after_nav %} {% endblock %}
                 </ul>
-            </div>
         {% endif %}
+        </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
