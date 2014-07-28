@@ -293,17 +293,17 @@ function dibujarGrafico(zona, dimension)
 	    		mensajerango += " [" + trans.de + " 01/"+("0" + val.min_mes).slice(-2)+"/"+val.min_anio;
 	    	
 	    	val = resp.datos[resp.datos.length-1];
-	    	if (val.min_mes == undefined)
+	    	if (typeof val.min_mes == 'undefined')
 	    		mensajerango += " "+trans.a+" "+val.max_anio+"] ";
 	    	else
 	    		mensajerango += " "+trans.a+" 01/"+("0" + val.max_mes).slice(-2)+"/"+val.max_anio+"] ";
 	    	
-	    	$('#' + zona + ' .titulo_indicador').html($('#' + zona + ' .titulo_indicador').attr('nombre') + mensajerango);
-                	    	
+	    	$('#' + zona + ' .titulo_indicador').html($('#' + zona + ' .titulo_indicador').attr('nombre') );
+			$('#' + zona + ' .panel-footer').html(mensajerango);                	    	
 	    	$('#'+zona).attr("rangoanio" , resp.datos[0].min_anio+":"+resp.datos[resp.datos.length-1].max_anio);
 	    	//$('#fechainicio'+zona).datepicker("option", { yearRange : $('#'+zona).attr("rangoanio") , disabled : false});
 	        //$('#fechafin'+zona).datepicker("option",  { yearRange : $('#'+zona).attr("rangoanio") , disabled : false});
-                $('label[for='+$('#filtro_por_fecha'+zona).attr("id")+']').text(trans.filtro_fecha+" - Rango disponible("+$('#'+zona).attr("rangoanio")+")");
+            $('label[for='+$('#filtro_por_fecha'+zona).attr("id")+']').text(trans.filtro_fecha+" - Rango disponible("+$('#'+zona).attr("rangoanio")+")");
                 //$('#filtro_por_fecha'+zona).text(trans.filtro_fecha+" - Rango disponible("+$('#'+zona).attr("rangoanio")+")");
 	        $('#filtro_por_fecha'+zona).removeAttr("disabled");
 	    }
@@ -371,7 +371,7 @@ function aplicarFiltro(zona)
     var elementos = '';
     var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
 
-    $('#' + zona + ' .capa_dimension_valores input:checked').each(function() 
+    $('#' + zona + ' .panel-body input:checked').each(function() 
 	{
         elementos += $(this).val() + '&';
     });
@@ -385,7 +385,6 @@ function aplicarFiltro(zona)
 			hasta=$('#' + zona + ' .fecha_hasta').val();
 		}
 	}*/
-	
     $.post(Routing.generate('indicador_datos_filtrar'),
     {
 		datos: datasetPrincipal, desde: desde, hasta: hasta, elementos: elementos
@@ -403,20 +402,28 @@ function controles_filtros(zona)
 {
     var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
 
-    var lista_datos_dimension = '<a class="filtro_elementos"><input type="button" class="btn btn-info aplicar_filtro" data-id="'+zona+'" value="' + trans.filtrar + '"/>' +
-            '&nbsp;<input type="button" class="btn btn-danger quitar_filtro" value="' + trans.quitar_filtro + '" data-id="'+zona+'"/></a>';
-    
-	lista_datos_dimension += '<table class="table table-bordered table-striped capa_dimension_valores" style="margin-top:10px"  ><tr><td><label class="col-lg-12">' + trans.filtrar_por_elemento + '</label></td></tr>';
+    var lista_datos_dimension1 = '<div class=""><a class="filtro_elementos"><input type="button" class="btn btn-info aplicar_filtro" data-id="'+zona+'" value="' + trans.filtrar + '" />' +
+            '&nbsp;<input type="button" class="btn btn-danger quitar_filtro" value="' + trans.quitar_filtro + '" data-id="'+zona+'"/></a></div>';
+			
+	lista_datos_dimension = '<ul class="list-group">';
     
 	$.each(datasetPrincipal, function(i, dato) 
 	{
-        lista_datos_dimension += '<tr><td><label class="forcheckbox" for="categorias_a_mostrar' + zona + i + '" ><input type="checkbox" id="categorias_a_mostrar' + zona + i + '" ' +
-                'name="categorias_a_mostrar[]" value="' + dato.category + '" /> ' + dato.category + '</label></td></tr>';
+        lista_datos_dimension += '<li class="list-group-item"><label class="forcheckbox" for="categorias_a_mostrar' + zona + i + '" ><input type="checkbox" id="categorias_a_mostrar' + zona + i + '" ' +
+                'name="categorias_a_mostrar[]" value="' + dato.category + '" /> ' + dato.category + '</label></li>';
     });
 	
-    lista_datos_dimension += '</table>';
+    lista_datos_dimension += '</ul>';
+	lista_group=lista_datos_dimension1+'<div class=""><hr><div class="col-lg-12">'+
+    '<div class="panel panel-default">'+
+        '<div class="panel-heading"><label>' + trans.filtrar_por_elemento + '</label></div>'+
+        '<div class="panel-body" style=" max-height:250px; overflow:auto; ">'+
+		lista_datos_dimension+
+        '</div>'+
+    '</div>'+
+'</div></div>';
 
-    $('#' + zona + ' .lista_datos_dimension').html(lista_datos_dimension);       
+    $('#' + zona + ' .lista_datos_dimension').html(lista_group);       
     
     // Corrige un error de bootstrap para permitir usar controles dentro de un dropdown
     $('.dropdown-menu SELECT, .dropdown-menu LABEL, .dropdown-menu INPUT').on("click",function(event) 
@@ -432,13 +439,15 @@ function controles_filtros(zona)
     
     $('#' + zona + ' .aplicar_filtro').on('click',function(e)
 	{
+		zona=$(this).attr("data-id");
         aplicarFiltro(zona);
     });
     $('#' + zona + ' .quitar_filtro').on('click',function(e)
 	{
+		zona=$(this).attr("data-id");
         $('#' + zona + ' .filtro_desde').val('');
         $('#' + zona + ' .filtro_hasta').val('');
-        $('#' + zona + ' .capa_dimension_valores input:checked').each(function() 
+        $('#' + zona + ' .panel-body input:checked').each(function() 
 		{
             $(this).attr('checked', false);
         });
@@ -446,9 +455,9 @@ function controles_filtros(zona)
         $('#' + zona).attr('datasetPrincipal', $('#' + zona).attr('datasetPrincipal_bk'))
         dibujarGraficoPrincipal(zona, $('#' + zona + ' .tipo_grafico_principal').val());
     });
-    if ($('#' + zona + ' .titulo_indicador').attr('filtro-elementos') !== undefined
-            && $('#' + zona + ' .titulo_indicador').attr('filtro-elementos') !== '') 
+    if (typeof $('#'+zona+' .titulo_indicador').attr('filtro-elementos')!=='undefined'&&$('#'+zona+' .titulo_indicador').attr('filtro-elementos') !== '') 
 	{
+		
         var filtroElementos = $('#' + zona + ' .titulo_indicador').attr('filtro-elementos').split(',');
         for (var j = 0; j < filtroElementos.length; j++) 
 		{
@@ -684,14 +693,14 @@ function dibujarControles(zona, datos)
 			});
 			combo_dimensiones += "</SELECT>";	
 	
-	var filtro_fecha = '<input type="checkbox" id="filtro_por_fecha'+zona+'" />'+
+	var filtro_fecha = '<input type="checkbox" class="filtro_por_fecha" id="filtro_por_fecha'+zona+'" data-id="'+zona+'" />'+
 					   '<label for="filtro_por_fecha'+zona+'">' + trans.filtro_fecha +'</label><br/>'+
 					   '<div id="div_rango_fechas'+zona+'" class="form-horizontal" style="display:none">'+
 						   '<label class="control-label required col-lg-2"> '+ trans.desde +" </label>"+
 						   "<INPUT class='valores_filtro fecha_desde form-control' id='fechainicio"+zona+"' type='month' style='width:220px;' />"+
 						   "<label class='control-label required col-lg-2'>" + trans.hasta +"</label>"+ 
 						   "<INPUT class='valores_filtro fecha_hasta form-control' id='fechafin"+zona+"' type='month'  style='width:220px;'/>" + 
-						   '<input type="button" class="btn btn-success" data-id="'+zona+'" id="btn_filtrar_fecha'+zona+'" value="' + trans.filtro_fecha + ' "/>'+
+						   '<input type="button" class="btn btn-success btn_filtrar_fecha" data-id="'+zona+'" id="btn_filtrar_fecha'+zona+'" value="' + trans.filtro_fecha + ' "/>'+
 					   '</div>';
   
 	filters='<div role="menu" >' +
@@ -716,7 +725,27 @@ function dibujarControles(zona, datos)
 				  '</div>'+
 				'</div>';
 	$('#' + zona + ' .controles').append(botonesinfo);					
-	
+		
+		var variable_="",data_="";
+		var origen=datos.origen_dato_;
+		for(data in origen)
+		{
+			variable_+='<table class="table table-bordered table-striped"><tr><th colspan=2><h3 class="popover-title">Variable '+((data*1)+1)+'</h3></th></tr><tr><th width="20%">'+
+			trans.last_confiable+'</th><td>'+origen[data].origen_dato_confiabilidad+'</td></tr><tr><th>'+
+			trans.last_nombre+' </th><td>'+origen[data].origen_dato_nombre+'</td></tr><tr><th>'+
+			trans.last_fuente+' </th><td>'+origen[data].origen_dato_fuente+'</td></tr><tr><th>'+			
+			trans.last_origen+' </th><td>'+origen[data].origen_dato_origen+'</td></tr><tr><th>'+
+			trans.last_conexion+' </th><td>'+origen[data].origen_dato_conexion+'</td></tr><tr><th>'+
+			trans.last_responsable+' </th><td>'+origen[data].origen_dato_responsable+'</td></tr></table>';
+		}
+		
+		data_=('<table class="table table-bordered table-striped"><tr><th>'+
+		trans.indicador+' </th><td>'+datos.nombre_indicador+'</td></tr><tr><th>'+
+		trans.last_reading+' </th><td>'+datos.ultima_lectura+' (dd/mm/aaaa hh:mm:ss)</td></tr><tr><th>'+
+		trans.last_update+' </th><td>'+datos.origen_dato_actualizacion+' (dd/mm/aaaa hh:mm:ss)</td></tr><tr><th colspan=2>'+
+		variable_
+		+'</th></tr></table>');
+		
 	botonesinfo='<div id="myNote'+ zona +'" class="modal fade" style="z-index:999999999">'+
 				  '<div class="modal-dialog">'+
 					'<div class="modal-content">'+
@@ -725,7 +754,7 @@ function dibujarControles(zona, datos)
 							'<h3 id="myModalLabel2">' + trans.notas_lectura + '</h3>'+
 						'</div>'+
 						'<div class="modal-body" style="max-height:'+hn+'; max-width:100%; overflow:auto;">'+
-							'<div id="'+ zona +'_minota" class="col-lg-12"></div>'+
+							'<div id="'+ zona +'_minota" class="col-lg-12">'+data_+'</div>'+
 						'</div>'+
 						'<div class="modal-footer">'+
 						'<button class="btn btn-warning" data-dismiss="modal" aria-hidden="true">Cerrar</button>'+
@@ -974,7 +1003,7 @@ function acciones_button()
 	  $("body").on('click','button.toimage',function(e)
 		{
 			zona=$(this).attr("data-id");
-			console.log(zona);
+			
             $("#"+zona+"_image").html('<canvas id="'+zona+'canvas" style="display:none"></canvas><img id="'+zona+'laimage" style="clear:both;display:none;" ><a class="btn btn-info dropdown-toggle" id="'+zona+'esvg">SVG</a> <a class="btn btn-primary dropdown-toggle btn-small" id="'+zona+'open" target="_blank"><i class="glyphicon glyphicon-open"></i></a> <a class="btn btn-info dropdown-toggle" id="'+zona+'epng">PNG</a><div id="'+zona+'lasvg" style="display:none"></div>');
 			
 			// se obtiene el uniqid que genera en auto symfony al create			
@@ -990,11 +1019,11 @@ function acciones_button()
 			
 			var img = document.getElementById(zona+"laimage");
 			img.setAttribute( "src", "data:image/svg+xml;base64," +valor) ;
-			 	    
+			titulo=$('#' + zona+' .titulo').find("span").text();   
 			img.onload =new function()
 			{
 				var a = document.getElementById(zona+"esvg");
-				a.download = "etab.png";
+				a.download = titulo+".svg";
 				a.href = "data:image/svg+xml;base64," +valor;		  
 				
 				var o = document.getElementById(zona+"open")
@@ -1015,15 +1044,16 @@ function acciones_button()
 					ctx.clearRect(0, 0, canvas.width, canvas.height);
 					ctx.drawImage(image, 0, 0);
 					var p = document.getElementById(zona+"epng")
-					p.download = "etab.png";
+					p.download = titulo+".png";
 					p.href = canvas.toDataURL("image/png");	
 				
 			  	};
 			}
 			
         });
-        $('#filtro_por_fecha'+zona).on("change",function()
+        $('body').on("change",'.filtro_por_fecha',function()
 		{
+			zona=$(this).attr("data-id");
 			if (this.checked == true)
 			{
 				$('#div_rango_fechas'+zona).css({'display':'inline'});
@@ -1034,8 +1064,9 @@ function acciones_button()
 			}
 		});
     
-    $('#btn_filtrar_fecha'+zona).on("click",function()
+    $('body').on("click",'.btn_filtrar_fecha',function()
 	{
+		zona=$(this).attr("data-id");
         if ($('#fechainicio'+zona).val() != '' && $('#fechafin'+zona).val() != '')
         {
             setTiposGraficos(zona);
@@ -1057,30 +1088,6 @@ function acciones_button()
     	recuperarDimensiones($('#' + zona + ' .titulo_indicador').attr('data-id'),null);
 	});
    
-    $('body').on("click",'.myNote',function()
-	{
-		zona=$(this).attr("data-id");
-		var variable_="";
-		var origen=datos.origen_dato_;
-		for(data in origen)
-		{
-			variable_+='<table class="table table-bordered table-striped"><tr><th colspan=2><h3 class="popover-title">Variable '+((data*1)+1)+'</h3></th></tr><tr><th width="20%">'+
-			trans.last_confiable+'</th><td>'+origen[data].origen_dato_confiabilidad+'</td></tr><tr><th>'+
-			trans.last_nombre+' </th><td>'+origen[data].origen_dato_nombre+'</td></tr><tr><th>'+
-			trans.last_fuente+' </th><td>'+origen[data].origen_dato_fuente+'</td></tr><tr><th>'+			
-			trans.last_origen+' </th><td>'+origen[data].origen_dato_origen+'</td></tr><tr><th>'+
-			trans.last_conexion+' </th><td>'+origen[data].origen_dato_conexion+'</td></tr><tr><th>'+
-			trans.last_responsable+' </th><td>'+origen[data].origen_dato_responsable+'</td></tr></table>';
-		}
-		
-		$("#"+ zona +"_minota").html('<table class="table table-bordered table-striped"><tr><th>'+
-		trans.indicador+' </th><td>'+datos.nombre_indicador+'</td></tr><tr><th>'+
-		trans.last_reading+' </th><td>'+datos.ultima_lectura+' (dd/mm/aaaa hh:mm:ss)</td></tr><tr><th>'+
-		trans.last_update+' </th><td>'+datos.origen_dato_actualizacion+' (dd/mm/aaaa hh:mm:ss)</td></tr><tr><th colspan=2>'+
-		variable_
-		+'</th></tr></table></div>');
-		
-	});
 	//({title: trans.ultima_lectura, content: trans.ultima_lectura_exp});
 	
    $('body').on('click','.myMax',function(e)
@@ -1271,10 +1278,11 @@ function acciones_button()
 
     $('body' ).on('click','.ver_ficha_tecnica',function(e){
 		zona=$(this).attr("data-id");	
-        $.get(Routing.generate('get_indicador_ficha',
-                {id: $('#' + zona + ' .titulo_indicador').attr('data-id')}),
-        function(resp) {
-            $('#myModalLabel2').html($('#' + zona + ' .titulo_indicador').html());
+        $.get(Routing.generate('get_indicador_ficha',{id: $('#' + zona + ' .titulo_indicador').attr('data-id')}),
+        function(resp) 
+		{
+			console.log($('#myModalLabel2').html());
+            $('#myModalLabel2').html($('#' + zona+' .titulo').find("span").text());
             $('#sql').html(resp);
             //Dejar solo el código html de la tabla, quitar todo lo demás
 

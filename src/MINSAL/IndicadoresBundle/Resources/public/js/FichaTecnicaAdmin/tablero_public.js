@@ -64,25 +64,43 @@ $(document).ready(function() {
     });
 
     function zona_elegir(zona) {
-        $('DIV.zona_actual').removeClass('zona_actual');
+        $('div .area_grafico').removeClass('zona_actual');
         $(zona).addClass('zona_actual');
     }
 
     function sala_agregar_fila() {
         var cant = $('DIV.area_grafico').length;
-        var html =  '<div class="area_grafico" id="grafico_' + parseInt(cant+1) + '" >' +
-                        "<DIV class= 'titulo'><span class='titulo_indicador '></span>"+
-                            "<span>("+trans.por+" <span class='dimension' ></span>)</span>"+
-                        '</DIV>'+
-                        '<h6 class="filtros_dimensiones"></h6>' +
-                        '<div class="controles btn-toolbar" style="margin-bottom:30px"></div>' +
-                        '<div class="info" ></div>' +
-                        '<div class="row_grafico" >' +
-                            '<div class="grafico" ></div>' +
-                        '</div>' +                        
-                    '</DIV>';         
+        var html =  '<div class="col-md-4">'+
+						'<div class="panel panel-default area_grafico zona_actual" data-id="'+parseInt(cant+1)+'" id="grafico_' + parseInt(cant+1) + '" >' +						
+						'<div class="panel-heading">'+
+						'<strong>'+
+							'<div class="titulo"><span class="titulo_indicador"></span>'+
+							'<span>('+trans.por+' <span class="dimension" ></span>)</span></div>'+
+						'</strong>'+
+						'</div>'+
+						'<div class="panel-body">'+	
+							'<div class="controles btn-toolbar"></div>' +
+							'<ol class="filtros_dimensiones breadcrumb" style="margin-top:10px; display:none;"></ol>' +		
+							'<div class="info" style="display:none;" ></div>' +
+							'<div class="row_grafico" style="margin-top:10px">' +
+								'<div class="grafico" ></div>' +
+							'</div>' +  
+						'</div>'+
+						'<div class="panel-footer"></div>'+
+					'</div></div>';         
+		var contador_indicadores = 0;
+		$('#sala .row').last().find('.col-md-4').each(function(){
+			contador_indicadores++;
+		});
+		if(contador_indicadores==0||contador_indicadores==3)
+		{
+			row="<div class='row'>"+html+"</div>";
+			$('#sala').append(row); 
+		}
+		else if(contador_indicadores<=2)
+			$('#sala .row').last().append(html);        
 
-        $('#sala').append(html);        
+           
         $('DIV.area_grafico').click(function() {
             zona_elegir(this);
         });

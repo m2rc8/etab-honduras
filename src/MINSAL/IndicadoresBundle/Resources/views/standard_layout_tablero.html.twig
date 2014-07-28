@@ -94,12 +94,7 @@ file that was distributed with this source code.
     </head>
     <body class="sonata-bc {% if _side_menu is empty %}sonata-ba-no-side-menu{% endif %}" style="margin-top:50px;">
         {# initialize block value #}
-<!--{% block logo %}
-    {# <a href="{{ url('sonata_admin_dashboard') }}" class="navbar-brand"> #}
-        <img src="{{ asset('bundles/indicadores/images/logo_salud.png') }}"  />
-    {# </a> #}
-{% endblock %}
-        <!-- barra superior con el logo y el título -->
+
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="z-index:9999999">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -111,8 +106,8 @@ file that was distributed with this source code.
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="{{ path('_inicio', {'page': '_inicio'}) }}">
-      <img src="{{ asset('bundles/indicadores/images/logo.png') }}" height="30px" /> 
-      eTAB</a>
+      <img src="{{ asset('bundles/indicadores/images/logo.png') }}" style="margin-top:-7px; height:34px;" /> 
+      </a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->

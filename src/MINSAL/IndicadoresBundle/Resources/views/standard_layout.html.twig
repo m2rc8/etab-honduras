@@ -19,6 +19,11 @@ file that was distributed with this source code.
 <!DOCTYPE html>
 <html class="no-js">
     <head>
+    
+    <link rel="apple-touch-icon"                 href="{{ asset('bundles/indicadores/images/logo.png') }}">
+    <link rel="apple-touch-icon" sizes="72x72"   href="{{ asset('bundles/indicadores/images/logo.png') }}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('bundles/indicadores/images/logo.png') }}">
+    
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
@@ -92,7 +97,7 @@ file that was distributed with this source code.
             {% endif%}#}
         </title>
     </head>
-    <body class="sonata-bc {% if _side_menu is empty %}sonata-ba-no-side-menu{% endif %}">
+    <body >
         {# initialize block value #}
 <!--{% block logo %}
     {# <a href="{{ url('sonata_admin_dashboard') }}" class="navbar-brand"> #}
@@ -111,8 +116,8 @@ file that was distributed with this source code.
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="{{ path('_inicio', {'page': '_inicio'}) }}">
-      <img src="{{ asset('bundles/indicadores/images/logo.png') }}" height="30px" /> 
-      eTAB</a>
+      <img src="{{ asset('bundles/indicadores/images/logo.png') }}" style="margin-top:-7px; height:34px;"/> 
+      </a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -209,7 +214,7 @@ file that was distributed with this source code.
   </div><!-- /.container-fluid -->
 </nav>
         <!-- fin menu -->
-        <div class="container-fluid" >
+        <div class="container-fluid" style="margin-top:53px">
             {% block notice %}
                 {% for notice_level in ['success','error','info', 'warning'] %}
                     {% set session_var = 'sonata_flash_' ~ notice_level %}
@@ -267,38 +272,38 @@ file that was distributed with this source code.
                 <div id="div_carga" class='affix'>
                     <div id="cargador"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></div>
                 </div>
-                    {% block sonata_admin_content %}
+                {% block sonata_admin_content %}
 
-                        {% if _preview is not empty %}
-                            <div class="sonata-ba-preview">{{ _preview|raw }}</div>
-                        {% endif %}
+                    {% if _preview is not empty %}
+                        <div class="sonata-ba-preview">{{ _preview|raw }}</div>
+                    {% endif %}
 
-                        {% if _content is not empty %}
-                            <div class="sonata-ba-content">{{ _content|raw }}</div>
-                        {% endif %}
+                    {% if _content is not empty %}
+                        <div class="sonata-ba-content">{{ _content|raw }}</div>
+                    {% endif %}
 
-                        {% if _show is not empty %}
-                            <div class="sonata-ba-show">{{ _show|raw }}</div>
-                        {% endif %}
+                    {% if _show is not empty %}
+                        <div class="sonata-ba-show">{{ _show|raw }}</div>
+                    {% endif %}
 
-                        {% if _form is not empty %}
-                            <div class="sonata-ba-form">{{ _form|raw }}</div>
-                        {% endif %}
+                    {% if _form is not empty %}
+                        <div class="sonata-ba-form">{{ _form|raw }}</div>
+                    {% endif %}
 
-                        {% if _list_table is not empty or _list_filters is not empty %}
-                            <div class="">
-                                <div class="col-md-10">
-                                    {{ _list_table|raw }}
-                                </div>
-                                <div class="col-md-2">
-                                    {{ _list_filters|raw }}
-                                </div>
+                    {% if _list_table is not empty or _list_filters is not empty %}
+                        <div class="">
+                            <div class="col-md-10">
+                                {{ _list_table|raw }}
                             </div>
-                        {% endif %}
+                            <div class="col-md-2">
+                                {{ _list_filters|raw }}
+                            </div>
+                        </div>
+                    {% endif %}
 
-                    {% endblock %}
+                {% endblock %}
                 </div>
-            </div>
+                </div>
 
             {% block footer %}
                 <div class="container-fluid"><hr>

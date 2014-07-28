@@ -231,6 +231,7 @@ $(document).ready(function() {
 								'<div class="grafico" ></div>' +
 							'</div>' +  
 						'</div>'+
+						'<div class="panel-footer"></div>'+
 					'</div></div>';         
 		var contador_indicadores = 0;
 		$('#sala .row').last().find('.col-md-4').each(function(){

@@ -61,41 +61,7 @@ $(document).ready(function(){
     });
 	
 });
-function sala_agregar_fila() {
-	var cant = 1  +  Math . floor ( Math . random ()  *  999999999 );
-	var html =  '<div class="panel panel-default area_grafico zona_actual" data-id="'+parseInt(cant+1)+'" id="grafico_' + parseInt(cant+1) + '"  >' +						
-						'<div class="panel-heading">'+
-						'<strong>'+
-							'<div class="titulo"><span class="titulo_indicador"></span>'+
-							'<span>('+trans.por+' <span class="dimension" ></span>)</span></div>'+
-						'</strong>'+
-						'</div>'+
-						'<div class="panel-body">'+													
-							'<div class="controles btn-toolbar"></div>' +
-							'<ol class="filtros_dimensiones breadcrumb" style="margin-top:10px; display:none;"></ol>' +		
-							'<div class="info" ></div>' +
-							'<div class="row_grafico" style="margin-top:10px">' +
-								'<div class="grafico" ></div>' +
-							'</div>' +  
-						'</div>'+
-					'</div>';                     
 
-	$('#sala').append(html);        
-	$('DIV.area_grafico').click(function() {
-		zona_elegir(this);
-	});
-}
-function maximizar()
-{		
-		var windowH = $(window).height();
-        $('#menu_sala .dropdown-submenu .dropdown-menu').css({'max-height':($(window).height()-300)+'px'});
-        $('#menu_sala .dropdown-submenu .dropdown-menu').css({'overflow':'visible'});
-        
-        $('.ui-autocomplete').css({'max-height':($(window).height()-300)+'px'});
-        $('.ui-autocomplete').css({'overflow':'visible'});
-}
-window.onresize=maximizar;
-window.onload=maximizar;
 </script>
 <style>
 .ui-autocomplete { max-height: 200px; overflow:visible; z-index:999999999}
@@ -104,11 +70,7 @@ window.onload=maximizar;
 
 {% block content %}
 
-<!--{% if is_mobile() %}
-    {% include 'IndicadoresBundle:FichaTecnicaAdmin:menu_tablero_mobile.html.twig' %}
-{% else %}-->
-    {% include 'IndicadoresBundle:FichaTecnicaAdmin:menu_tablero.html.twig' %}
-<!--{% endif %}-->
+{% include 'IndicadoresBundle:FichaTecnicaAdmin:menu_tablero.html.twig' %}
 <div class="container-fluid">
     <div class="row" id="titulo_header" style="display:none">
     	<div class="col-md-12">
@@ -157,7 +119,7 @@ window.onload=maximizar;
     <div class="modal-content">
        <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel2"></h3>
+        <h4 id="myModalLabel2"></h4>
     	</div>
         <div class="modal-body" style="max-height:400px; max-width:100%; overflow:auto;">
         <span class='info' id='sql'></span>

@@ -29,12 +29,8 @@ file that was distributed with this source code.
 
             <!-- css de eTAB -->
             <link rel="stylesheet" href="{{ asset('bundles/indicadores/js/bootstrap/css/bootstrap.min.css') }}" type="text/css" media="all"  />
-			<link rel="stylesheet" href="{{ asset('bundles/indicadores/js/bootstrap/css/bootstrap-theme.min.css') }}" type="text/css" media="all"  />
-            <link rel="stylesheet" href="{{ asset('bundles/indicadores/css/custom_layout.css') }}" type="text/css" media="all" />
-            <link rel="stylesheet" href="{{ asset('bundles/indicadores/js/bootstrap/css/bootstrap-responsive.min.css') }}" type="text/css" media="all" />
 
             <!-- base application asset -->
-            <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/layout.css') }}" type="text/css" media="all" />
 			<link rel="stylesheet" href="{{ asset('bundles/indicadores/css/custom_layout.css') }}" type="text/css" media="all" />
             <link rel="stylesheet" href="{{ asset('bundles/indicadores/css/ionicons.min.css') }}" type="text/css" media="all" />
             <link rel="stylesheet" href="{{ asset('bundles/indicadores/css/font-awesome.min.css') }}" type="text/css" media="all" />
@@ -47,7 +43,7 @@ file that was distributed with this source code.
             <script type="text/javascript">
 
                
-               var sSwfPath = "{{ asset('bundles/indicadores/js/DataTables/media/swf/copy_csv_xls_pdf.swf') }}";
+            var sSwfPath = "{{ asset('bundles/indicadores/js/DataTables/media/swf/copy_csv_xls_pdf.swf') }}";
             </script>
             <script src="{{ asset('bundles/indicadores/js/jquery/jquery-2.0.3.min.js') }}" type="text/javascript"></script>
             <script src="{{ asset('bundles/indicadores/js/jquery/jquery-ui/js/jquery-ui-1.10.3.custom.min.js') }}" type="text/javascript"></script>
@@ -81,133 +77,69 @@ file that was distributed with this source code.
             {% endif%}#}
         </title>
     </head>
-    <body class="{% if _side_menu is empty %}sonata-ba-no-side-menu{% endif %}">
+    <body >
         {# initialize block value #}
 
         <!-- barra superior con el logo y el título -->
-        <div  class="" >
-            <div  class="navbar-inner">
-                <div  id="collapseOne" class="container-fluid panel-group-body collapse in">
-                    {#<a class="btn navbar-btn" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="glyphicon glyphicon-bar"></span>
-                        <span class="glyphicon glyphicon-bar"></span>
-                        <span class="glyphicon glyphicon-bar"></span>
-                    </a> #}
-
-                        <div class="navbar-text pull-right">
-                            
-                            <div class='btn-group'>
-                                <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
-                                    <i class="glyphicon glyphicon-user"></i>{{'lbllenguaje'|trans}}
-                                    <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu pull-right">
-                                    {% for locale, lenguaje in {'es_SV':'Español', 'en_US':'English'} %}
-                                        {% if locale == app.request.locale %}
-                                            <li class='active'><A href='#'>{{lenguaje}}</a></li>
-                                        {% else %}
-                                            <li ><a href='{{url('change_locale',{_locale:locale})}}'>{{lenguaje}}</a></li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            
-                        </div>
-                    {% block logo %}
-                        {# <a href="{{ url('sonata_admin_dashboard') }}" class="navbar-brand"> #}
-                            <img src="{{ asset('bundles/indicadores/images/logo_salud.png') }}" style="margin-left:18%; width:50%" />
-                        {# </a> #}
+        <div class="container-fluid">
+        	<div class="row">
+            	<div class="col-md-12" id="collapseOne">
+                	{% block logo %}
+                        
+                            <div align="center"><img class="bannerPublico" src="{{ asset('bundles/indicadores/images/logo_salud.png') }}" />                        
                     {% endblock %}
-                    {% if admin_pool is defined %}
-
-                        {# MENU PRINCIPAL #}
-                        <div  >
-                            <ul class="nav">
-                                {% block top_bar_before_nav %} {% endblock %}
-                                {% block sonata_top_bar_nav %}
-                                  
-                                {% endblock %}
-                                {% block top_bar_after_nav %} {% endblock %}
-                            </ul>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+            	</div>
+            </div>	
         </div>
 
-        <div class="container-fluid">
-            {% block notice %}
-                {% for notice_level in ['success','error','info', 'warning'] %}
-                    {% set session_var = 'sonata_flash_' ~ notice_level %}
-                    {% for flash in app.session.flashbag.get(session_var) %}
-                        <div class="alert {{ 'alert-' ~ notice_level }}">
-                            {{ flash|trans([], 'SonataAdminBundle') }}
-                        </div>
-                    {% endfor %}
-                {% endfor %}
-                {% for flashMessage in app.session.flashbag.get('notice') %}
-                    <div class="alert alert-success">
-                        {{ flashMessage|trans }}
-                    </div>
-                {% endfor %}
-            {% endblock %}
-            <div class="row" id='tool_actions'>
-                <div class="col-md-6">
-                   
-                </div>
+{%block actions %}{% endblock %}
+{% if _side_menu is not empty %}
+                {{ _side_menu|raw }}
+            {% endif %}
+            
+            {% block sonata_admin_content %}
 
-            <div style="float: right">
-                    {%block actions %}{% endblock %}
-                </div>
-            </div>
-
-            <div class="row">
-                {% if _side_menu is not empty %}
-                    <div class="sidebar col-md-2">
-                        <div class="well sonata-ba-side-menu" style="padding: 8px 0;">{{ _side_menu|raw }}</div>
-                    </div>
+                {% if _preview is not empty %}
+                    {{ _preview|raw }}
                 {% endif %}
 
-                <div class="content {{ _side_menu is not empty ? ' col-md-10' : 'col-md-12' }}">
-<div id="div_carga" class='affix'>
-    <img id="cargador" src="{{ asset('bundles/indicadores/images/ajax-loader.gif') }}"/>
-</div>
-                    {% block sonata_admin_content %}
+                {% if _content is not empty %}
+                    {{ _content|raw }}
+                {% endif %}
 
-                        {% if _preview is not empty %}
-                            <div class="sonata-ba-preview">{{ _preview|raw }}</div>
-                        {% endif %}
+                {% if _show is not empty %}
+                    {{ _show|raw }}
+                {% endif %}
 
-                        {% if _content is not empty %}
-                            <div class="sonata-ba-content">{{ _content|raw }}</div>
-                        {% endif %}
+                {% if _form is not empty %}
+                   {{ _form|raw }}
+                {% endif %}
 
-                        {% if _show is not empty %}
-                            <div class="sonata-ba-show">{{ _show|raw }}</div>
-                        {% endif %}
-
-                        {% if _form is not empty %}
-                            <div class="sonata-ba-form">{{ _form|raw }}</div>
-                        {% endif %}
-
-                        {% if _list_table is not empty or _list_filters is not empty %}
-                            <div class="row">
-                                <div class="sonata-ba-list col-md-10">
-                                    {{ _list_table|raw }}
-                                </div>
-                                <div class="sonata-ba-filter col-md-2">
-                                    {{ _list_filters|raw }}
-                                </div>
-                            </div>
-                        {% endif %}
-
-                    {% endblock %}
-                </div>
-            </div>
-
-            {% block footer %}
+                {% if _list_table is not empty or _list_filters is not empty %}
+                            {{ _list_table|raw }}
+                            {{ _list_filters|raw }}
+                {% endif %}
 
             {% endblock %}
-        </div>
+            
+    {% block notice %}
+        {% for notice_level in ['success','error','info', 'warning'] %}
+            {% set session_var = 'sonata_flash_' ~ notice_level %}
+            {% for flash in app.session.flashbag.get(session_var) %}
+                <div class="alert {{ 'alert-' ~ notice_level }}">
+                    {{ flash|trans([], 'SonataAdminBundle') }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="alert alert-success">
+                {{ flashMessage|trans }}
+            </div>
+        {% endfor %}
+    {% endblock %}
+
+{% block footer %}
+
+{% endblock %}        
     </body>
 </html>
