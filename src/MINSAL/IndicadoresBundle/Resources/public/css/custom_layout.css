@@ -43,3 +43,10 @@
 		width:100%;	
 	}
 }
+
+.bodysinscroll
+{
+	overflow-x: hidden;
+	overflow-y: hidden;
+	overflow:hidden;
+}

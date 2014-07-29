@@ -70,9 +70,9 @@
 				mes = "0"+mes;
 			$("#dob").val(dia+"/"+mes+"/"+$("#"+uniqid[1]+"_dateOfBirth_year").val());
 		}
-		$("#field_container_"+uniqid[1]+"_groups").append("<div id='micontenido'><button type='button' id='miboton'  class='btn btn-success' style='margin-left:10px; margin-top:5px'><i class='glyphicon glyphicon-refresh'></i> Refrescar Lista </button></div>");
+		$("#field_actions_"+uniqid[1]+"_groups").append("<button type='button' id='miboton'  class='btn btn-success' style='margin-left:10px;'><i class='glyphicon glyphicon-refresh'></i> Refrescar Lista </button>");
 		$(".icon-plus").attr("class","glyphicon glyphicon-plus-sign");
-		$( "#"+uniqid[1]+"_groups").attr("class","unstyled col-md-8");
+		$( "#"+uniqid[1]+"_groups").attr("class","unstyled col-md-12");
 		
 		$("#miboton").click(function(e){
 		    
@@ -93,10 +93,16 @@
 			url: url,
 			})
 			.done(function(dato)
-			{
-				$("#field_widget_"+uniqid[1]+"_groups").html(dato);
+			{			
+				$("#field_widget_"+uniqid[1]+"_groups").html('<div class="panel panel-default">'+		  
+				  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
+					dato+
+				  '</div>'+
+				'</div>');
+					
 			});
 		});
+		$(".popover").attr("style","top:-100%; margin-left:100%; width:600px; display: block; z-index:9999999999;");
 		var url=$(".sonata-ba-action").attr("href");
 		/*$(".sonata-ba-action").attr("href","");
 		//$(".sonata-ba-action").attr("onclick","");

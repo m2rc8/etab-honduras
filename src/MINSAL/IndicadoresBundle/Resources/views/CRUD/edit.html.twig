@@ -28,41 +28,78 @@ file that was distributed with this source code.
 		$("input[type='text'],input[type='number'],input[type='password'],input[type='email'],input[type='date'],input[type='url'], textarea, select").attr("class","form-control");	
 		$("input[type='checkbox']").attr("class","");
 		
-		$("#"+idcontrol+"_conexiones ui").attr("class","list-group");
+		
+		$("#"+idcontrol+"_conexiones ").attr("class","list-group");
 		$("#"+idcontrol+"_conexiones li").attr("class","list-group-item");
+		$("#"+idcontrol+"_conexiones").parent('div').html('<div class="panel panel-default">'+		  
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
+			$("#"+idcontrol+"_conexiones").parent().html()+
+		  '</div>'+
+		'</div>');	
 		
-		$("#"+idcontrol+"_variables ui").attr("class","list-group");
-		$("#"+idcontrol+"_variables li").attr("class","list-group-item");
-		
-		$("#"+idcontrol+"_clasificacionPrivacidad ui").attr("class","list-group");
+		$("#"+idcontrol+"_variables").attr("class","list-group");
+		$("#"+idcontrol+"_variables li").attr("class","list-group-item");		
+		$("#"+idcontrol+"_variables").parent('div').html('<div class="panel panel-default">'+		  
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
+			$("#"+idcontrol+"_variables").parent().html()+
+		  '</div>'+
+		'</div>');	
+
+		$("#"+idcontrol+"_clasificacionPrivacidad ").attr("class","list-group");
 		$("#"+idcontrol+"_clasificacionPrivacidad li").attr("class","list-group-item");
-		
-		$("#"+idcontrol+"_clasificacionTecnica ui").attr("class","list-group");
+		$("#"+idcontrol+"_clasificacionPrivacidad").parent('div').html('<div class="panel panel-default">'+		  
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
+			$("#"+idcontrol+"_clasificacionPrivacidad").parent().html()+
+		  '</div>'+
+		'</div>');	
+
+		$("#"+idcontrol+"_clasificacionTecnica ").attr("class","list-group");
 		$("#"+idcontrol+"_clasificacionTecnica li").attr("class","list-group-item");
-		
-		$("#"+idcontrol+"_groups ui").attr("class","list-group");
+		$("#"+idcontrol+"_clasificacionTecnica").parent('div').html('<div class="panel panel-default">'+		  
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
+			$("#"+idcontrol+"_clasificacionTecnica").parent().html()+
+		  '</div>'+
+		'</div>');	
+
+		$("#"+idcontrol+"_groups").attr("class","list-group");
 		$("#"+idcontrol+"_groups li").attr("class","list-group-item");
+		$("#"+idcontrol+"_groups").parent('span').html('<div class="panel panel-default">'+		  
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
+			$("#"+idcontrol+"_groups").parent().html()+
+		  '</div>'+
+		'</div>');	
 		
-		$("#"+idcontrol+"_indicadores ui").attr("class","list-group");
+		$("#"+idcontrol+"_indicadores ").attr("class","list-group");		
 		$("#"+idcontrol+"_indicadores li").attr("class","list-group-item");
+		$("#"+idcontrol+"_indicadores").parent('div').html('<div class="panel panel-default">'+		  
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
+			$("#"+idcontrol+"_indicadores").parent().html()+
+		  '</div>'+
+		'</div>');	
+
 		
-		$("#"+idcontrol+"_salas ui").attr("class","list-group");
+		$("#"+idcontrol+"_salas ").attr("class","list-group");
 		$("#"+idcontrol+"_salas li").attr("class","list-group-item");
+		$("#"+idcontrol+"_salas").parent('div').html('<div class="panel panel-default">'+		  
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
+			$("#"+idcontrol+"_salas").parent().html()+
+		  '</div>'+
+		'</div>');	
+
 		
-		$("#"+idcontrol+"_realRoles ui").attr("class","list-group");
+		$("#"+idcontrol+"_realRoles ").attr("class","list-group");
 		$("#"+idcontrol+"_realRoles li").attr("class","list-group-item");
-				
 		$(".editable").html('<div class="panel panel-default">'+
 		  '<div class="panel-heading">'+
 			$(".editable h4").html()+
 		  '</div>'+
-		  '<div class="panel-body" style=" max-height:250px; overflow:auto; ">'+
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
 			$("#"+idcontrol+"_realRoles").html()+
 		  '</div>'+
 		'</div>');		
 		$(".editable").attr("class","");
 		
-		$(".popover").attr("style","top:-100%; margin-left:100%; width:600px; display: block;");
+		$(".popover").attr("style","top:-100%; margin-left:100%; width:600px; display: block; z-index:9999999999;");
 
     });
 	</script>

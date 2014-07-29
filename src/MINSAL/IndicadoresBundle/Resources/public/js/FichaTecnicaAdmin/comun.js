@@ -95,14 +95,16 @@ function dibujarGraficoPrincipal(zona, tipo)
 			  'zoomEnabled': true ,
 			  'controlIconsEnabled': true 
 			});
-			var matrix="matrix(2,0,0,2,"+$(document).width()/3.5+","+$(document).height()/4.5+")";
+			var matrix="matrix(2,0,0,2,"+$(document).width()/3.5+","+$(document).height()/6.5+")";
 			$("#"+zona+" #viewport").attr("transform",matrix);
 
-			var tra="translate("+($(document).width()-130)+" "+($(document).height()-200)+" ) scale(0.75)";
+			var tra="translate("+($(document).width()-180)+" "+($(window).height()/1.33 )+" ) scale(0.75)";
 			$("#svg-pan-zoom-controls").attr("transform",tra);
+			
 			var hei="height:"+($(document).height()-120)+"px;";
 			$("#"+zona+" .grafico").attr("style",hei);			
 			$('#' + zona).attr("style","width:100%; height:100%");
+			$('#'+zona +' svg').animate({height:$(window).height()/1.2});						
 		}
 	}
 }
@@ -780,34 +782,32 @@ function dibujarControles(zona, datos)
 		}
   });
   
-  function minimizar(zona,contenedor)
-  {
- 		$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-out');
-  		$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-in');		
-  		posicion = $(contenedor).attr('alt');
-  		if (posicion == 0)
-  		$('.area_grafico').eq(posicion).before($('#' + zona));
-  		else
-  		$('.area_grafico').eq(posicion - 1).after($('#' + zona));
-		
-		panZoom.disablePan();
-		panZoom.disableZoom();
-		panZoom.resetZoom("#"+zona+" svg");
-		$('#' + zona+' .grafico').html('');
-		$("#svg-pan-zoom-controls").remove();
-		delete panZoom;
-  		$('#contenedor_maximizado').remove();				
-	
-		$('#' + zona+' .grafico').animate({height:h1 , width: w1});
-		$('#' + zona).animate({height:tam , width: tam});
-	
-		$("#"+zona+"lasvg").html("");
-		aplicarFiltro(zona);
-  }
+  
   
   setTiposGraficos(zona);
 }
-
+function minimizar(zona,contenedor)
+{
+	$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-out');
+	$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-in');		
+	
+	panZoom.disablePan();
+	panZoom.disableZoom();
+	panZoom.resetZoom("#"+zona+" svg");
+	$('#' + zona+' .grafico').html('');
+	$("#svg-pan-zoom-controls").remove();
+	delete panZoom;
+	$('#_maximizado').html($('#contenedor_maximizado').html());
+	$('#contenedor_maximizado').remove();
+	$('#esc_maximizado').remove();
+	$("#"+zona+" .panel-body").removeAttr("style");
+	$("#"+zona+" .grafico").removeAttr("style");
+	$('#_maximizado').removeAttr("id");
+	$("body").removeClass("bodysinscroll");
+	
+	$("#"+zona+"lasvg").html("");
+	aplicarFiltro(zona);
+}
 function setTiposGraficos(zona) 
 {
     var tipos_graficos = '';
@@ -1093,9 +1093,9 @@ function acciones_button()
    $('body').on('click','.myMax',function(e)
    {
 	   zona=$(this).attr("data-id");	   
-  	if($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out')||getCookieS("zoom"+zona)=='1')
+  	if($(this).hasClass('glyphicon glyphicon-zoom-out')||getCookieS("zoom"+zona)=='1')
 	{
-		document.cookie="zoom"+zona+"=0";		
+		document.cookie="zoom"+zona+"=0";				
 	   	minimizar(zona,contenedor);
 	}
   	else
@@ -1107,17 +1107,27 @@ function acciones_button()
 		var tecla = (event.keyCode) ? event.keyCode : event.which ;
 		if (tecla != 27)
 		{
+			$("body").addClass("bodysinscroll");
+			
 			$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-in');
 			$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-out');
-			
+			$('#'+zona).parent().attr('id','_maximizado');
 			contenedor = document.createElement('div');
 			$(contenedor).attr('alt',$('#' + zona).index());
 			$(contenedor).addClass("row");
-			$(contenedor).css({'position':'absolute','left':'15px','top':'0px','zIndex':'99999999' ,'width':'100%','height':'100%','background-color':'#F4F3FA','overflow':'none'});
+			$(contenedor).css({'position':'absolute',
+							   'left':'15px','top':'0px',
+							   'zIndex':'99999999' ,
+							   'width':'100%',
+							   'height':'100%',
+							   'background-color':'#F4F3FA',
+							   'overflow':''});
+							   
 			$(contenedor).attr('id','contenedor_maximizado');
 			$(contenedor).append($('#' + zona));
 			
 			scapemsg = document.createElement('div');
+			$(scapemsg).attr('id','esc_maximizado');
 			$(scapemsg).css({'position':'absolute',
 							'right':'15px',
 							'-webkit-border-radius': '10px',
@@ -1135,10 +1145,11 @@ function acciones_button()
 			$(contenedor).append(scapemsg);
 			
 			$(document.body).append($(contenedor));
-			 
+			
 			$(contenedor).fadeIn('slow',function()
 			{
-				$('#'+zona).animate({height:$(document).height()-6.5 , width: $(document).width()-1});
+				$('#'+zona +' .panel-body').animate({height:$(window).height()/1.109 , width: $(window).width()-1});
+				$('#'+zona +' svg').animate({height:$(window).height()/1.2});
 		   //     dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
 			});
 			
@@ -1152,10 +1163,10 @@ function acciones_button()
 			  'zoomEnabled': true ,
 			  'controlIconsEnabled': true 
 			});
-			var matrix="matrix(2,0,0,2,"+$(document).width()/3.5+","+$(document).height()/4.5+")";
+			var matrix="matrix(2,0,0,2,"+$(document).width()/3.5+","+$(document).height()/6.5+")";
 			$("#"+zona+" #viewport").attr("transform",matrix);
 
-			var tra="translate("+($(document).width()-93)+" "+($(document).height()-220)+" ) scale(0.75)";
+			var tra="translate("+($(document).width()-180)+" "+($(window).height()/1.33 )+" ) scale(0.75)";
 			$("#svg-pan-zoom-controls").attr("transform",tra);
 		}
 	}

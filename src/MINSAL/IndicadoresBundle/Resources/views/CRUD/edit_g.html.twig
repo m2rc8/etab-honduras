@@ -35,18 +35,30 @@ file that was distributed with this source code.
 		  '<div class="panel-heading">'+
 			$(".editable h4").html()+
 		  '</div>'+
-		  '<div class="panel-body" style=" max-height:250px; overflow:auto; ">'+
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
 			$("#"+idcontrol+"_roles").html()+
 		  '</div>'+
 		'</div>');		
 		$(".editable").attr("class","");
 		
-		$("#"+idcontrol+"_indicadores ui").attr("class","list-group");
+		$("#"+idcontrol+"_indicadores ").attr("class","list-group");		
 		$("#"+idcontrol+"_indicadores li").attr("class","list-group-item");
-				
-		$("#"+idcontrol+"_salas ui").attr("class","list-group");
+		$("#"+idcontrol+"_indicadores").parent('div').html('<div class="panel panel-default">'+		  
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
+			$("#"+idcontrol+"_indicadores").parent().html()+
+		  '</div>'+
+		'</div>');	
+
+		
+		$("#"+idcontrol+"_salas ").attr("class","list-group");
 		$("#"+idcontrol+"_salas li").attr("class","list-group-item");
-		$(".popover").attr("style","top:-100%; margin-left:100%; width:600px; display: block;");
+		$("#"+idcontrol+"_salas").parent('div').html('<div class="panel panel-default">'+		  
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
+			$("#"+idcontrol+"_salas").parent().html()+
+		  '</div>'+
+		'</div>');	
+		
+		$(".popover").attr("style","top:-100%; margin-left:100%; width:600px; display: block; z-index:9999999999;");
     });
 	</script>
 {% endblock %}
