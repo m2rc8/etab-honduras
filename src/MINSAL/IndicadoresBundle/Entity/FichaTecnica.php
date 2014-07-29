@@ -59,6 +59,13 @@ class FichaTecnica
      */
     private $unidadMedida;
 
+	/**
+     * @var string $meta
+     *
+     * @ORM\Column(name="meta", type="integer", length=300, nullable=true)
+     */
+    private $meta;
+	
     /**
      * @var string $formula
      *
@@ -292,6 +299,29 @@ class FichaTecnica
         return $this->unidadMedida;
     }
 
+	/**
+     * Set meta
+     *
+     * @param  string       $meta
+     * @return FichaTecnica
+     */
+    public function setMeta($meta)
+    {
+        $this->meta = $meta;
+
+        return $this;
+    }
+
+    /**
+     * Get formula
+     *
+     * @return string
+     */
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+	
     /**
      * Set formula
      *

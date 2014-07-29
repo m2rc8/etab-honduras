@@ -43,6 +43,7 @@ class FichaTecnicaAdmin extends Admin
                                 ->orderBy('ct.clasificacionUso');
                     }))
                 ->add('clasificacionPrivacidad', null, array('label' => $this->getTranslator()->trans('_nivel_de_usuario_'), 'expanded' => true))
+				->add('meta', null, array('attr' => array('label' =>  $this->getTranslator()->trans('meta'), 'min'=>'1', 'max'=>'100')))
                 ->add('periodo', null, array('label' => $this->getTranslator()->trans('periodicidad')))
                 ->add('confiabilidad', null, array('label' => $this->getTranslator()->trans('confiabilidad'), 'required' => false))
                 ->add('observacion', 'textarea', array('label' => $this->getTranslator()->trans('_observacion_'), 'required' => false))
@@ -91,6 +92,7 @@ class FichaTecnicaAdmin extends Admin
                                 ->orderBy('ct.clasificacionUso');
                     }))
                 ->add('clasificacionPrivacidad', null, array('label' => $this->getTranslator()->trans('_nivel_de_usuario_'), 'expanded' => true))
+				->add('meta', null, array('label' => $this->getTranslator()->trans('meta')))
                 ->add('periodo', null, array('label' => $this->getTranslator()->trans('periodicidad')))
                 ->add('confiabilidad', null, array('label' => $this->getTranslator()->trans('confiabilidad')))
                 ->add('observacion', 'string', array('label' => $this->getTranslator()->trans('_observacion_')))
@@ -120,7 +122,7 @@ class FichaTecnicaAdmin extends Admin
         $listMapper
                 ->addIdentifier('nombre', null, array('label' => $this->getTranslator()->trans('nombre_indicador')))
                 ->add('tema', null, array('label' => $this->getTranslator()->trans('_interpretacion_')))
-                ->add('concepto', null, array('label' => $this->getTranslator()->trans('concepto')))
+                ->add('meta', null, array('label' => $this->getTranslator()->trans('meta')))
                 ->add('camposIndicador', null, array('label' => $this->getTranslator()->trans('campos_indicador')))
 				->add('clasificacionTecnica', null, array('label' => $this->getTranslator()->trans('clasificacion_tecnica')))
 				->add('clasificacionPrivacidad', null, array('label' => $this->getTranslator()->trans('_nivel_de_usuario_')))

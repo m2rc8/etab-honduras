@@ -67,7 +67,9 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
         svg.append("g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(" + margin.left + "," + (margin.top + height + 5) + ")")
-                .call(xAxis);				        
+                .call(xAxis);	
+		
+		 			        
 			
         plot.selectAll("rect")
                 .data(currentDatasetChart)
@@ -75,36 +77,47 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
                 .append("rect")
                 .attr("stroke", 'black')
                 .attr("stroke-width", '2px')
-                .attr("x", function(d, i) {
-            return xScale(d.category);
-			
-        })
+                .attr("x", function(d, i) 
+				{
+					return xScale(d.category);
+				})
                 .transition().duration(1000).delay(20)
                 .attr("width", xScale.rangeBand())
-                .attr("y", function(d) {
-            return yScale(parseFloat(d.measure));
-        })
-                .attr("height", function(d) {
-            return height - yScale(parseFloat(d.measure));
-        });
+                .attr("y", function(d) 
+				{
+					return yScale(parseFloat(d.measure));
+				})
+                .attr("height", function(d) 
+				{
+					return height - yScale(parseFloat(d.measure));
+				});
+				
         plot.selectAll("rect").append("title")
                 .text(function(d) {
             return d.category + ": " + d.measure;
         });
-		
+		svg.append("line")
+			.attr("x1", 5)
+			.attr("y1", 50)
+			.attr("x2", 500)
+			.attr("y2", 50)
+			.attr("stroke-width", 2)
+            .attr("stroke", "black");
+				
 		plot.selectAll("text")
-           .data(currentDatasetChart)
-	       .enter()
-		   .append("text").text(function(d) {
-				return d.measure;
-			})
-			.attr('x', function(d,i){return (i)*(width/currentDatasetChart.length)+(width/currentDatasetChart.length)/2;})
-			.attr('y', function(d){a= yScale(parseFloat(d.measure))+20; if(a<0) a=0; if((xScale.rangeBand()/6)>30){if(a>0)a=a+20};if(a>222)a=22; return a;})
-			.attr('text-anchor', 'middle')
-			.attr('font-size', (xScale.rangeBand()/6)<1 ? 1: (xScale.rangeBand()/6))
-			.attr('font-family', 'arial')
-			.attr('fill', '#fff')
-			.attr("font-weight","bold");
+			   .data(currentDatasetChart)
+			   .enter()
+			   .append("text").text(function(d) 
+			   {
+					return d.measure;
+			   })
+				.attr('x', function(d,i){return (i)*(width/currentDatasetChart.length)+(width/currentDatasetChart.length)/2;})
+				.attr('y', function(d){a= yScale(parseFloat(d.measure))+20; if(a<0) a=0; if((xScale.rangeBand()/6)>30){if(a>0)a=a+20};if(a>222)a=22; return a;})
+				.attr('text-anchor', 'middle')
+				.attr('font-size', (xScale.rangeBand()/6)<1 ? 1: (xScale.rangeBand()/6))
+				.attr('font-family', 'arial')
+				.attr('fill', '#fff')
+				.attr("font-weight","bold");
 		        
         plot.selectAll("rect").on("dblclick", function(d, i) {
             descenderNivelDimension(ubicacion, d.category);
