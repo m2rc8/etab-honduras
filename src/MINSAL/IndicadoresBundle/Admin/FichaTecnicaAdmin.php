@@ -43,7 +43,7 @@ class FichaTecnicaAdmin extends Admin
                                 ->orderBy('ct.clasificacionUso');
                     }))
                 ->add('clasificacionPrivacidad', null, array('label' => $this->getTranslator()->trans('_nivel_de_usuario_'), 'expanded' => true))
-				->add('meta', null, array('attr' => array('label' =>  $this->getTranslator()->trans('meta'), 'min'=>'1', 'max'=>'100')))
+				->add('meta', null, array('attr' => array('label' =>  $this->getTranslator()->trans('meta'), 'min'=>'1')))
                 ->add('periodo', null, array('label' => $this->getTranslator()->trans('periodicidad')))
                 ->add('confiabilidad', null, array('label' => $this->getTranslator()->trans('confiabilidad'), 'required' => false))
                 ->add('observacion', 'textarea', array('label' => $this->getTranslator()->trans('_observacion_'), 'required' => false))

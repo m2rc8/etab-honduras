@@ -21,6 +21,7 @@ graficoTermometro = function(ubicacion, datos, colorChosen, categoryChoosen) {
     	  var svg = d3.select("#" + ubicacion + ' .grafico')
           .append("svg:svg")
           .attr("viewBox", '0 -20 440 300')
+		  .attr("style", 'width:96%')
           .attr("preserveAspectRatio", 'none')
           .attr("id", "ChartGauge");
 

@@ -49,7 +49,7 @@ graficoMapa = function(ubicacion, datos, colorChosen, categoryChoosen) {
                 .append("svg")
                 .attr("viewBox", '-5 0 440 310')
                 .attr("preserveAspectRatio", 'none')
-                .attr("width", width)
+                .attr("style", 'width:96%')
                 .attr("height", height)
                 .attr("id", "ChartPlot");
 

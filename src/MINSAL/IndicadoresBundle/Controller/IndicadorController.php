@@ -78,6 +78,7 @@ class IndicadorController extends Controller
             }
             $resp['rangos'] = $rangos_alertas;
             $resp['formula'] = $fichaTec->getFormula();
+			$resp['meta'] = $fichaTec->getMeta();
             $resp['dimensiones'] = $dimensiones;
                         
             //Verificar que se tiene la más antigua de las últimas lecturas de los orígenes

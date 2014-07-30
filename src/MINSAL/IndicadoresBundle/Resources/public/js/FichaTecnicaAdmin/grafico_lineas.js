@@ -1,27 +1,35 @@
 graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 
     this.tipo = 'lineas';
-    var margin = {top: 20, right: 5, bottom: 20, left: 70},
-    width = 390 - margin.left - margin.right,
-            height = 250 - margin.top - margin.bottom
-            ;
+    var margin = {top: 0, right: 5, bottom: 25, left: 40},
+    width  = 390 - margin.left - margin.right,
+    height = 250 - margin.top - margin.bottom,
+    barPadding = 1;
+
     var currentDatasetChart = datos;
     var zona = ubicacion;
-
     var xScale = d3.scale.ordinal()
             .domain(currentDatasetChart.map(function(d) {
         return d.category;
     }))
-            .rangeRoundBands([0, width], .9);
-    ;
-    var max_y;
+            .rangeRoundBands([0, width], .1)
+            ;
+
+    var max_y=100;
+	var meta=0;
     var datasetPrincipal_bk = JSON.parse($('#' + zona).attr('datasetPrincipal_bk'));
     max_y = d3.max(datasetPrincipal_bk, function(d) {
         return parseFloat(d.measure);
     });
     if ($('#' + ubicacion + ' .max_y') != null && $('#' + ubicacion + ' .max_y').val() == 'rango_alertas')
         max_y = $('#' + ubicacion + ' .titulo_indicador').attr('data-max_rango');
-
+	
+	if (parseFloat($('#' + ubicacion + 'meta').attr("data-id"))>0)
+	{
+		meta=$('#' + zona + 'meta').attr("data-id");
+		max_y = $('#' + zona + ' .titulo_indicador').attr('data-max_rango');
+	}
+	
     var yScale = d3.scale.linear()
             .domain([0, max_y])
             .range([height, 0]);
@@ -42,7 +50,8 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
         var svg = d3.select("#" + ubicacion + ' .grafico ')
                 .append("svg")
                 .datum(currentDatasetChart)
-                .attr("viewBox", '-5 0 440 310')
+                .attr("viewBox", '-20 0 440 310')
+				.attr("style", 'width:96%')
                 .attr("preserveAspectRatio", 'none')
                 .attr("id", "ChartPlot");
         // create group and move it so that margins are respected (space for axis and title)
@@ -53,19 +62,22 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
                 ;
 
         var long = $('#' + ubicacion + ' .titulo_indicador').attr('data-unidad-medida').length;
+		
+		
         svg.append("g")
                 .attr("class", "axis")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .call(yAxis).append("text")
+                .attr("transform", "translate(" + margin.left + ",5)")                
+                .call(yAxis)
+                .append("text")
                 .attr("transform", "rotate(-90)")
-                .attr("y", -50)
+                .attr("y", -50)                
                 .attr("x", -((height / 2) + (long / 2) * 6.5))
-                .text($('#' + ubicacion + ' .titulo_indicador').attr('data-unidad-medida'));
-
-        svg.append("g")
+                .text($('#' + ubicacion + ' .titulo_indicador').attr('data-unidad-medida'));      
+			
+		svg.append("g")
                 .attr("class", "x axis")
-                .attr("transform", "translate(" + margin.left + "," + (margin.top + height ) + ")")
-                .call(xAxis);
+                .attr("transform", "translate(" + margin.left + "," + (margin.top + height + 5) + ")")
+                .call(xAxis);	
 
         plot.append("path")
                 .attr("class", "line")
@@ -78,19 +90,33 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
                 .enter().append("circle")
                 .attr("class", "dot")
                 .transition().duration(1000).delay(20)
-                .attr("fill", function(d, i) {
-            return colores_alertas(ubicacion, d.measure, i)
-        })
+                .attr("fill", function(d, i) 
+				{
+            		return colores_alertas(ubicacion, d.measure, i)
+        		})
                 .attr("cx", line.x())
                 .attr("cy", line.y())
                 .attr("r", 7.5)
                 .attr("stroke", colorChosen);
+				
         plot.selectAll(".dot")
                 .append("title")
-                .text(function(d) {
-            return d.category + ": " + d.measure;
-        });
-		
+                .text(function(d) 
+				{
+            		return d.category + ": " + d.measure;
+        		});
+				
+		if(meta>0)
+		{
+			svg.append("line")
+				.attr("x1", 5)
+				.attr("y1", (max_y-meta)*2.45)
+				.attr("x2", $("#"+zona+" .panel-body").width()-100)
+				.attr("y2", (max_y-meta)*2.45)
+				.attr("stroke-width", 2)
+				.attr("stroke", "blue");
+                	
+		}
 		plot.selectAll("text")
            .data(currentDatasetChart)
 	       .enter()

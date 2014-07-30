@@ -15,19 +15,28 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
             .rangeRoundBands([0, width], .1)
             ;
 
-    var max_y;
+    var max_y=100;
+	var meta=0;
 
+	
     //El nivel máximo de la escala puede ser el mayor valor de la serie
     // o el mayor valor del rango, el usuario elige
     // se utiliza datasetPrincipal_bk por si se han aplicado filtros
     // Así no usará el máximo valor del filtro
     var datasetPrincipal_bk = JSON.parse($('#' + zona).attr('datasetPrincipal_bk'));
-    max_y = d3.max(datasetPrincipal_bk, function(d) {
+    max_y = d3.max(datasetPrincipal_bk, function(d) 
+	{
         return parseFloat(d.measure);
     });
     if ($('#' + ubicacion + ' .max_y') != null && $('#' + ubicacion + ' .max_y').val() == 'rango_alertas')
         max_y = $('#' + zona + ' .titulo_indicador').attr('data-max_rango');
 
+	if (parseFloat($('#' + ubicacion + 'meta').attr("data-id"))>0)
+	{
+		meta=$('#' + zona + 'meta').attr("data-id");
+		max_y = $('#' + zona + ' .titulo_indicador').attr('data-max_rango');
+	}
+	
     var yScale = d3.scale.linear()
             .domain([0, max_y])
             .range([height, 0])
@@ -96,14 +105,18 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
                 .text(function(d) {
             return d.category + ": " + d.measure;
         });
-		svg.append("line")
-			.attr("x1", 5)
-			.attr("y1", 50)
-			.attr("x2", 500)
-			.attr("y2", 50)
-			.attr("stroke-width", 2)
-            .attr("stroke", "black");
-				
+		
+		if(meta>0)
+		{
+			svg.append("line")
+				.attr("x1", 5)
+				.attr("y1", (max_y-meta)*2.45)
+				.attr("x2", $("#"+zona+" .panel-body").width()-100)
+				.attr("y2", (max_y-meta)*2.45)
+				.attr("stroke-width", 2)
+				.attr("stroke", "blue");	
+		}
+	
 		plot.selectAll("text")
 			   .data(currentDatasetChart)
 			   .enter()
@@ -117,7 +130,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 				.attr('font-size', (xScale.rangeBand()/6)<1 ? 1: (xScale.rangeBand()/6))
 				.attr('font-family', 'arial')
 				.attr('fill', '#fff')
-				.attr("font-weight","bold");
+				.attr("font-weight","bold");		
 		        
         plot.selectAll("rect").on("dblclick", function(d, i) {
             descenderNivelDimension(ubicacion, d.category);

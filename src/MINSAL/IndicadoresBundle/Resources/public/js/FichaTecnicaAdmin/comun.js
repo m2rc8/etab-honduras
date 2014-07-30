@@ -15,37 +15,7 @@ var zona = 1;
 var max_zonas = 3;
 
 var color = d3.scale.category20();    //builtin range of colors
-function indicadorclick(id) 
-{
-	mid=$("#"+id).attr("data-id");
-	if($("#"+id).hasClass("active"))
-	{
-		$("#"+mid).removeClass("active");
-		$("#"+mid).removeClass("btn-success");			
-		$("#"+mid).html('<i class="glyphicon glyphicon-plus"></i>');
-		
-		$("#fav-"+mid).removeClass("active");
-		$("#fav-"+mid).removeClass("btn-success");			
-		$("#fav-"+mid).html('<i class="glyphicon glyphicon-plus"></i>');
-			
-		id=$("span[data-id='"+mid+"']").parent('div').parent('div').attr('id');
-		$(".zona_actual").removeClass("zona_actual");
-		$("#"+id).addClass("zona_actual");
-		limpiarZona2(id);
-		$("#"+id).remove();
-	}
-	else
-	{
-		sala_agregar_fila(); 
-		$("#"+mid).addClass("active btn-success");
-		$("#"+mid).html('<i class="glyphicon glyphicon-ok"></i>');
-		
-		$("#fav-"+mid).addClass("active btn-success");
-		$("#fav-"+mid).html('<i class="glyphicon glyphicon-ok"></i>');
-			
-		recuperarDimensiones($("#"+id).attr('data-id'),null);
-	}
-}
+
 function colores_alertas(zona, indice, i) 
 {
 
@@ -301,7 +271,8 @@ function dibujarGrafico(zona, dimension)
 	    		mensajerango += " "+trans.a+" 01/"+("0" + val.max_mes).slice(-2)+"/"+val.max_anio+"] ";
 	    	
 	    	$('#' + zona + ' .titulo_indicador').html($('#' + zona + ' .titulo_indicador').attr('nombre') );
-			$('#' + zona + ' .panel-footer').html(mensajerango);                	    	
+			$('#' + zona + ' .panel-footer').find(".pull-left").remove();
+			$('#' + zona + ' .panel-footer').append("<span class='pull-left'>"+mensajerango+"</span>");                	    	
 	    	$('#'+zona).attr("rangoanio" , resp.datos[0].min_anio+":"+resp.datos[resp.datos.length-1].max_anio);
 	    	//$('#fechainicio'+zona).datepicker("option", { yearRange : $('#'+zona).attr("rangoanio") , disabled : false});
 	        //$('#fechafin'+zona).datepicker("option",  { yearRange : $('#'+zona).attr("rangoanio") , disabled : false});
@@ -914,6 +885,7 @@ function recuperarDimensiones(id_indicador, datos)
     function(resp) 
 	{
         //Construir el campo con las dimensiones disponibles
+		var meta=0;
         if (resp.resultado === 'ok') 
 		{
             if (resp.dimensiones == '') 
@@ -921,9 +893,11 @@ function recuperarDimensiones(id_indicador, datos)
                 alert(trans.no_graficos_asignados);
             } 
 			else 
-			{
+			{				
                 dibujarControles(zona_g, resp);
-				
+				meta=resp.meta;
+				if(meta==null)
+				meta=0;
                 if (datos !== null) 
 				{
                     if (JSON.stringify(datos.filtro) !== '""') 
@@ -952,12 +926,14 @@ function recuperarDimensiones(id_indicador, datos)
                     $('#' + zona_g + ' .filtro_desde').val(datos.filtroPosicionDesde);
                     $('#' + zona_g + ' .filtro_hasta').val(datos.filtroPosicionHasta);
                     $('#' + zona_g + ' .titulo_indicador').attr('filtro-elementos', datos.filtroElementos);
-                    $('#' + zona_g + ' .tipo_grafico_principal').val(datos.tipoGrafico);
+                    $('#' + zona_g + ' .tipo_grafico_principal').val(datos.tipoGrafico);					
+					
                 }
                 dibujarGrafico(zona_g, $('#' + zona_g + ' .dimensiones').val());
-				
             }
 			$("#"+zona_g).removeClass('zona_actual');
+			
+			$('#' + zona_g + ' .panel-footer').append("<span class='pull-right' data-id='"+meta+"' id='"+zona_g+"meta'><strong>-</strong> Meta: "+meta+"</span>.");
         }
     });	
 }
@@ -1292,7 +1268,7 @@ function acciones_button()
         $.get(Routing.generate('get_indicador_ficha',{id: $('#' + zona + ' .titulo_indicador').attr('data-id')}),
         function(resp) 
 		{
-			console.log($('#myModalLabel2').html());
+			
             $('#myModalLabel2').html($('#' + zona+' .titulo').find("span").text());
             $('#sql').html(resp);
             //Dejar solo el código html de la tabla, quitar todo lo demás

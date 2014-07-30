@@ -24,6 +24,7 @@ graficoGauge = function(ubicacion, datos, colorChosen, categoryChoosen) {
           //.attr("width", 300)
           //.attr("height", 270)
           .attr("viewBox", '-20 0 440 310')
+		  .attr("style", 'width:96%')
           .attr("preserveAspectRatio", 'none')
           .attr("id", "ChartGauge");
 
