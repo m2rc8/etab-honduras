@@ -28,7 +28,7 @@
         <div class="well form-actions">
             <form method="POST" action="{{ admin.generateObjectUrl('delete', object) }}">
                 <input type="hidden" value="DELETE" name="_method" />
-
+				<input type="hidden" value="{{ csrf_token }}" name="_sonata_csrf_token" />
                 <button type="submit" class="btn btn-danger" />
                     <i class="glyphicon glyphicon-trash"></i>
                     {{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}

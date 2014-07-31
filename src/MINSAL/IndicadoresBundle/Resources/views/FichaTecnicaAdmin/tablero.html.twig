@@ -421,9 +421,9 @@ $(document).ready(function(){
 					'onclick="cargar_indicador('+datos[c].id+');" id="'+datos[c].id+'">'+
 					'<i class="glyphicon glyphicon-plus"></i>'+
 					'</button>'+datos[c].nombre+'</li>';										
-				}		
-				
+				}						
 				$("#miclasificacion").append(li);
+				marcar_agregados();
 			}
 		});
 		

@@ -129,30 +129,30 @@ file that was distributed with this source code.
     <div class="well form-actions">
         {% if app.request.isxmlhttprequest %}
             {% if admin.id(object) %}
-                <button type="submit" class="btn btn-primary" name="btn_update" >
+                <button type="submit" class="btn btn-primary" name="btn_update" value="{{ 'btn_update'|trans({}, 'SonataAdminBundle') }}">
                     <i class="glyphicon glyphicon-edit"></i>
                     {{ 'btn_update'|trans({}, 'SonataAdminBundle') }}
                 </button>
             {% else %}
-                <button type="submit" class="btn btn-info" name="btn_create" >
+                <button type="submit" class="btn btn-info" name="btn_create" value="{{ 'btn_create'|trans({}, 'SonataAdminBundle') }}">
                     <i class="glyphicon glyphicon-ok"></i>
                     {{ 'btn_create'|trans({}, 'SonataAdminBundle') }}
                 </button>
             {% endif %}
         {% else %}
             {% if admin.supportsPreviewMode %}
-                <button class="btn btn-info persist-preview" name="btn_preview" type="submit">
+                <button class="btn btn-info persist-preview" name="btn_preview" type="submit" value="{{ 'btn_preview'|trans({}, 'SonataAdminBundle') }}">
                 <i class="glyphicon glyphicon-search"></i> 
                 {{ 'btn_preview'|trans({}, 'SonataAdminBundle') }}
                 </button>
             {% endif %}
             {% if admin.id(object) %}
-                <button type="submit" class="btn btn-primary" name="btn_update_and_edit" >
+                <button type="submit" class="btn btn-primary" name="btn_update_and_edit" value="{{ 'btn_update_and_edit_again'|trans({}, 'SonataAdminBundle') }}">
                     <i class="glyphicon glyphicon-edit"></i>
                     {{ 'btn_update_and_edit_again'|trans({}, 'SonataAdminBundle') }}
                 </button>
-                <button type="submit" class="btn btn-info" name="btn_update_and_list" >
-                <i class="glyphicon glyphicon-share-alt"></i> 
+                <button type="submit" class="btn btn-info" name="btn_update_and_list" value="{{ 'btn_update_and_return_to_list'|trans({}, 'SonataAdminBundle') }}" >
+                <i class="glyphicon glyphicon-share-alt"></i>                 
                 {{ 'btn_update_and_return_to_list'|trans({}, 'SonataAdminBundle') }}
                 </button>
 
@@ -164,15 +164,15 @@ file that was distributed with this source code.
                     </a>
                 {% endif %}
             {% else %}
-                <button class="btn btn-primary" type="submit" name="btn_create_and_edit" >
+                <button class="btn btn-primary" type="submit" name="btn_create_and_edit" value="{{ 'btn_create_and_edit_again'|trans({}, 'SonataAdminBundle') }}">
                     <i class="glyphicon glyphicon-ok"></i>
                     {{ 'btn_create_and_edit_again'|trans({}, 'SonataAdminBundle') }}
                 </button>
-                <button type="submit" class="btn btn-info" name="btn_create_and_list">
+                <button type="submit" class="btn btn-info" name="btn_create_and_list" value="{{ 'btn_create_and_return_to_list'|trans({}, 'SonataAdminBundle') }}">
                 <i class="glyphicon glyphicon-share-alt"></i> 
                 {{ 'btn_create_and_return_to_list'|trans({}, 'SonataAdminBundle') }}
                 </button>
-                <button class="btn btn-success" type="submit" name="btn_create_and_create">
+                <button class="btn btn-success" type="submit" name="btn_create_and_create" value="{{ 'btn_create_and_create_a_new_one'|trans({}, 'SonataAdminBundle') }}">
                 <i class="glyphicon glyphicon-plus"></i> 
                 {{ 'btn_create_and_create_a_new_one'|trans({}, 'SonataAdminBundle') }}
                 </button>
