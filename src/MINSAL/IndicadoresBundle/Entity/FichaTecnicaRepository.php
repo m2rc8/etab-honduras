@@ -297,10 +297,12 @@ class FichaTecnicaRepository extends EntityRepository
         preg_match_all('/\{[a-z0-9\_]{1,}\}/', strtolower($formula), $variables, PREG_SET_ORDER);
 
         $oper = 'SUM';
-        if ($acumulado) {
+        if ($acumulado) 
+		{
             $formula = str_replace(array('{', '}'), array('MAX(', ')'), $formula);
             $oper = 'MAX';
-        } else
+        } 
+		else
             $formula = str_replace(array('{', '}'), array('SUM(', ')'), $formula);
 
         $denominador = explode('/', $fichaTecnica->getFormula());
@@ -317,7 +319,8 @@ class FichaTecnicaRepository extends EntityRepository
         $variables_query = '';
         foreach ($variables as $var) {
             $v = str_replace(array('{', '}'), array('', ''), $var[0]);
-            $variables_query .= " $oper($v) as $v, ";
+			
+            $variables_query .= "case $oper($v) when null then 0 else $oper($v) end as $v, ";
         }
         $variables_query = trim($variables_query, ', ');
 
@@ -397,7 +400,7 @@ class FichaTecnicaRepository extends EntityRepository
             $grupo_extra = ', B.id ';
         }
 
-        $sql = "SELECT $camposrangos $dimension AS category, $otros_campos $variables_query, round(($formula)::numeric,2) AS measure FROM $tabla_indicador A" . $rel_catalogo;
+        $sql = "SELECT $camposrangos $dimension AS category, $otros_campos $variables_query, case concat('A',round(($formula)::numeric,2)) when 'A' then 0 else round(($formula)::numeric,2) end AS measure FROM $tabla_indicador A" . $rel_catalogo;
         $sql .= ' WHERE 1=1 ' . $evitar_div_0 . $filtroporfecha;
 		$orderid="";
 		

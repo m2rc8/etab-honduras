@@ -94,6 +94,8 @@ $(document).ready(function() {
 			$("#_cerrar_sala_").attr("style","display:none");
 			$("#_guardar_sala_").attr("style","display:none");
 			$("#titulo_header").attr("style","display:none");
+			
+			graficos=Array();
 		}
 		else
 		{

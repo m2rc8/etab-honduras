@@ -32,7 +32,7 @@ function colores_alertas(zona, indice, i)
         return 'lightblue';
     }
 }
-
+var graficos=Array();
 function dibujarGraficoPrincipal(zona, tipo) 
 {
 	//en el caso de que se recuperen tipos de graficos null
@@ -44,10 +44,10 @@ function dibujarGraficoPrincipal(zona, tipo)
     $('#' + zona + ' .dimension').html($('#' + zona + ' .dimensiones option:selected').html());
     cerrarMenus();
     var grafico = crearGraficoObj(zona, tipo);
-
+	graficos[zona] = grafico;
     $('#' + zona + ' .titulo').show();
     grafico.dibujar();
-    aplicarFormato();
+    //aplicarFormato();
 
     var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
     construir_tabla_datos(zona, datasetPrincipal);
@@ -55,7 +55,7 @@ function dibujarGraficoPrincipal(zona, tipo)
 	if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out')||getCookieS("zoom"+zona)=='1')
 	{
 		$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-out');
-		if (typeof (event) != "undefined")
+		/*if (typeof (event) != "undefined")
 		{
 			if($("#svg-pan-zoom-controls"))
 			$("#svg-pan-zoom-controls").remove();
@@ -75,11 +75,12 @@ function dibujarGraficoPrincipal(zona, tipo)
 			$("#"+zona+" .grafico").attr("style",hei);			
 			$('#' + zona).attr("style","width:100%; height:100%");
 			$('#'+zona +' svg').animate({height:$(window).height()/1.2});						
-		}
+		}*/
 	}
 }
 function aplicarFormato() 
 {
+	/*
     d3.selectAll(".axis path, .axis line")
             .attr('fill', 'none')
             .attr('stroke', 'black');
@@ -91,10 +92,9 @@ function aplicarFormato()
             .attr('font-family', 'sans-serif');
     d3.selectAll(".axis text")
             .attr('font-family', 'sans-serif')
-            .attr('font-size', '9pt');
+            .attr('font-size', '8pt');
     d3.selectAll(".background").attr('fill', 'none');
-
-    d3.selectAll(".x g text").attr("transform", "rotate(45)").attr('x', 7).attr('y', 10).attr('text-anchor', 'start');
+	*/
 }
 function crearGraficoObj(zona, tipo) 
 {
@@ -158,11 +158,6 @@ function ascenderNivelDimension(zona, nivel)
     $filtro.html(ruta);
     $filtro.attr('data', JSON.stringify(nuevo_filtro));
 
-    $('#' + zona + ' .filtros_dimensiones A').on('click',function(e)
-	{
-        ascenderNivelDimension(zona, $(this).attr('data'));
-    });
-
     dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
     $('#' + zona).attr('orden', null);
     $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
@@ -185,6 +180,7 @@ function filtroRuta(filtros_obj)
 }
 function descenderNivelDimension(zona, category) 
 {
+	
     if ($('#' + zona + ' .dimensiones option').length <= 1) 
 	{
         alert(trans.no_mas_niveles);
@@ -220,6 +216,7 @@ function descenderNivelDimension(zona, category)
 	{
         ascenderNivelDimension(zona, $(this).attr('data'));
     });
+	
 	dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
     $('#' + zona).attr('orden', null);
     $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
@@ -246,7 +243,7 @@ function dibujarGrafico(zona, dimension)
         var max = $('#fechafin'+zona).val().split('-');
         filtrofecha = {mesmin : min[1],aniomin : min[0],mesmax:max[1],aniomax:max[0]};
     }
-    
+    $('#' + zona).removeAttr('datasetPrincipal_bk');
     $.getJSON(Routing.generate('indicador_datos',{id: $('#' + zona + ' .titulo_indicador').attr('data-id'), dimension: dimension}),
     {filtro: filtro, ver_sql: false, filtrofecha : filtrofecha},
     function(resp) 
@@ -334,7 +331,7 @@ function ordenarDatos(zona, ordenar_por, modo_orden)
     grafico.ordenar(modo_orden, ordenar_por);
     var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
     construir_tabla_datos(zona, datasetPrincipal);
-    aplicarFormato();
+    //aplicarFormato();
 }
 //filtro...
 function aplicarFiltro(zona) 
@@ -501,7 +498,7 @@ function dibujarControles(zona, datos)
 					'<li><a class="ver_sql" data-id="'+zona+'"><i class="glyphicon glyphicon-eye-open" ></i> ' + trans.ver_sql + ' </a></li>' +
 			'</ul>';
 				
-	image='<div class="opciones_dimension dropdown-menu" role="menu" id="'+ zona +'_image" style="width:150px; height:154px;"></div>';
+	image='<ul class="opciones_dimension dropdown-menu" role="menu" id="'+ zona +'_image" ></ul>';
 	
 	//inicio Botones 
 	botones='<button class="btn btn-info myOption" data-toggle="modal" data-target="#myOption'+ zona +'" title="' + trans.opciones_grafico + '" data-id="'+zona+'">' +
@@ -509,13 +506,10 @@ function dibujarControles(zona, datos)
 			'</button>';	
 	if (rangos_alertas.length > 0) 
 	{
-	botones+='<button class="btn btn-warning myAlert" data-toggle="modal" data-target="#myAlert'+ zona +'"  title="' + trans.alertas_indicador + '" data-id="'+zona+'">' +
+	botones+='<button class="btn btn-info myAlert" data-toggle="modal" data-target="#myAlert'+ zona +'"  title="' + trans.alertas_indicador + '" data-id="'+zona+'">' +
 				'<i class="glyphicon glyphicon-exclamation-sign"></i>' +
 			'</button>';
-	}
-	botones+='<div class="btn-group"><button class="btn btn-info dropdown-toggle myConfig" data-toggle="dropdown" title="' + trans.opciones + '" data-id="'+zona+'">' +
-				'<i class="glyphicon glyphicon-info-sign"></i> <span class="caret"></span>' +
-			'</button>'+myConfig+'</div>';
+	}	
 	
 	botones+='<button class="btn btn-info myFilter" data-toggle="modal" data-target="#myFilter'+ zona +'" title="' + trans.dimension_opciones + '" data-id="'+zona+'">' +
 				'<i class="glyphicon glyphicon-filter"></i>' +
@@ -524,10 +518,10 @@ function dibujarControles(zona, datos)
 	botones+='<div class="btn-group div_toimage"><button class="btn btn-info dropdown-toggle toimage" id="'+ zona +'_toimage" data-toggle="dropdown" title="' + trans.exportar_imagen + '" data-id="'+zona+'">' +
 				'<i class="glyphicon glyphicon-camera"></i> <span class="caret"></span>' +
 			'</button>'+image+'</div>';
-	
-	botones+='<button class="btn btn-info myMax" data-toggle="dropdown" title="' + trans.maximizar + '" id="'+ zona+'_maximizar" data-id="'+zona+'">' + 
-				'<i class="glyphicon glyphicon-zoom-in" id= "'+ zona +'_icon_maximizar"></i>' +
-			'</button>';
+			
+	botones+='<div class="btn-group"><button class="btn btn-info dropdown-toggle myConfig" data-toggle="dropdown" title="' + trans.opciones + '" data-id="'+zona+'">' +
+				'<i class="glyphicon glyphicon-info-sign"></i> <span class="caret"></span>' +
+			'</button>'+myConfig+'</div>';
 			
 	botones+='<button class="btn btn-info myNote" id="'+ zona +'_ultima_lectura" data-toggle="modal" data-target="#myNote'+ zona +'" title="' + trans.notas_lectura + '" data-id="'+zona+'">' +
 				'<i class="glyphicon glyphicon-calendar"></i>' +
@@ -538,14 +532,18 @@ function dibujarControles(zona, datos)
 			'</button>';
 	else
 		botones+='<button class="btn btn-warning agregar_como_favorito" data-toggle="dropdown" title="' + trans.quitar_favoritos + '" data-indicador="' + datos.id_indicador + '" data-id="'+zona+'">' +
-				'<i class="glyphicon glyphicon-star-empty"></i>' +
+				'<i class="glyphicon glyphicon-star"></i>' +
 			'</button>';
 			
 	botones+='<button class="btn btn-info myRefresh" id="'+ zona +'_refresh" data-toggle="dropdown" title="' + trans.refrescar + '" data-id="'+zona+'">' +
 				'<i class="glyphicon glyphicon-refresh"></i>' +
 			'</button>';
 	
-	botones+='<button class="btn btn-info quitar_indicador" id="'+ zona +'_refresh" data-toggle="dropdown" title="' + trans.quitar_indicador + '" data-id="'+zona+'">' +
+	botones+='<button class="btn btn-info myMax" data-toggle="dropdown" title="' + trans.maximizar + '" id="'+ zona+'_maximizar" data-id="'+zona+'">' + 
+				'<i class="glyphicon glyphicon-zoom-in" id= "'+ zona +'_icon_maximizar"></i>' +
+			'</button>';
+			
+	botones+='<button class="btn btn-info quitar_indicador" id="'+ zona +'_quitar" data-toggle="dropdown" title="' + trans.quitar_indicador + '" data-id="'+zona+'">' +
 				'<i class="glyphicon glyphicon-remove-sign"></i>' +
 			'</button>';
 	
@@ -760,14 +758,15 @@ function dibujarControles(zona, datos)
 function minimizar(zona,contenedor)
 {
 	$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-out');
-	$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-in');		
+	$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-in');	
+	$('#' + zona + '_quitar').removeAttr("style");	
 	
-	panZoom.disablePan();
+	/*panZoom.disablePan();
 	panZoom.disableZoom();
 	panZoom.resetZoom("#"+zona+" svg");
 	$('#' + zona+' .grafico').html('');
 	$("#svg-pan-zoom-controls").remove();
-	delete panZoom;
+	delete panZoom;*/
 	$('#_maximizado').html($('#contenedor_maximizado').html());
 	$('#contenedor_maximizado').remove();
 	$('#esc_maximizado').remove();
@@ -807,7 +806,7 @@ function alternar_favorito(zona, id_indicador)
     } 
 	else 
 	{
-        $('#' + zona + ' .agregar_como_favorito').html('<i class=" glyphicon glyphicon-star-empty"></i>');
+        $('#' + zona + ' .agregar_como_favorito').html('<i class=" glyphicon glyphicon-star"></i>');
 		$('#' + zona + ' .agregar_como_favorito').removeClass("btn-info").addClass("btn-warning");
 		
 		
@@ -932,7 +931,7 @@ function recuperarDimensiones(id_indicador, datos)
                 dibujarGrafico(zona_g, $('#' + zona_g + ' .dimensiones').val());
             }
 			$("#"+zona_g).removeClass('zona_actual');
-			
+			$('#' + zona_g + ' .panel-footer').find("#"+zona_g+"meta").remove();
 			$('#' + zona_g + ' .panel-footer').append("<span class='pull-right' data-id='"+meta+"' id='"+zona_g+"meta'><strong>-</strong> Meta: "+meta+"</span>.");
         }
     });	
@@ -980,20 +979,15 @@ function acciones_button()
 		{
 			zona=$(this).attr("data-id");
 			
-            $("#"+zona+"_image").html('<canvas id="'+zona+'canvas" style="display:none"></canvas><img id="'+zona+'laimage" style="clear:both;display:none;" ><a class="btn btn-info dropdown-toggle" id="'+zona+'esvg">SVG</a> <a class="btn btn-primary dropdown-toggle btn-small" id="'+zona+'open" target="_blank"><i class="glyphicon glyphicon-open"></i></a> <a class="btn btn-info dropdown-toggle" id="'+zona+'epng">PNG</a><div id="'+zona+'lasvg" style="display:none"></div>');
+            $("#"+zona+"_image").html('<li><a id="'+zona+'esvg"><i class="ion ion-images"></i> SVG</a></li><li> <a id="'+zona+'epng"><i class="ion ion-image"></i> PNG</a></li>');
 			
 			// se obtiene el uniqid que genera en auto symfony al create			
 			$("svg").attr({ version: '1.1' , xmlns:"http://www.w3.org/2000/svg"});
 			var valor = $("#"+zona+" .grafico").html();
 			
-			if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out'))
-			{
-				valor='<svg viewBox="-20 0 800 500" preserveAspectRatio="none" id="ChartPlot" version="1.1" xmlns="http://www.w3.org/2000/svg">'+$("#"+zona+" #viewport").html()+'</svg>';
-				$("#"+zona+"lasvg").append(valor);
-			}									
 			valor=window.btoa( valor );
 			
-			var img = document.getElementById(zona+"laimage");
+			var img = document.createElement("img");
 			img.setAttribute( "src", "data:image/svg+xml;base64," +valor) ;
 			titulo=$('#' + zona+' .titulo').find("span").text();   
 			img.onload =new function()
@@ -1001,15 +995,14 @@ function acciones_button()
 				var a = document.getElementById(zona+"esvg");
 				a.download = titulo+".svg";
 				a.href = "data:image/svg+xml;base64," +valor;		  
-				
-				var o = document.getElementById(zona+"open")
-				o.href = "data:image/svg+xml;base64," +valor ;	
-				
-				img.style.display = "block";								
+								
+				img.style.display = "none";								
 				
 			};
-			var image = document.getElementById(zona+"laimage");
-			var canvas = document.getElementById(zona+"canvas");
+			
+			var image = img;
+			var canvas = document.createElement("canvas");
+			
 			canvas.width = image.width;
 			canvas.height = image.height;
 			if (canvas.getContext) 
@@ -1088,6 +1081,7 @@ function acciones_button()
 			$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-in');
 			$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-out');
 			$('#'+zona).parent().attr('id','_maximizado');
+			$('#' + zona + '_quitar').attr("style","display:none");	
 			contenedor = document.createElement('div');
 			$(contenedor).attr('alt',$('#' + zona).index());
 			$(contenedor).addClass("row");
@@ -1125,11 +1119,9 @@ function acciones_button()
 			$(contenedor).fadeIn('slow',function()
 			{
 				$('#'+zona +' .panel-body').animate({height:$(window).height()/1.109 , width: $(window).width()-1});
-				$('#'+zona +' svg').animate({height:$(window).height()/1.2});
-		   //     dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
 			});
-			
-			if (typeof (event) == "undefined")
+			aplicarFiltro(zona);
+			/*if (typeof (event) == "undefined")
 				aplicarFiltro(zona);
 			if($("#svg-pan-zoom-controls"))
 			$("#svg-pan-zoom-controls").remove();
@@ -1143,7 +1135,7 @@ function acciones_button()
 			$("#"+zona+" #viewport").attr("transform",matrix);
 
 			var tra="translate("+($(document).width()-180)+" "+($(window).height()/1.33 )+" ) scale(0.75)";
-			$("#svg-pan-zoom-controls").attr("transform",tra);
+			$("#svg-pan-zoom-controls").attr("transform",tra);*/
 		}
 	}
   });
@@ -1303,4 +1295,14 @@ function acciones_button()
             $('#myModal2').modal('show');
         }, 'html');
     });
+}
+
+$(window).on('resize', resizeGraficos); 
+
+function resizeGraficos() 
+{
+	if(Object.keys(graficos).length>0)
+	$(".area_grafico").each(function(){
+		graficos[$(this).attr("id")].dibujar();
+	});
 }

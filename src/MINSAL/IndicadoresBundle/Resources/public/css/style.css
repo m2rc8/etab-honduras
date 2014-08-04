@@ -695,16 +695,27 @@ h6,
   white-space: nowrap;
   padding: 0;
 }
+.small-box p {
+  font-size: 15px;
+}
 @media (max-width: 1024px) and (min-width: 768px) {
 	.small-box h3 
 	{
   		font-size: 1.5em;
+	}
+	.small-box p 
+	{
+	  font-size: 15px;
 	}
 }
 @media (max-width: 768px) and (min-width: 480px) {
 	.small-box h3 
 	{
   		font-size: 1.1em;
+	}
+	.small-box p 
+	{
+	  font-size: 12px;
 	}
 }
 
@@ -713,17 +724,23 @@ h6,
 	{
   		font-size: .8em; 
   	} 
+	.small-box p 
+	{
+	  font-size: 9px;
+	}
 }
 @media (max-width: 320px) and (min-width: 160px) {
 	.small-box h3 
 	{
   		font-size: .4em; 
   	} 
+	.small-box p 
+	{
+	  font-size: 6px;
+	}
 }
 
-.small-box p {
-  font-size: 15px;
-}
+
 .small-box p > small {
   display: block;
   color: #f9f9f9;

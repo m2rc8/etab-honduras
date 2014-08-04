@@ -42,7 +42,8 @@ class IndicadorController extends Controller
             $resp['unidad_medida'] = $fichaTec->getUnidadMedida();
 			if($fichaTec->getUpdatedAt()!="")
 			$resp["origen_dato_actualizacion"]= date('d/m/Y H:i:s',$fichaTec->getUpdatedAt()->getTimestamp());
-            if ($fichaTec->getCamposIndicador() != '') {
+            if ($fichaTec->getCamposIndicador() != '') 
+			{
                 $campos = explode(',', str_replace(array("'", ' '), array('', ''), $fichaTec->getCamposIndicador()));
             } 
 			else 
@@ -52,9 +53,9 @@ class IndicadorController extends Controller
             $dimensiones = array();
             foreach ($campos as $campo) 
 			{
-                $significado = $em->getRepository('IndicadoresBundle:SignificadoCampo')
-                        ->findOneByCodigo($campo);
-                if (count($significado->getTiposGraficosArray()) > 0) {
+                $significado = $em->getRepository('IndicadoresBundle:SignificadoCampo')->findOneByCodigo($campo);
+                if (count($significado->getTiposGraficosArray()) > 0) 
+				{
                     $dimensiones[$significado->getCodigo()]['descripcion'] = ucfirst(preg_replace('/^Identificador /i', '', $significado->getDescripcion()));
                     $dimensiones[$significado->getCodigo()]['escala'] = $significado->getEscala();
                     $dimensiones[$significado->getCodigo()]['origenX'] = $significado->getOrigenX();

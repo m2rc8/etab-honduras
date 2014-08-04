@@ -34,6 +34,10 @@
 	{
 		width:100%;	
 	}
+	.myMax
+	{
+		display:none;
+	}
 }
 
 @media screen and (max-width:890px)
@@ -50,3 +54,32 @@
 	overflow-y: hidden;
 	overflow:hidden;
 }
+
+.bar {
+	border:none;
+}
+
+.bar:hover {
+	opacity:0.7;
+}
+
+.axis {
+  font: 1em;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.bar text {
+    font-size: 12px;
+    fill: #333;
+}
+
