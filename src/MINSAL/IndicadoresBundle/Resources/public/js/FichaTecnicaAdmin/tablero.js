@@ -287,7 +287,7 @@ function sala_agregar_fila()
 	$('div .area_grafico').removeClass('zona_actual');
 	var cant = 1  +  Math . floor ( Math . random ()  *  999999999 );
 	var html =  '<div class="col-md-4">'+
-					'<div class="panel panel-default area_grafico zona_actual" data-id="'+parseInt(cant+1)+'" id="grafico_' + parseInt(cant+1) + '" >' +						
+					'<div class="panel panel-default area_grafico zona_actual" data-id="'+parseInt(cant+1)+'" id="grafico_' + parseInt(cant+1) + '" data-dimension="" data-desde="" data-hasta="" data-elementos="" data-codigo="" data-valor="" data-filtroActivo="" data-graficos="">' +						
 					'<div class="panel-heading">'+
 					'<strong>'+
 						'<div class="titulo"><span class="titulo_indicador"></span>'+
@@ -351,10 +351,6 @@ function cargar_indicador(mid)
 		$("#"+id).addClass("zona_actual");
 		limpiarZona2(id);			
 		
-		/*if(contador==1)
-			$("#"+id).parent().parent().remove();
-		else
-			$("#"+id).parent().remove();*/
 	}
 	else
 	{

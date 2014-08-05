@@ -12,8 +12,8 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
     this.dibujar = function() 
 	{
 		
-		var margin = {top: 10, right: 40, bottom: 75, left: 50},
-		width = parseInt(d3.select('#'+this.zona+' .panel-body').style('width'), 10)
+		var margin = {top: 30, right: 40, bottom: 75, left: 50},
+		width = parseInt(d3.select('#'+this.zona+' .panel-body').style('width'), 10);		
 		width  = width - margin.left - margin.right-50,
 		barPadding = 1;
 		var height=parseInt(d3.select('#'+this.zona+' .panel-body').style('height'), 10)-150;
@@ -21,7 +21,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			height=height-50;
 		if(height<300||height>width)
 		height=width*.65;
-		
+		console.log(height+"="+width);
 		var xScale = d3.scale.ordinal()
 			.domain(this.currentDatasetChart.map(function(d) 
 			{
@@ -104,12 +104,13 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			  
 		svg.append("text")
 			.attr("class","axis-label")
-			.attr("transform", "rotate(-90)")
-			.attr("y", 6)
-			.attr("dy", "-4.2em")	  
+			.attr("transform", "rotate(0)")
+			.attr("y", 0)
+			.attr("x", 15)
+			.attr("dy", "-2.2em")	  
 			.text(long+" "+texto)
 			.style("text-anchor", "end")
-			.style("font-size", "0.7em");
+			.style("font-size", "0.7em");			
 		    
 		  
 		svg.append("g")
@@ -122,6 +123,17 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			.attr('style', '')
 			.style("font-size", "0.7em")
 			.attr("transform", "rotate(30)");
+		
+		var ylabel=$('#' + contexto.zona + ' .dimensiones option:selected').text();
+		svg.append("text")
+			.attr("class","axis-label")
+			.attr("transform", "rotate(-90)")
+			.attr("y", width+margin.left)
+			.attr("x",-((height-margin.top)-ylabel.length))
+			.attr("dy", "-4.2em")	  
+			.text(ylabel)
+			.style("text-anchor", "end")
+			.style("font-size", "0.7em");
 		  
 		var plot = svg
 		.append("g")		 
@@ -130,6 +142,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			.data(contexto.currentDatasetChart)
 			.enter()
 			.append("text")
+			.attr("class","label")
 			.text(function(d) 
 			{
 				return d.measure;
@@ -166,47 +179,10 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			svg.selectAll("rect").attr("fill", this.color);
 	};
     this.ordenar = function(modo_orden, ordenar_por) 
-	{
-        var margin = {top: 10, right: 5, bottom: 25, left: 40},
-		width = parseInt(d3.select('#'+this.zona+' .panel-body').style('width'), 10)
-		width  = width - margin.left - margin.right-50,
-		barPadding = 1;
-		var height=parseInt(d3.select('#'+this.zona+' .panel-body').style('height'), 10)-150;
-		if(height<300||height>width)
-		height=width*.65;
-		
-		var xScale = d3.scale.ordinal()
-			.domain(this.currentDatasetChart.map(function(d) 
-			{
-				return d.category;
-			}))
-			.rangeRoundBands([0, width], .1);
-		var xAxis = d3.svg.axis().scale(xScale).orient("bottom");		
-        var svg = d3.select("#" + this.zona + ' .grafico');
+	{        
         
-        var datos_ordenados = ordenarArreglo(this.currentDatasetChart, ordenar_por, modo_orden);
-        var x0 = xScale.domain(datos_ordenados.map(function(d) 
-				{
-					return d.category;
-				})).copy();
-
-        var transition = svg.transition().duration(750),
-                delay = function(d, i) 
-				{
-					return i * 40;
-				};
-        
-        transition.selectAll("#"+this.zona+" rect")
-                .delay(delay)
-                .attr("x", function(d) 
-				{
-					return x0(d.category);
-				});
-        transition.select('#'+this.zona+' .x.axis')
-                .call(xAxis)
-                .selectAll("g")
-                .delay(delay);
-        // Ordenar la tabla de datos
+        this.currentDatasetChart = ordenarArreglo(this.currentDatasetChart, ordenar_por, modo_orden);
+        this.dibujar();
         $('#' + this.zona).attr('datasetPrincipal', JSON.stringify(this.currentDatasetChart));
     };	
 }

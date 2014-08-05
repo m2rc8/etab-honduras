@@ -54,174 +54,8 @@ function dibujarGraficoPrincipal(zona, tipo)
 	
 	if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out')||getCookieS("zoom"+zona)=='1')
 	{
-		$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-out');
-		/*if (typeof (event) != "undefined")
-		{
-			if($("#svg-pan-zoom-controls"))
-			$("#svg-pan-zoom-controls").remove();
-			panZoom = Object.create(svgPanZoom);
-			panZoom.init({
-			  'selector': "#"+zona+" #ChartPlot",
-			  'zoomEnabled': true ,
-			  'controlIconsEnabled': true 
-			});
-			var matrix="matrix(2,0,0,2,"+$(document).width()/3.5+","+$(document).height()/6.5+")";
-			$("#"+zona+" #viewport").attr("transform",matrix);
-
-			var tra="translate("+($(document).width()-180)+" "+($(window).height()/1.33 )+" ) scale(0.75)";
-			$("#svg-pan-zoom-controls").attr("transform",tra);
-			
-			var hei="height:"+($(document).height()-120)+"px;";
-			$("#"+zona+" .grafico").attr("style",hei);			
-			$('#' + zona).attr("style","width:100%; height:100%");
-			$('#'+zona +' svg').animate({height:$(window).height()/1.2});						
-		}*/
+		$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-out');		
 	}
-}
-function aplicarFormato() 
-{
-	/*
-    d3.selectAll(".axis path, .axis line")
-            .attr('fill', 'none')
-            .attr('stroke', 'black');
-    d3.selectAll(".line")
-            .attr('fill', 'none')
-            .attr('stroke-width', '2px');
-    d3.selectAll(".slice")
-            .attr('font-size', '11pt')
-            .attr('font-family', 'sans-serif');
-    d3.selectAll(".axis text")
-            .attr('font-family', 'sans-serif')
-            .attr('font-size', '8pt');
-    d3.selectAll(".background").attr('fill', 'none');
-	*/
-}
-function crearGraficoObj(zona, tipo) 
-{
-    var grafico;
-    var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
-    if (tipo == 'pastel')
-        grafico = new graficoPastel(zona, datasetPrincipal);
-    else if (tipo == 'columnas')
-        grafico = new graficoColumnas(zona, datasetPrincipal);
-    else if (tipo == 'lineas')
-        grafico = new graficoLineas(zona, datasetPrincipal);
-    else if (tipo == 'mapa')
-        grafico = new graficoMapa(zona, datasetPrincipal);
-    else if (tipo == 'gauge')
-	{
-    	if (datasetPrincipal[1] != null)
-    	grafico = new graficoColumnas(zona, datasetPrincipal);
-    	else
-        grafico = new graficoGauge(zona, datasetPrincipal);
-	}
-    else if (tipo == 'lineargauge' /*termometro*/)
-    {
-    	if (datasetPrincipal[1] != null)
-    	grafico = new graficoColumnas(zona, datasetPrincipal);
-    	else
-        grafico = new graficoTermometro(zona, datasetPrincipal);
-    }
-
-    return grafico;
-}
-function ascenderNivelDimension(zona, nivel) 
-{
-    var ultimo,
-            ruta = '',
-            $filtro = $('#' + zona + ' .filtros_dimensiones'),
-            filtros_obj = jQuery.parseJSON($filtro.attr('data'));
-
-    var nuevo_filtro = [{}];
-    $.each(filtros_obj, function(i, obj) 
-	{
-        if (i <= nivel) 
-		{
-            nuevo_filtro[i] = obj;
-            if (i == nivel)
-                ruta +='<li>'+obj.etiqueta + ': ' + obj.valor+'</li> ';
-            else
-                ruta += '<li><a data="' + i + '">' + obj.etiqueta + ': ' + obj.valor + '</a></li> ';
-        }
-        else 
-		{
-            // Los que estén a la derecha del seleccionado deben volver al control de dimensiones                        
-            $('#' + zona + ' .dimensiones').append("<OPTION VALUE='" + obj.codigo + "'>" + obj.etiqueta + "</OPTION>");
-            if (i == parseInt(nivel) + 1)
-                primero = obj.codigo;
-        }
-    });
-	
-    //El primer elemento 
-    $('#' + zona + ' .dimensiones').children('option[value="' + primero + '"]').attr('selected', 'selected');
-
-    $filtro.html(ruta);
-    $filtro.attr('data', JSON.stringify(nuevo_filtro));
-
-    dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
-    $('#' + zona).attr('orden', null);
-    $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
-    $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');	
-}
-
-function filtroRuta(filtros_obj) 
-{
-    var ruta = '';
-    //var filtros_obj = );
-    var cant_obj = filtros_obj.length;
-    $.each(filtros_obj, function(i, obj) 
-	{
-        if (i == (cant_obj - 1))
-            ruta += obj.etiqueta + ': ' + obj.valor;
-        else
-            ruta += '<a data="' + i + '">' + obj.etiqueta + ': ' + obj.valor + '</a> / ';
-    });
-    return ruta;
-}
-function descenderNivelDimension(zona, category) 
-{
-	
-    if ($('#' + zona + ' .dimensiones option').length <= 1) 
-	{
-        alert(trans.no_mas_niveles);
-        return;
-    }
-    var $dimension = $('#' + zona + ' .dimensiones option:selected');
-    var $filtro = $('#' + zona + ' .filtros_dimensiones');
-    var separador1 = '',
-        separador2 = '';
-	$('#' + zona).attr("style","width:100%; height:100%");
-    // Construir la cadena de filtros
-    var filtros = $filtro.attr('data');
-    var filtro_a_agregar = '{"codigo":"' + $dimension.val() + '",' +
-            '"etiqueta":"' + $dimension.html() + '",' +
-            '"valor":"' + category + '"' +
-            "}";
-
-    if (filtros != '' && filtros != null)
-        separador1 += ',';
-    else
-        filtros = '[';
-
-    filtros = filtros.replace(']', '');
-    $filtro.attr('data', filtros + separador1 + filtro_a_agregar + ']');
-
-    var ruta = filtroRuta(jQuery.parseJSON($filtro.attr('data')));
-    $filtro.html(ruta);
-
-    //Borrar la opcion del control de dimensiones
-    $dimension.remove();
-	
-    $('#' + zona + ' .filtros_dimensiones A').on('click',function(e)
-	{
-        ascenderNivelDimension(zona, $(this).attr('data'));
-    });
-	
-	dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
-    $('#' + zona).attr('orden', null);
-    $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
-    $('#' + zona + '.ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
-	
 }
 //dibujar...
 var tam=0,h1=0,w1=0;
@@ -229,7 +63,7 @@ function dibujarGrafico(zona, dimension)
 {
     if (dimension === null)
         return;
-		
+	$('#' + zona + ' .filtros_dimensiones').attr('data-id',zona);	
     var filtro = $('#' + zona + ' .filtros_dimensiones').attr('data');
     //validar las entradas de las fechas
     var patron = /^\d{4}-\d{2}$/;
@@ -252,41 +86,42 @@ function dibujarGrafico(zona, dimension)
     	////
     	mensajerango = "";
     	val = resp.datos[0];
-        if (val !=undefined)
+        if (typeof val !='undefined')
         {
-	    if (val.min_anio != undefined)
-	    {
-	    	if (val.min_mes == undefined)
-	    		mensajerango += " ["+trans.de+" "+val.min_anio;
-	    	else
-	    		mensajerango += " [" + trans.de + " 01/"+("0" + val.min_mes).slice(-2)+"/"+val.min_anio;
-	    	
-	    	val = resp.datos[resp.datos.length-1];
-	    	if (typeof val.min_mes == 'undefined')
-	    		mensajerango += " "+trans.a+" "+val.max_anio+"] ";
-	    	else
-	    		mensajerango += " "+trans.a+" 01/"+("0" + val.max_mes).slice(-2)+"/"+val.max_anio+"] ";
-	    	
-	    	$('#' + zona + ' .titulo_indicador').html($('#' + zona + ' .titulo_indicador').attr('nombre') );
-			$('#' + zona + ' .panel-footer').find(".pull-left").remove();
-			$('#' + zona + ' .panel-footer').append("<span class='pull-left'>"+mensajerango+"</span>");                	    	
-	    	$('#'+zona).attr("rangoanio" , resp.datos[0].min_anio+":"+resp.datos[resp.datos.length-1].max_anio);
-	    	//$('#fechainicio'+zona).datepicker("option", { yearRange : $('#'+zona).attr("rangoanio") , disabled : false});
-	        //$('#fechafin'+zona).datepicker("option",  { yearRange : $('#'+zona).attr("rangoanio") , disabled : false});
-            $('label[for='+$('#filtro_por_fecha'+zona).attr("id")+']').text(trans.filtro_fecha+" - Rango disponible("+$('#'+zona).attr("rangoanio")+")");
-                //$('#filtro_por_fecha'+zona).text(trans.filtro_fecha+" - Rango disponible("+$('#'+zona).attr("rangoanio")+")");
-	        $('#filtro_por_fecha'+zona).removeAttr("disabled");
-	    }
-        else
-	    {
-	    	//$('#fechainicio'+zona).datepicker("option", "disabled", true);
-	        //$('#fechafin'+zona).datepicker("option", "disabled", true);
-	        $('#filtro_por_fecha'+zona).attr("disabled","disabled"); 
-	    }
+			if (typeof val.min_anio != 'undefined')
+			{
+				if (typeof val.min_mes == 'undefined')
+					mensajerango += " ["+trans.de+" "+val.min_anio;
+				else
+					mensajerango += " [" + trans.de + " 01/"+("0" + val.min_mes).slice(-2)+"/"+val.min_anio;
+				
+				val = resp.datos[resp.datos.length-1];
+				if (typeof val.min_mes == 'undefined')
+					mensajerango += " "+trans.a+" "+val.max_anio+"] ";
+				else
+					mensajerango += " "+trans.a+" 01/"+("0" + val.max_mes).slice(-2)+"/"+val.max_anio+"] ";
+				
+				$('#' + zona + ' .titulo_indicador').html($('#' + zona + ' .titulo_indicador').attr('nombre') );
+				$('#' + zona + ' .panel-footer').find(".pull-left").remove();
+				$('#' + zona + ' .panel-footer').append("<span class='pull-left'>"+mensajerango+"</span>");                	    	
+				$('#'+zona).attr("rangoanio" , resp.datos[0].min_anio+":"+resp.datos[resp.datos.length-1].max_anio);
+				//$('#fechainicio'+zona).datepicker("option", { yearRange : $('#'+zona).attr("rangoanio") , disabled : false});
+				//$('#fechafin'+zona).datepicker("option",  { yearRange : $('#'+zona).attr("rangoanio") , disabled : false});
+				$('label[for='+$('#filtro_por_fecha'+zona).attr("id")+']').text(trans.filtro_fecha+" - Rango disponible("+$('#'+zona).attr("rangoanio")+")");
+					//$('#filtro_por_fecha'+zona).text(trans.filtro_fecha+" - Rango disponible("+$('#'+zona).attr("rangoanio")+")");
+				$('#filtro_por_fecha'+zona).removeAttr("disabled");
+			}
+			else
+			{
+				//$('#fechainicio'+zona).datepicker("option", "disabled", true);
+				//$('#fechafin'+zona).datepicker("option", "disabled", true);
+				$('#filtro_por_fecha'+zona).attr("disabled","disabled"); 
+			}
     	
             var datos = JSON.stringify(resp.datos);
             $('#' + zona).attr('datasetPrincipal_bk', datos);
-            if ($('#' + zona).attr('orden') !== undefined
+			
+            if (typeof $('#' + zona).attr('orden') !== 'undefined'
                     && $('#' + zona).attr('orden') !== null
                     && $('#' + zona).attr('orden') !== '')
             {
@@ -316,172 +151,10 @@ function dibujarGrafico(zona, dimension)
 
 }
 
-function ordenarDatos(zona, ordenar_por, modo_orden) 
-{
-    if (modo_orden === '-1')
-        return;
-    if (ordenar_por === 'dimension')
-        $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
-    else
-        $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
-
-    cerrarMenus();
-    $('#' + zona).attr('orden', '[{"tipo":"' + ordenar_por + '", "modo": "' + modo_orden + '"}]');
-    var grafico = crearGraficoObj(zona, $('#' + zona + ' .tipo_grafico_principal').val());
-    grafico.ordenar(modo_orden, ordenar_por);
-    var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
-    construir_tabla_datos(zona, datasetPrincipal);
-    //aplicarFormato();
-}
-//filtro...
-function aplicarFiltro(zona) 
-{
-    //datasetPrincipal = datasetPrincipal_bk;
-    $('#' + zona).attr('datasetPrincipal', $('#' + zona).attr('datasetPrincipal_bk'));
-    var elementos = '';
-    var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
-
-    $('#' + zona + ' .panel-body input:checked').each(function() 
-	{
-        elementos += $(this).val() + '&';
-    });
-	
-	var desde="",hasta="";
-	/*if($('#filtro_por_fecha'+zona).is(':checked'))
-	{
-		if ($('#fechainicio'+zona).val() != '' && $('#fechafin'+zona).val() != '')
-		{
-			desde=$('#' + zona + ' .fecha_desde').val();
-			hasta=$('#' + zona + ' .fecha_hasta').val();
-		}
-	}*/
-    $.post(Routing.generate('indicador_datos_filtrar'),
-    {
-		datos: datasetPrincipal, desde: desde, hasta: hasta, elementos: elementos
-	},
-    function(resp) 
-	{
-        $('#' + zona).attr('datasetPrincipal', JSON.stringify(resp.datos));
-        dibujarGraficoPrincipal(zona, $('#' + zona + ' .tipo_grafico_principal').val());
-    }, 'json');
-    $('#' + zona).attr('orden', '');
-    $('#' + zona + ' .titulo_indicador').attr('filtro-elementos', '');
-}
-
-function controles_filtros(zona) 
-{
-    var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
-
-    var lista_datos_dimension1 = '<div class=""><a class="filtro_elementos"><input type="button" class="btn btn-info aplicar_filtro" data-id="'+zona+'" value="' + trans.filtrar + '" />' +
-            '&nbsp;<input type="button" class="btn btn-danger quitar_filtro" value="' + trans.quitar_filtro + '" data-id="'+zona+'"/></a></div>';
-			
-	lista_datos_dimension = '<ul class="list-group">';
-    
-	$.each(datasetPrincipal, function(i, dato) 
-	{
-        lista_datos_dimension += '<li class="list-group-item"><label class="forcheckbox" for="categorias_a_mostrar' + zona + i + '" ><input type="checkbox" id="categorias_a_mostrar' + zona + i + '" ' +
-                'name="categorias_a_mostrar[]" value="' + dato.category + '" /> ' + dato.category + '</label></li>';
-    });
-	
-    lista_datos_dimension += '</ul>';
-	lista_group=lista_datos_dimension1+'<div class=""><hr><div class="col-lg-12">'+
-    '<div class="panel panel-default">'+
-        '<div class="panel-heading"><label>' + trans.filtrar_por_elemento + '</label></div>'+
-        '<div class="panel-body" style=" max-height:250px; overflow:auto; ">'+
-		lista_datos_dimension+
-        '</div>'+
-    '</div>'+
-'</div></div>';
-
-    $('#' + zona + ' .lista_datos_dimension').html(lista_group);       
-    
-    // Corrige un error de bootstrap para permitir usar controles dentro de un dropdown
-    $('.dropdown-menu SELECT, .dropdown-menu LABEL, .dropdown-menu INPUT').on("click",function(event) 
-	{
-        $(this).focus();
-        event.stopPropagation();
-    });    
-    //Corrige un error de bootstrap para que funcione un menu dropdown en tabletas
-    $('body').on('touchstart.dropdown', '.dropdown-menu', function(e) 
-	{
-        e.stopPropagation();
-    }); 
-    
-    $('#' + zona + ' .aplicar_filtro').on('click',function(e)
-	{
-		zona=$(this).attr("data-id");
-        aplicarFiltro(zona);
-    });
-    $('#' + zona + ' .quitar_filtro').on('click',function(e)
-	{
-		zona=$(this).attr("data-id");
-        $('#' + zona + ' .filtro_desde').val('');
-        $('#' + zona + ' .filtro_hasta').val('');
-        $('#' + zona + ' .panel-body input:checked').each(function() 
-		{
-            $(this).attr('checked', false);
-        });
-        //datasetPrincipal = datasetPrincipal_bk;
-        $('#' + zona).attr('datasetPrincipal', $('#' + zona).attr('datasetPrincipal_bk'))
-        dibujarGraficoPrincipal(zona, $('#' + zona + ' .tipo_grafico_principal').val());
-    });
-    if (typeof $('#'+zona+' .titulo_indicador').attr('filtro-elementos')!=='undefined'&&$('#'+zona+' .titulo_indicador').attr('filtro-elementos') !== '') 
-	{
-		
-        var filtroElementos = $('#' + zona + ' .titulo_indicador').attr('filtro-elementos').split(',');
-        for (var j = 0; j < filtroElementos.length; j++) 
-		{
-            $('#' + zona + ' .capa_dimension_valores input[value="' + filtroElementos[j] + '"]').attr('checked', true);
-        }
-        aplicarFiltro(zona);
-    }
-}
-
-function cerrarMenus() 
-{
-    $('.open').each(function(i, nodo) 
-	{
-        $(nodo).removeClass('open');
-    })
-}
-
-function construir_tabla_datos(zona, datos) 
-{
-    var tabla_datos = '<TABLE class="table table-bordered table-striped" >';
-    $.each(datos, function(i, fila) 
-	{
-        if (i === 0) 
-		{
-            // Los nombres de los campos
-            tabla_datos += '<THEAD><TR>';
-            for (var campo in fila) 
-			{
-
-                if (campo === 'category')
-                    campo = $('#' + zona + ' .dimension').html();
-                else if (campo === 'measure')
-                    campo = trans.indicador + ' (' + $('#' + zona + ' .titulo_indicador').attr('formula') + ')';
-                tabla_datos += '<TH>' + campo.toUpperCase() + '</TH>';
-            }
-            tabla_datos += '</TR></THEAD><TBODY>';
-        }
-
-        //los datos
-        tabla_datos += '<TR>';
-        for (var i in fila)
-            tabla_datos += '<TD>' + fila[i] + '</TD>';
-        tabla_datos += '</TR>';
-
-    });
-    tabla_datos += '</TBODY></TABLE>';
-	//$('#' + zona + ' .info').hide();
-    $('#' + zona + ' .info').html(tabla_datos);
-}
-
 function dibujarControles(zona, datos) 
 {
 	//////agregar un nuevo atributo con el nombre del indicador
-	////
+	
     $('#' + zona + ' .titulo_indicador').html(datos.nombre_indicador)
             .attr('data-unidad-medida', datos.unidad_medida)
             .attr('nombre', datos.nombre_indicador)
@@ -750,23 +423,296 @@ function dibujarControles(zona, datos)
 			minimizar(zona,contenedor)
 		}
   });
-  
-  
-  
   setTiposGraficos(zona);
 }
+
+function crearGraficoObj(zona, tipo) 
+{
+    var grafico;
+    var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
+    if (tipo == 'pastel')
+        grafico = new graficoPastel(zona, datasetPrincipal);
+    else if (tipo == 'columnas')
+        grafico = new graficoColumnas(zona, datasetPrincipal);
+    else if (tipo == 'lineas')
+        grafico = new graficoLineas(zona, datasetPrincipal);
+    else if (tipo == 'mapa')
+        grafico = new graficoMapa(zona, datasetPrincipal);
+    else if (tipo == 'gauge')
+	{
+    	if (datasetPrincipal[1] != null)
+    	grafico = new graficoColumnas(zona, datasetPrincipal);
+    	else
+        grafico = new graficoGauge(zona, datasetPrincipal);
+	}
+    else if (tipo == 'lineargauge' /*termometro*/)
+    {
+    	if (datasetPrincipal[1] != null)
+    	grafico = new graficoColumnas(zona, datasetPrincipal);
+    	else
+        grafico = new graficoTermometro(zona, datasetPrincipal);
+    }
+
+    return grafico;
+}
+
+function filtroRuta(filtros_obj) 
+{
+    var ruta = '';
+    //var filtros_obj = );
+    var cant_obj = filtros_obj.length;
+    $.each(filtros_obj, function(i, obj) 
+	{
+        if (i == (cant_obj - 1))
+            ruta += obj.etiqueta + ': ' + obj.valor;
+        else
+            ruta += '<a href="#" data="' + i + '">' + obj.etiqueta + ': ' + obj.valor + '</a> / ';
+    });
+    return ruta;
+}
+
+function ascenderNivelDimension(zona, nivel) 
+{
+    var ultimo,
+		ruta = '',
+		$filtro = $('#' + zona + ' .filtros_dimensiones'),
+		filtros_obj = jQuery.parseJSON($filtro.attr('data'));
+
+    var nuevo_filtro = [{}];
+    $.each(filtros_obj, function(i, obj) 
+	{
+        if (i <= nivel) 
+		{
+            nuevo_filtro[i] = obj;
+            if (i == nivel)
+                ruta +='<li>'+obj.etiqueta + ': ' + obj.valor+'</li> ';
+            else
+                ruta += '<li><a href="#" data="' + i + '">' + obj.etiqueta + ': ' + obj.valor + '</a></li> ';
+        }
+        else 
+		{
+            // Los que estén a la derecha del seleccionado deben volver al control de dimensiones                        
+            //$('#' + zona + ' .dimensiones').append("<OPTION VALUE='" + obj.codigo + "'>" + obj.etiqueta + "</OPTION>");
+			$('#' + zona + ' .dimensiones').children('option[value="' + obj.codigo + '"]').attr("disabled",false);
+            if (i == parseInt(nivel) + 1)
+                primero = obj.codigo;
+        }
+    });	
+    //El primer elemento 
+    $('#' + zona + ' .dimensiones').children('option[value="' + primero + '"]').attr("disabled",false).attr('selected', 'selected');
+
+    $filtro.html(ruta);
+    $filtro.attr('data', JSON.stringify(nuevo_filtro));
+
+    dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
+    $('#' + zona).attr('orden', null);
+    $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
+    $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');	
+}
+
+function descenderNivelDimension(zona, category) 
+{
+   if ($('#' + zona + ' .dimensiones option').length-1 ==$('#' + zona + ' .dimensiones option:disabled').length) 
+	{
+        alert(trans.no_mas_niveles);
+        return;
+    }
+    var $dimension = $('#' + zona + ' .dimensiones option:selected');
+    var $filtro = $('#' + zona + ' .filtros_dimensiones');
+    var separador1 = '',
+        separador2 = '';
+	$('#' + zona).attr("style","width:100%; height:100%");
+    // Construir la cadena de filtros
+    var filtros = $filtro.attr('data');
+    var filtro_a_agregar = '{"codigo":"' + $dimension.val() + '",' +
+            '"etiqueta":"' + $dimension.html() + '",' +
+            '"valor":"' + category + '"' +
+            "}";
+
+    if (filtros != '' && filtros != null)
+        separador1 += ',';
+    else
+        filtros = '[';
+
+    filtros = filtros.replace(']', '');
+    $filtro.attr('data', filtros + separador1 + filtro_a_agregar + ']');
+
+    var ruta = filtroRuta(jQuery.parseJSON($filtro.attr('data')));
+    $filtro.html(ruta);
+
+    //Borrar la opcion del control de dimensiones
+   	$dimension.attr('disabled',true);
+	$('#' + zona + ' .dimensiones option:selected').next().attr("selected","selected");
+	
+	dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
+    $('#' + zona).attr('orden', null);
+    $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
+    $('#' + zona + '.ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
+	
+}
+
+function ordenarDatos(zona, ordenar_por, modo_orden) 
+{
+    if (modo_orden === '-1')
+        return;
+    if (ordenar_por === 'dimension')
+        $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
+    else
+        $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
+
+    cerrarMenus();
+    $('#' + zona).attr('orden', '[{"tipo":"' + ordenar_por + '", "modo": "' + modo_orden + '"}]');
+    var grafico = crearGraficoObj(zona, $('#' + zona + ' .tipo_grafico_principal').val());
+    grafico.ordenar(modo_orden, ordenar_por);
+    var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
+    construir_tabla_datos(zona, datasetPrincipal);
+    //aplicarFormato();
+}
+//filtro...
+function aplicarFiltro(zona) 
+{
+    //datasetPrincipal = datasetPrincipal_bk;
+    $('#' + zona).attr('datasetPrincipal', $('#' + zona).attr('datasetPrincipal_bk'));
+    var elementos = '';
+    var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
+
+    $('#' + zona + ' .panel-body input:checked').each(function() 
+	{
+        elementos += $(this).val() + '&';
+    });
+	
+	var desde="",hasta="";
+	
+    $.post(Routing.generate('indicador_datos_filtrar'),
+    {
+		datos: datasetPrincipal, desde: desde, hasta: hasta, elementos: elementos
+	},
+    function(resp) 
+	{
+        $('#' + zona).attr('datasetPrincipal', JSON.stringify(resp.datos));
+        dibujarGraficoPrincipal(zona, $('#' + zona + ' .tipo_grafico_principal').val());
+    }, 'json');
+    $('#' + zona).attr('orden', '');
+    $('#' + zona + ' .titulo_indicador').attr('filtro-elementos', '');
+}
+
+function controles_filtros(zona) 
+{
+    var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
+
+    var lista_datos_dimension1 = '<div class=""><a class="filtro_elementos"><input type="button" class="btn btn-info aplicar_filtro" data-id="'+zona+'" value="' + trans.filtrar + '" />' +
+            '&nbsp;<input type="button" class="btn btn-danger quitar_filtro" value="' + trans.quitar_filtro + '" data-id="'+zona+'"/></a></div>';
+			
+	lista_datos_dimension = '<ul class="list-group">';
+    
+	$.each(datasetPrincipal, function(i, dato) 
+	{
+        lista_datos_dimension += '<li class="list-group-item"><label class="forcheckbox" for="categorias_a_mostrar' + zona + i + '" ><input type="checkbox" id="categorias_a_mostrar' + zona + i + '" ' +
+                'name="categorias_a_mostrar[]" value="' + dato.category + '" /> ' + dato.category + '</label></li>';
+    });
+	
+    lista_datos_dimension += '</ul>';
+	lista_group=lista_datos_dimension1+'<div class=""><hr><div class="col-lg-12">'+
+    '<div class="panel panel-default">'+
+        '<div class="panel-heading"><label>' + trans.filtrar_por_elemento + '</label></div>'+
+        '<div class="panel-body" style=" max-height:250px; overflow:auto; ">'+
+		lista_datos_dimension+
+        '</div>'+
+    '</div>'+
+'</div></div>';
+
+    $('#' + zona + ' .lista_datos_dimension').html(lista_group);       
+    
+    // Corrige un error de bootstrap para permitir usar controles dentro de un dropdown
+    $('.dropdown-menu SELECT, .dropdown-menu LABEL, .dropdown-menu INPUT').on("click",function(event) 
+	{
+        $(this).focus();
+        event.stopPropagation();
+    });    
+    //Corrige un error de bootstrap para que funcione un menu dropdown en tabletas
+    $('body').on('touchstart.dropdown', '.dropdown-menu', function(e) 
+	{
+        e.stopPropagation();
+    }); 
+    
+    $('#' + zona + ' .aplicar_filtro').on('click',function(e)
+	{
+		zona=$(this).attr("data-id");
+        aplicarFiltro(zona);
+    });
+    $('#' + zona + ' .quitar_filtro').on('click',function(e)
+	{
+		zona=$(this).attr("data-id");
+        $('#' + zona + ' .filtro_desde').val('');
+        $('#' + zona + ' .filtro_hasta').val('');
+        $('#' + zona + ' .panel-body input:checked').each(function() 
+		{
+            $(this).attr('checked', false);
+        });
+        //datasetPrincipal = datasetPrincipal_bk;
+        $('#' + zona).attr('datasetPrincipal', $('#' + zona).attr('datasetPrincipal_bk'))
+        dibujarGraficoPrincipal(zona, $('#' + zona + ' .tipo_grafico_principal').val());
+    });
+    if (typeof $('#'+zona+' .titulo_indicador').attr('filtro-elementos')!=='undefined'&&$('#'+zona+' .titulo_indicador').attr('filtro-elementos') !== '') 
+	{
+		
+        var filtroElementos = $('#' + zona + ' .titulo_indicador').attr('filtro-elementos').split(',');
+        for (var j = 0; j < filtroElementos.length; j++) 
+		{
+            $('#' + zona + ' .capa_dimension_valores input[value="' + filtroElementos[j] + '"]').attr('checked', true);
+        }
+        aplicarFiltro(zona);
+    }
+}
+
+function cerrarMenus() 
+{
+    $('.open').each(function(i, nodo) 
+	{
+        $(nodo).removeClass('open');
+    })
+}
+
+function construir_tabla_datos(zona, datos) 
+{
+    var tabla_datos = '<TABLE class="table table-bordered table-striped" >';
+    $.each(datos, function(i, fila) 
+	{
+        if (i === 0) 
+		{
+            // Los nombres de los campos
+            tabla_datos += '<THEAD><TR>';
+            for (var campo in fila) 
+			{
+
+                if (campo === 'category')
+                    campo = $('#' + zona + ' .dimension').html();
+                else if (campo === 'measure')
+                    campo = trans.indicador + ' (' + $('#' + zona + ' .titulo_indicador').attr('formula') + ')';
+                tabla_datos += '<TH>' + campo.toUpperCase() + '</TH>';
+            }
+            tabla_datos += '</TR></THEAD><TBODY>';
+        }
+
+        //los datos
+        tabla_datos += '<TR>';
+        for (var i in fila)
+            tabla_datos += '<TD>' + fila[i] + '</TD>';
+        tabla_datos += '</TR>';
+
+    });
+    tabla_datos += '</TBODY></TABLE>';
+	//$('#' + zona + ' .info').hide();
+    $('#' + zona + ' .info').html(tabla_datos);
+}
+
 function minimizar(zona,contenedor)
 {
 	$('#' + zona + '_icon_maximizar').removeClass('glyphicon glyphicon-zoom-out');
 	$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-in');	
 	$('#' + zona + '_quitar').removeAttr("style");	
 	
-	/*panZoom.disablePan();
-	panZoom.disableZoom();
-	panZoom.resetZoom("#"+zona+" svg");
-	$('#' + zona+' .grafico').html('');
-	$("#svg-pan-zoom-controls").remove();
-	delete panZoom;*/
+	
 	$('#_maximizado').html($('#contenedor_maximizado').html());
 	$('#contenedor_maximizado').remove();
 	$('#esc_maximizado').remove();
@@ -914,9 +860,9 @@ function recuperarDimensiones(id_indicador, datos)
                                     .remove();
                         }
 
-                        $('#' + zona_g + ' .filtros_dimensiones A').on('click',function(e){
+                        /*$('#' + zona_g + ' .filtros_dimensiones A').on('click',function(e){
                             ascenderNivelDimension(zona_g, $(this).attr('data'));
-                        });
+                        });*/
                     }
                     $('#' + zona_g + ' .titulo_indicador').attr('data-id', datos.idIndicador);
                     $('#' + zona_g).attr('orden', datos.orden);
@@ -1121,21 +1067,7 @@ function acciones_button()
 				$('#'+zona +' .panel-body').animate({height:$(window).height()/1.109 , width: $(window).width()-1});
 			});
 			aplicarFiltro(zona);
-			/*if (typeof (event) == "undefined")
-				aplicarFiltro(zona);
-			if($("#svg-pan-zoom-controls"))
-			$("#svg-pan-zoom-controls").remove();
-			panZoom = Object.create(svgPanZoom);
-			panZoom.init({
-			  'selector': "#"+zona+" svg",
-			  'zoomEnabled': true ,
-			  'controlIconsEnabled': true 
-			});
-			var matrix="matrix(2,0,0,2,"+$(document).width()/3.5+","+$(document).height()/6.5+")";
-			$("#"+zona+" #viewport").attr("transform",matrix);
-
-			var tra="translate("+($(document).width()-180)+" "+($(window).height()/1.33 )+" ) scale(0.75)";
-			$("#svg-pan-zoom-controls").attr("transform",tra);*/
+			
 		}
 	}
   });
@@ -1294,6 +1226,11 @@ function acciones_button()
             $('#sql .DTTT_container').css('float', 'left');
             $('#myModal2').modal('show');
         }, 'html');
+    });
+	$('body').on('click','.filtros_dimensiones A',function(e)
+	{
+		event.preventDefault();
+        ascenderNivelDimension($(this).parent().attr('data-id'), $(this).attr('data'));
     });
 }
 
