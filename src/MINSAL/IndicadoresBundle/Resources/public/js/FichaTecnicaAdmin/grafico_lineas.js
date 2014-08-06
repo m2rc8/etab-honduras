@@ -7,7 +7,8 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 	this.category = categoryChoosen;
 	
 	var contexto=this;
-	this.dibujar = function() {
+	this.dibujar = function() 
+	{
 		var margin = {top: 30, right: 40, bottom: 75, left: 50},
 		width = parseInt(d3.select('#'+this.zona+' .panel-body').style('width'), 10)
 		width  = width - margin.left - margin.right-50,
@@ -63,6 +64,16 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			{
 				return yScale(parseFloat(d.measure));
 			});
+		
+		var line2 = d3.svg.line()			
+			.x(function(d, i) 
+			{
+				return xScale(d.category);
+			})
+			.y(function(d) 
+			{
+				return yScale(0);
+			});
 
         $('#' + this.zona + ' .grafico').html('');
 		
@@ -75,14 +86,18 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			.attr("id", "ChartPlot")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 			
-		svg.append("svg:path")
+		svg.append("svg:path")	
+			.attr("d", line2(contexto.currentDatasetChart))		
+			.transition().duration(500).delay(20)
+			.ease("cubic")
 			.attr("d", line(contexto.currentDatasetChart))
 			.style("stroke",function()
 			{
 				return "steelblue";
 			})
 			.style("fill","none")
-			.style("stroke-width","1.5");
+			.style("stroke-width","1.5")
+			;
 		
 		var datacircleGroup=svg.append("svg:g");
 		var circles=datacircleGroup.selectAll("data-point").data(contexto.currentDatasetChart)
@@ -96,23 +111,22 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 				{
 					return colores_alertas(contexto.zona, d.measure, i)
 				})
-				.attr("cx", line.x())
-				.attr("cy", line.y())
-				.attr("r", 5)
 				.on("mouseover",function(d)
 				{
 					d3.select(this)
+					.transition().duration(750)
 					.attr("r",10)
 					.attr("stroke","ligth-gray")
 					.attr("fill", function(d, i) 
 					{
 						return colores_alertas(contexto.zona, d.measure, i)
 					})
-					.transition().duration(750);
+					;
 				})
 				.on("mouseout",function(d)
 				{
 					d3.select(this)
+					.transition().duration(750)
 					.attr("r",5)
 					.attr("fill", "white") 
 				   .style("stroke-width","1.5")
@@ -120,8 +134,16 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 					{
 						return colores_alertas(contexto.zona, d.measure, i)
 					})
-					.transition().duration(750);
-				});
+					;
+				})
+				.attr("cx", line.x())
+				.attr("cy", height)
+				.transition().duration(500).delay(20)
+				.ease("cubic")
+				.attr("cx", line.x())								
+				.attr("cy", line.y())
+				.attr("r", 5)
+				;
 				
         svg.selectAll(".dot")
 			.append("title")
@@ -188,7 +210,10 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			{
 				return d.measure;
 			})
+			
 			.attr('x', function(d,i){return (i)*(width/contexto.currentDatasetChart.length)+(width/contexto.currentDatasetChart.length)/2;})
+			.attr('y',height)
+			.transition().duration(500).delay(20)
 			.attr('y', function(d){a= yScale(parseFloat(d.measure))+15; if(a<0) a=0; return a;})
 			.attr('text-anchor', 'middle')
 			.attr('font-size', 10)
@@ -204,28 +229,11 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
             descenderNivelDimension(contexto.zona, d.category);
         });
     };
-    this.ordenar = function(modo_orden, ordenar_por) {
-        var svg = d3.select("#" + zona + ' .grafico ');
-        
-        var datos_ordenados = ordenarArreglo(contexto.currentDatasetChart, ordenar_por, modo_orden);
-        var x0 = xScale.domain(datos_ordenados.map(function(d) 
-				{
-					return d.category;
-				})).copy();        
-        var transition = svg.transition().duration(750),
-						delay = function(d, i) 
-						{
-							return i * 40;
-						};
-
-        transition.selectAll(".line").delay(delay).attr("d", line).attr("stroke", 'blue');
-        transition.selectAll(".dot").delay(delay).attr("cx", function(d) {
-            return x0(d.category);
-        });
-        transition.select(".x.axis").call(xAxis).selectAll("g").delay(delay);
-        
-        // Ordenar la tabla de datos
-        $('#' + zona).attr('datasetPrincipal', JSON.stringify(contexto.currentDatasetChart));
+    this.ordenar = function(modo_orden, ordenar_por) 
+	{
+        this.currentDatasetChart = ordenarArreglo(this.currentDatasetChart, ordenar_por, modo_orden);
+        this.dibujar();
+        $('#' + this.zona).attr('datasetPrincipal', JSON.stringify(this.currentDatasetChart));
 
     };
 }

@@ -24,6 +24,18 @@
 	width:auto;	
 	
 }
+.y.axis .tick text
+{
+	font-size:1em;
+}
+
+@media screen and (max-width:1200px)
+{
+	.y.axis .tick text
+	{
+		font-size:.7em;
+	}
+}
 @media screen and (max-width:767px)
 {
 	.connection
@@ -38,13 +50,28 @@
 	{
 		display:none;
 	}
+	
+	.y.axis .tick text
+	{
+		font-size:.7em;
+	}
 }
-
+@media screen and (max-width:992px)
+{
+	#sala
+	{
+		margin-top:70px;
+	}
+}
 @media screen and (max-width:890px)
 {
 	.bannerPublico
 	{
 		width:100%;	
+	}
+	.y.axis .tick text
+	{
+		font-size:.5m;
 	}
 }
 

@@ -1040,25 +1040,7 @@ function acciones_button()
 							   'overflow':''});
 							   
 			$(contenedor).attr('id','contenedor_maximizado');
-			$(contenedor).append($('#' + zona));
-			
-			scapemsg = document.createElement('div');
-			$(scapemsg).attr('id','esc_maximizado');
-			$(scapemsg).css({'position':'absolute',
-							'right':'15px',
-							'-webkit-border-radius': '10px',
-							'border-radius': '10px',
-							'background-color': 'rgba(200, 200, 200, .5)',		   					 
-							'color': 'rgba(133, 133, 123, .5)',
-							'padding':'8px',
-							'font-color':'black',
-							'font-size':'17px',
-							'font-weight':'bold',
-							'top':'3px',
-							'overflow':'none'});
-			
-			$(scapemsg).html(trans.teclaescape);
-			$(contenedor).append(scapemsg);
+			$(contenedor).append($('#' + zona));					
 			
 			$(document.body).append($(contenedor));
 			

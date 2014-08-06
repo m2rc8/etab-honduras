@@ -54,7 +54,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{{ path('_inicio', {'page': '_inicio'}) }}">
+      <a class="navbar-brand" href="#">
       <img src="{{ asset('bundles/indicadores/images/logo.png') }}" style="margin-top:-7px; height:34px;" /> 
       </a>
     </div>
@@ -172,4 +172,11 @@
         </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->{% endblock %}
+</div><!-- /.modal -->
+<script>
+$(document).ready(function()
+{
+	acciones_button();
+});
+</script>
+{% endblock %}

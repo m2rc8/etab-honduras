@@ -1,6 +1,10 @@
 _inicio:
     pattern:  /
-    defaults: { _controller: SonataAdminBundle:Core:dashboard }
+    defaults: { _controller: IndicadoresBundle:Tablero:tablero }
+
+_inicioPublico:
+    pattern:  /
+    defaults: { _controller: IndicadoresBundle:Tablero:tableroPublico }
 
 group_show:
     pattern:  /migroup/{token}/{valor}

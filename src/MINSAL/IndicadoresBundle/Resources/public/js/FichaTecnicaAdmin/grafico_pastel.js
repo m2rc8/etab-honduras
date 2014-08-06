@@ -1,17 +1,24 @@
-graficoPastel = function(ubicacion, datos, color_grafico, categoryChoosen) {
+graficoPastel = function(ubicacion, datos, color_grafico, categoryChoosen) 
+{
     this.tipo = 'pastel';
-    
-    var width = 350,
-		height = 250,
-		outerRadius = Math.min(width, height) / 2,
-		innerRadius = outerRadius * .999,
-		// for animation
-		innerRadiusFinal = outerRadius * .5,
-		innerRadiusFinal3 = outerRadius * .45
-		;
+    this.currentDatasetChart = datos;
+    this.zona = ubicacion;
+	this.color = colorChosen;
+	this.category = categoryChoosen;
+	
+	var contexto=this;
+    this.dibujar = function() 
+	{
+		var margin = {top: 30, right: 40, bottom: 75, left: 50},
+		width = parseInt(d3.select('#'+this.zona+' .panel-body').style('width'), 10)
+		width  = width - margin.left - margin.right-50,
+		barPadding = 1;
+		var height=parseInt(d3.select('#'+this.zona+' .panel-body').style('height'), 10)-150;
+		if ($('#' + zona + '_icon_maximizar').hasClass('glyphicon glyphicon-zoom-out'))
+			height=height-50;
+		if(height<300||height>width)
+		height=width*.65;
 		
-
-    this.dibujar = function() {
         $('#' + ubicacion + ' .grafico').html('');
         var vis = d3.select('#' + ubicacion + ' .grafico')
                 .append("svg:svg")              //create the SVG element inside the <body>

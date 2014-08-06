@@ -11,7 +11,6 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 	var contexto=this;
     this.dibujar = function() 
 	{
-		
 		var margin = {top: 30, right: 40, bottom: 75, left: 50},
 		width = parseInt(d3.select('#'+this.zona+' .panel-body').style('width'), 10);		
 		width  = width - margin.left - margin.right-50,
@@ -21,7 +20,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			height=height-50;
 		if(height<300||height>width)
 		height=width*.65;
-		console.log(height+"="+width);
+		
 		var xScale = d3.scale.ordinal()
 			.domain(this.currentDatasetChart.map(function(d) 
 			{
@@ -71,27 +70,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			.append("g")
 			.attr("id", "ChartPlot")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");						
-			
-		svg.selectAll("rect")
-			.data(this.currentDatasetChart)
-			.enter()
-			.append("rect")
-			.attr("class", "bar")											
-			.transition().duration(1000).delay(20)
-			.attr("width", xScale.rangeBand())			
-			.attr("height", function(d) 
-			{
-				return height - yScale(parseFloat(d.measure));
-			})
-			.attr("x", function(d, i) 
-			{
-				return xScale(d.category);
-			})
-			.attr("y", function(d) 
-			{
-				return yScale(parseFloat(d.measure));
-			});
-				
+		
 		svg.selectAll("rect").append("title")
 			.text(function(d) 
 			{
@@ -134,7 +113,33 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			.text(ylabel)
 			.style("text-anchor", "end")
 			.style("font-size", "0.7em");
-		  
+				
+		svg.selectAll("rect")
+			.data(this.currentDatasetChart)
+			.enter()
+			.append("rect")
+			.attr("class", "bar")
+			.attr("height",0)
+			.attr("y",height)											
+			.attr("x", function(d, i) 
+			{
+				return xScale(d.category);
+		
+			})
+						
+			.attr("width", xScale.rangeBand())			
+			.transition().duration(500).delay(20)
+			.ease("cubic-in-out")
+			.attr("y", function(d) 
+			{
+				return yScale(parseFloat(d.measure));
+			})
+			.attr("height", function(d) 
+			{
+				return height - yScale(parseFloat(d.measure));
+			})
+			;								                 
+				
 		var plot = svg
 		.append("g")		 
 		 
@@ -142,17 +147,24 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			.data(contexto.currentDatasetChart)
 			.enter()
 			.append("text")
-			.attr("class","label")
+			.attr("class","label_barra")
 			.text(function(d) 
 			{
 				return d.measure;
-			})
+			})			
 			.attr('x', function(d,i){return (i)*(width/contexto.currentDatasetChart.length)+(width/contexto.currentDatasetChart.length)/2;})
-			.attr('y', function(d){return (height-((height*d.measure)/100))+((xScale.rangeBand()/6)<1 ? 1: (xScale.rangeBand()/6))+2})
-			.attr('text-anchor', 'middle')
-			.attr('font-size', (xScale.rangeBand()/6)<1 ? 1: (xScale.rangeBand()/6))
-			.attr('font-family', 'arial')
-			.attr('fill', '#fff');
+			.attr('y',height)
+			.transition().duration(500).delay(20)
+			.attr('y', function(d){return (height-((height*d.measure)/100))-5})
+			.attr('text-anchor', 'middle')			
+			.attr('font-size', function()
+			{ 
+				var size=(xScale.rangeBand()/6)<1 ? 1: (xScale.rangeBand()/6);
+				if(size>12) size=16;
+				if(size<4) size=0;
+				return size;
+			})
+			.attr('fill', '#000');
 		
 		if(meta>0)
 		{
@@ -180,7 +192,6 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 	};
     this.ordenar = function(modo_orden, ordenar_por) 
 	{        
-        
         this.currentDatasetChart = ordenarArreglo(this.currentDatasetChart, ordenar_por, modo_orden);
         this.dibujar();
         $('#' + this.zona).attr('datasetPrincipal', JSON.stringify(this.currentDatasetChart));
