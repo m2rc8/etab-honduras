@@ -85,8 +85,12 @@
 .bar {
 	border:none;
 }
-
-.bar:hover {
+.slice
+{
+	stroke: #fff;
+	stroke-width:.5px;
+}
+.bar:hover, .slice:hover {
 	opacity:0.7;
 }
 

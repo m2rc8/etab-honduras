@@ -1,5 +1,5 @@
-graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
-
+graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) 
+{
     this.tipo = 'lineas';
 	this.currentDatasetChart = datos;
     this.zona = ubicacion;
@@ -114,6 +114,7 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 				.on("mouseover",function(d)
 				{
 					d3.select(this)
+					.attr("r",5)
 					.transition().duration(750)
 					.attr("r",10)
 					.attr("stroke","ligth-gray")
@@ -216,8 +217,17 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 			.transition().duration(500).delay(20)
 			.attr('y', function(d){a= yScale(parseFloat(d.measure))+15; if(a<0) a=0; return a;})
 			.attr('text-anchor', 'middle')
-			.attr('font-size', 10)
-			.attr('font-family', 'arial')
+			.attr('font-size', function()
+			{ 
+				var size=(width/contexto.currentDatasetChart.length)/2;
+
+				if(size>50) size=14;
+				if(size<50&&size>30) size=12;
+				if(size<30&&size>10) size=10;
+				if(size<10) size=0;
+				
+				return size;
+			})
 			.attr('fill', '#000');
 		
 		/*plot.append("path")

@@ -1,5 +1,5 @@
-graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
-
+graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) 
+{
     this.tipo = 'columnas';
 	this.currentDatasetChart = datos;
     this.zona = ubicacion;
@@ -126,7 +126,6 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) {
 				return xScale(d.category);
 		
 			})
-						
 			.attr("width", xScale.rangeBand())			
 			.transition().duration(500).delay(20)
 			.ease("cubic-in-out")
