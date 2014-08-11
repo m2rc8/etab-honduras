@@ -14,6 +14,7 @@ class OrigenDatosRepository extends EntityRepository
      * 1) Que no tenga ningún campo sin significado
      * 2) Que tenga un campo con significado "calculo"
      */
+	static $_instance; 
     public function estaConfigurado(OrigenDatos $origen)
     {
         $tiene_campo_calculo = false;
@@ -246,5 +247,16 @@ class OrigenDatosRepository extends EntityRepository
         return ($respuesta['ultima_lectura']);
         
     }
+	
+	public function getUltimaActualizacionStatic($id)
+	{		
+		$sql = 'SELECT MAX(ultima_lectura) as ultima_lectura FROM fila_origen_dato WHERE id_origen_dato = :id_origen_dato';
+		
+        $sth = $this->_em->getConnection()->prepare($sql);
 
+        $sth->execute(array(':id_origen_dato' => $id));
+        $respuesta = $sth->fetch(\PDO::FETCH_ASSOC);
+        
+        return ($respuesta['ultima_lectura']);
+	}
 }

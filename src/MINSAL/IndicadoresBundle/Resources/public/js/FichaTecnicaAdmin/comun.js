@@ -291,7 +291,7 @@ function dibujarControles(zona, datos)
             comentario_rango = rango.comentario
         
 		alertas += '<TR>' +
-						'<TD bgcolor="' + rango.color + '"></TD>' +
+						'<TD><span class="label" style="display:block;widht:100%;font-size:16px;background:'+rango.color+'">' + rango.limite_inf + ' - ' + rango.limite_sup + '</span></TD>' +
 						'<TD>' + rango.limite_inf + '</TD>' +
 						'<TD>' + rango.limite_sup + '</TD>' +
 						'<TD>' + comentario_rango + '</TD>' +
@@ -615,7 +615,7 @@ function controles_filtros(zona)
 	lista_group=lista_datos_dimension1+'<div class=""><hr><div class="col-lg-12">'+
     '<div class="panel panel-default">'+
         '<div class="panel-heading"><label>' + trans.filtrar_por_elemento + '</label></div>'+
-        '<div class="panel-body" style=" max-height:250px; overflow:auto; ">'+
+        '<div class="" style=" max-height:250px; overflow:auto; ">'+
 		lista_datos_dimension+
         '</div>'+
     '</div>'+

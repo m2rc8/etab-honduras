@@ -62,7 +62,7 @@ class FichaTecnica
 	/**
      * @var string $meta
      *
-     * @ORM\Column(name="meta", type="integer", length=300, nullable=true)
+     * @ORM\Column(name="meta", type="float", scale=2, nullable=true)
      */
     private $meta;
 	
@@ -202,6 +202,17 @@ class FichaTecnica
      *
      * @return integer
      */
+	 
+	/**
+     *
+     * @var periodo
+     *
+     * @ORM\ManyToOne(targetEntity="ClasificacionUso")
+     * @ORM\JoinColumn(name="clasificacionUso", referencedColumnName="id")
+     * @ORM\OrderBy({"descripcion" = "ASC"})
+     **/
+    private $clasificacionUso;
+	
     public function getId()
     {
         return $this->id;
@@ -398,6 +409,7 @@ class FichaTecnica
     {
         $this->periodos = new \Doctrine\Common\Collections\ArrayCollection();
         $this->variables = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->clasificacionUso = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -628,6 +640,30 @@ class FichaTecnica
     {
         return $this->periodo;
     }
+	
+	/**
+     * Set clasificacionUso
+     *
+     * @param  \MINSAL\IndicadoresBundle\Entity\ClasificacionUso $clasificacionUso
+     * @return FichaTecnica
+     */
+    public function setClasificacionUso(\MINSAL\IndicadoresBundle\Entity\ClasificacionUso $clasificacionUso = null)
+    {
+        $this->clasificacionUso = $clasificacionUso;
+
+        return $this;
+    }
+
+    /**
+     * Get periodo
+     *
+     * @return \MINSAL\IndicadoresBundle\Entity\ClasificacionUso
+     */
+    public function getClasificacionUso()
+    {
+        return $this->clasificacionUso;
+    }
+
 
     /**
      * Add usuariosFavoritos

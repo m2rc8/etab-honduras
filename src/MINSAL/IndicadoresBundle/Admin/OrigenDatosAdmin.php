@@ -8,6 +8,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
+use MINSAL\IndicadoresBundle\Entity\OrigenDatos;
 
 class OrigenDatosAdmin extends Admin
 {
@@ -67,7 +68,8 @@ class OrigenDatosAdmin extends Admin
                 ->add('sentenciaSql', null, array('label' => $this->getTranslator()->trans('sentencia_sql'),
                     'template'=>'IndicadoresBundle:CRUD:list_sentencia_sql.html.twig'))
                 ->add('archivoNombre', null, array('label' => $this->getTranslator()->trans('archivo_asociado')))
-				->add('ultima_lectura', null, array('label' => $this->getTranslator()->trans('archivo_UltimaActualizacion')))
+				
+				->add('ultima_lectura', 'string', array('label' => $this->getTranslator()->trans('_ultima_actualizacion_')))				       			          				
                 ->add('_action', 'actions', array(
                     'actions' => array(
                         'load_data' => array('template' => 'IndicadoresBundle:OrigenDatosAdmin:list__action_load_data.html.twig')
@@ -125,7 +127,11 @@ class OrigenDatosAdmin extends Admin
             'label' => $this->trans('action_load_data'),
             'ask_confirmation' => false // If true, a confirmation will be asked before performing the action
         );
-        /*$actions['merge'] = array(
+		/*$actions['ultima_lectura'] = array(
+            'label' => $this->trans('_ultima_actualizacion_'),
+            'ask_confirmation' => false // If true, a confirmation will be asked before performing the action
+        );
+        $actions['merge'] = array(
             'label' => $this->trans('action_merge'),
             'ask_confirmation' => true // If true, a confirmation will be asked before performing the action
         );
@@ -203,5 +209,4 @@ class OrigenDatosAdmin extends Admin
         $collection->add('merge_save', 'merge/save');
         $collection->add('load_data');
     }
-
 }

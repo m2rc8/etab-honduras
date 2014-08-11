@@ -6,7 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use MINSAL\IndicadoresBundle\Validator as CustomAssert;
-
+use Doctrine\ORM\EntityManager as Manager;
+use MINSAL\IndicadoresBundle\Entity\OrigenDatosRepo;
 /**
  * MINSAL\IndicadoresBundle\Entity\OrigenDatos
  *
@@ -163,7 +164,7 @@ class OrigenDatos
         $this->fusiones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->conexiones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->esCatalogo = false;
-		$this->actualizacionIncremental = false;
+		$this->actualizacionIncremental = false;	
     }
 
     public function getAbsolutePath()
@@ -742,5 +743,18 @@ class OrigenDatos
     public function removeReporteActualizacione(\MINSAL\IndicadoresBundle\Entity\ReporteActualizacion $reporteActualizaciones)
     {
         $this->reporteActualizaciones->removeElement($reporteActualizaciones);
-    }		
+    }	
+	
+
+	public function getUltimaLectura()
+    { 
+		global $kernel;
+		if ( 'AppCache' == get_class($kernel) )
+		{
+		   $kernel = $kernel->getKernel();
+		}
+		$em = $kernel->getContainer()->get( 'doctrine.orm.entity_manager' );
+	
+		return $em->getRepository('IndicadoresBundle:OrigenDatos')->getUltimaActualizacionStatic($this->id);		 
+	}
 }

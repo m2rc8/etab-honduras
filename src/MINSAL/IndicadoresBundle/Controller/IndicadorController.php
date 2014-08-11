@@ -839,4 +839,31 @@ return $result;
 		$response=new Response(json_encode($indicadores_por_usuario));
 		return $response;
     }
+	
+	/**
+     * @Route("/clasificacionTecnica/{uso}/{ficha}", name="clasificacionTecnica", options={"expose"=true})
+     */
+	public function clasificacionTecnicaAction($uso,$ficha)
+	{
+        $em = $this->getDoctrine()->getManager();
+        $clasificacionUso = $em->getRepository("IndicadoresBundle:ClasificacionTecnica")->findByclasificacionUso($uso);
+		
+		$fichaTecnica = $em->getRepository("IndicadoresBundle:FichaTecnica")->findById($ficha);
+		$ftecnica="";
+		foreach ($fichaTecnica as $item)
+			$ftecnica=$item->getClasificacionTecnica();
+		$fichaTecnica=",";	
+		foreach ($ftecnica as $item)
+			$fichaTecnica.=$item->getId().",";
+		
+		$clasUso=array();
+		foreach ($clasificacionUso as $item){
+			$che="";
+			
+			if(stripos($fichaTecnica,"".$item->getId()))$che="checked";
+            $clasUso[] = array("id"=>$item->getId(),"value"=>$item->getDescripcion(),"che"=>$che);
+        }  
+		$response=new Response(json_encode($clasUso));
+		return $response;
+	}
 }//end class

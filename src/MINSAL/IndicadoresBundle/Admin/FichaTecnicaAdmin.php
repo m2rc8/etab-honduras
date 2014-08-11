@@ -35,8 +35,10 @@ class FichaTecnicaAdmin extends Admin
                 ->add('formula', null, array('label' => $this->getTranslator()->trans('formula'),
                     'help' => $this->getTranslator()->trans('ayuda_ingreso_formula')
                 ))
-                ->add('clasificacionTecnica', null, array('label' => $this->getTranslator()->trans('clasificacion_tecnica'),
-                    'required' => true, 'expanded' => true,
+				->add('clasificacionUso', null, array('label' => $this->getTranslator()->trans('clasificacion_uso-eTAB')))
+				
+                ->add('clasificacionTecnica', null, array('label' => $this->getTranslator()->trans('clasificacion_tecnica'),                 
+					'expanded' => true,
                     'class' => 'IndicadoresBundle:ClasificacionTecnica',
                     'query_builder' => function ($repository) {
                         return $repository->createQueryBuilder('ct')
