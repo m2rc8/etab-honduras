@@ -162,7 +162,7 @@ $(document).ready(function(){
                     <div class="col-lg-12"><br />
                         <div class="form-group">
                             <label for="s53beb59d6d27d_establecimiento">
-                            {{'_clasificacion_indicadores_'|trans}}
+                            {{'clasificacion_uso-eTAB'|trans}}
                             </label>
                             <select class="form-control" id="clasificacion_00">
                             <option value="xxx">
@@ -170,8 +170,8 @@ $(document).ready(function(){
                             </option>
                             {% for clasificacion in clasificacionUso %}
                                 {% if clasificacion.codigo == app.user.clasificacionUso.codigo|default('') %}
-                                <option value="{{clasificacion.codigo}}">
-                                    {{clasificacion.id}} .- {{clasificacion.descripcion}}
+                                <option value="{{clasificacion.id}}">
+                                     {{clasificacion.descripcion}}
                                     {% for categoria in categorias%}
                                         {% if categoria.indicadores|length > 0 and categoria.cat.descripcion==clasificacion.descripcion   %}
                                             ({{categoria.indicadores|length}})
@@ -179,11 +179,21 @@ $(document).ready(function(){
                                     {% endfor %}
                                 </option>
                                 {% else %}
-                                <option value="{{clasificacion.codigo}}" >
-                                    {{clasificacion.id}} .- {{clasificacion.descripcion}}                                        
+                                <option value="{{clasificacion.id}}" >
+                                    {{clasificacion.descripcion}}                                        
                                 </option>
                                 {% endif %}
                             {% endfor %}
+                           </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="s53beb59d6d27d_establecimiento">
+                            {{'clasificacion_tecnica'|trans}}
+                            </label>
+                            <select class="form-control" id="clasificacion_11">
+                            
                            </select>
                         </div>
                     </div>
@@ -396,34 +406,41 @@ $(document).ready(function(){
 		});
 	});	
 	$("#clasificacion_00").change(function(e) {
+		var uso=$(this).val();
 		var valor=this.value.toLowerCase();	
 		che="";
 		if(valor=="xxx")
 		{
 			valor=$("#clasificacion_00 option:nth-child(2)").val();								
-			che="che";
+			indicadoresList(valor,"che","");
+			$("#clasificacion_11").html("");
 		}
-		$.ajax({
-			type: "POST",
-			dataType:"JSON",								
-			url:(Routing.generate("change_clasificacion_uso",{codigo_clasificacion:valor})),
-			data:{ajax:"ajax",che:che},
-			success: function(datos) {
-				$("#miclasificacion").html("");
-				var li="";
-				for(var c=0;c<datos.length; c++)
+		else
+		{
+			$("#miclasificacion").html("");
+			$.ajax({
+				url: Routing.generate("clasificacionTecnica",{'uso':uso,'ficha':"x"}),
+				dataType:"json",	
+				type: 'POST',
+				error: function() 
 				{
-					li=li+'<li class="list-group-item" style="height:100%; width:100%; display:block;">'+
-					'<button type="button" class="indicador pull-left btn" style="margin-right:15px" data-id="'+datos[c].id+'"'+
-					'onclick="cargar_indicador('+datos[c].id+');" id="'+datos[c].id+'">'+
-					'<i class="glyphicon glyphicon-plus"></i>'+
-					'</button>'+datos[c].nombre+'</li>';										
-				}						
-				$("#miclasificacion").append(li);
-				marcar_agregados();
-			}
-		});
-		
+					$("#clasificacion_11").html(li);
+				},
+				success: function(result) 
+				{
+					var li="<option value=''>Seleccione</option>";
+					for (i = 0; i < result.length; i++) 
+					{
+						li+='<option value="'+result[i].id+'" >'+result[i].value+'</option>';
+					}
+					$("#clasificacion_11").html(li);				
+				}
+			});
+			indicadoresList(valor,"","");
+		}
+	});
+	$("#clasificacion_11").change(function(e) {		
+		indicadoresList($("#clasificacion_00").val(),"",$(this).val());
 	});	
 	
 	$("#search_5").keyup(function(e) {   
@@ -537,6 +554,31 @@ function openModalSala(sala,titulo,edit)
 		$("#guardar_sala").attr("style","display:");
 		$("#elimina_sala").attr("style","display:none");
 	}
+}
+function indicadoresList(valor,che,ft)
+{
+	$("#miclasificacion").html("");
+	
+	$.ajax({
+		type: "POST",
+		dataType:"JSON",								
+		url:(Routing.generate("change_clasificacion_uso",{codigo_clasificacion:valor})),
+		data:{ajax:"ajax",che:che,ft:ft},
+		success: function(datos) 
+		{
+			var li="";
+			for(var c=0;c<datos.length; c++)
+			{
+				li=li+'<li class="list-group-item" style="height:100%; width:100%; display:block;">'+
+				'<button type="button" class="indicador pull-left btn" style="margin-right:15px" data-id="'+datos[c].id+'"'+
+				'onclick="cargar_indicador('+datos[c].id+');" id="'+datos[c].id+'">'+
+				'<i class="glyphicon glyphicon-plus"></i>'+
+				'</button>'+datos[c].nombre+'</li>';										
+			}						
+			$("#miclasificacion").append(li);
+			marcar_agregados();
+		}
+	});
 }
 acciones_button();
 </script>

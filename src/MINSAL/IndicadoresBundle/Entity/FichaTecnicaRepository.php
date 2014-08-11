@@ -514,5 +514,10 @@ class FichaTecnicaRepository extends EntityRepository
         $fichaTecnica->setCamposIndicador($campos_comunes);
         $em->flush();
     }
-
+	public function indicadorClasificacionTecnica($tecnica)
+    {
+		return $this->getEntityManager()->getConnection()->executeQuery("SELECT fichatecnica_id as id
+			FROM fichatecnica_clasificaciontecnica 
+			WHERE clasificaciontecnica_id='$tecnica'")->fetchAll();
+	}
 }

@@ -306,7 +306,7 @@ class IndicadorController extends Controller
 
     /**
      * @Route("/tablero/usuario/change/{codigo_clasificacion}", name="change_clasificacion_uso", options={"expose"=true})
-     * @ParamConverter("clasificacion", options={"mapping": {"codigo_clasificacion": "codigo"}})
+     * @ParamConverter("clasificacion", options={"mapping": {"codigo_clasificacion": "id"}})
      */
     public function changeClasificacionUsoAction(ClasificacionUso $clasificacion)
     {		
@@ -362,20 +362,37 @@ class IndicadorController extends Controller
 			$em->flush();
 			if($request->get("ajax"))
 			{
+				$ft=$request->get("ft");
+				$cu=",";
+				if($ft!="")
+				{
+					$fichaTecnica = $em->getRepository("IndicadoresBundle:FichaTecnica")->indicadorClasificacionTecnica($ft);
+					$ftecnica="";
+					foreach ($fichaTecnica as $item)						
+						$cu.=$item["id"].",";
+				}
+				
 				$clasificacionUso = $em->getRepository("IndicadoresBundle:ClasificacionUso")->findAll();
+									
 				$usuario = $this->getUser();
-				if ($usuario->getClasificacionUso()) {
+				if ($usuario->getClasificacionUso()) 
+				{
 					$clasificacionUsoPorDefecto = $usuario->getClasificacionUso();
-				} else {
+				} 
+				else 
+				{
 					$clasificacionUsoPorDefecto = $clasificacionUso[0];
 				}
+				
 				$categorias = $em->getRepository("IndicadoresBundle:ClasificacionTecnica")->findBy(array('clasificacionUso' => $clasificacionUsoPorDefecto));
 				
 				//Indicadores asignados por usuario
 				$usuarioIndicadores = ($usuario->hasRole('ROLE_SUPER_ADMIN')) ?
-						//$em->getRepository("IndicadoresBundle:FichaTecnica")->findAll() :
-						$this->get('doctrine')->getManager()->createQuery('SELECT c FROM IndicadoresBundle:FichaTecnica c ORDER BY c.nombre ASC')->getResult() :
-						$usuario->getIndicadores();
+				//$em->getRepository("IndicadoresBundle:FichaTecnica")->findAll() :
+				$this->get('doctrine')->getManager()->createQuery('SELECT c FROM IndicadoresBundle:FichaTecnica c ORDER BY c.nombre ASC')
+				->getResult() :
+				
+				$usuario->getIndicadores();
 				//Indicadores asignadas al grupo al que pertenece el usuario
 				$indicadoresPorGrupo = array();
 				foreach ($usuario->getGroups() as $grp){            
@@ -395,13 +412,21 @@ class IndicadorController extends Controller
 				}
 		
 				$categorias_indicador = array();
-				foreach ($categorias as $cat) {
+				foreach ($categorias as $cat) 
+				{
 					$categorias_indicador[$cat->getId()]['cat'] = $cat;
 					$categorias_indicador[$cat->getId()]['indicadores'] = array();
 					$indicadores_por_categoria = $cat->getIndicadores();
 					foreach ($indicadores_por_categoria as $ind) {
-						if (in_array($ind->getId(), $indicadores_por_usuario)) {
-							$categorias_indicador[$cat->getId()]['indicadores'][] = $ind;
+						if (in_array($ind->getId(), $indicadores_por_usuario)) 
+						{
+							$categorias_indicador[$cat->getId()]['indicadores'][] = $ind;	
+							if($ft!="")
+							{
+								if(stripos($cu,"".$ind->getId()))
+								$indicadores_clasificados[] =array("id"=> $ind->getId(),"nombre"=>$ind->getNombre());
+							}
+							else						
 							$indicadores_clasificados[] =array("id"=> $ind->getId(),"nombre"=>$ind->getNombre());
 						}
 					}
@@ -843,24 +868,26 @@ return $result;
 	/**
      * @Route("/clasificacionTecnica/{uso}/{ficha}", name="clasificacionTecnica", options={"expose"=true})
      */
-	public function clasificacionTecnicaAction($uso,$ficha)
+	public function clasificacionTecnicaAction($uso,$ficha="")
 	{
         $em = $this->getDoctrine()->getManager();
         $clasificacionUso = $em->getRepository("IndicadoresBundle:ClasificacionTecnica")->findByclasificacionUso($uso);
 		
-		$fichaTecnica = $em->getRepository("IndicadoresBundle:FichaTecnica")->findById($ficha);
-		$ftecnica="";
-		foreach ($fichaTecnica as $item)
-			$ftecnica=$item->getClasificacionTecnica();
-		$fichaTecnica=",";	
-		foreach ($ftecnica as $item)
-			$fichaTecnica.=$item->getId().",";
-		
+		if($ficha!="x")
+		{
+			$fichaTecnica = $em->getRepository("IndicadoresBundle:FichaTecnica")->findById($ficha);
+			$ftecnica="";
+			foreach ($fichaTecnica as $item)
+				$ftecnica=$item->getClasificacionTecnica();
+			$fichaTecnica=",";	
+			foreach ($ftecnica as $item)
+				$fichaTecnica.=$item->getId().",";
+		}
 		$clasUso=array();
 		foreach ($clasificacionUso as $item){
 			$che="";
 			
-			if(stripos($fichaTecnica,"".$item->getId()))$che="checked";
+			if($ficha!="x"&&stripos($fichaTecnica,"".$item->getId()))$che="checked";
             $clasUso[] = array("id"=>$item->getId(),"value"=>$item->getDescripcion(),"che"=>$che);
         }  
 		$response=new Response(json_encode($clasUso));
