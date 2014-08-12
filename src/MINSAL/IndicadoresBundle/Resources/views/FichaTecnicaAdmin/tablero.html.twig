@@ -574,7 +574,9 @@ function indicadoresList(valor,che,ft)
 				'onclick="cargar_indicador('+datos[c].id+');" id="'+datos[c].id+'">'+
 				'<i class="glyphicon glyphicon-plus"></i>'+
 				'</button>'+datos[c].nombre+'</li>';										
-			}						
+			}
+			if(li=="")
+				li="<div class='alert alert-warning col-lg-12'>No hay resultados</div>";					
 			$("#miclasificacion").append(li);
 			marcar_agregados();
 		}
