@@ -325,8 +325,10 @@ class IndicadorController extends Controller
                 $usuario->getIndicadores();
 				
 			$indicadoresPorGrupo = array();
-			foreach ($usuario->getGroups() as $grp){            
-				foreach ($grp->getIndicadores() as $indicadores_grupo){
+			foreach ($usuario->getGroups() as $grp)
+			{            
+				foreach ($grp->getIndicadores() as $indicadores_grupo)
+				{
 					$indicadoresPorGrupo[] = $indicadores_grupo;
 				}
 			}

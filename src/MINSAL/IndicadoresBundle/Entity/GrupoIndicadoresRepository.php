@@ -28,5 +28,16 @@ class GrupoIndicadoresRepository extends EntityRepository
 
         return $query->getArrayResult();
     }
-
+	public function getSalaGrupo($user)
+    {        
+		$sql="SELECT i.grupoindicadores_id
+                     FROM group_grupoindicadores i
+                     LEFT JOIN fos_user_user_group g on g.group_id=i.group_id
+                     WHERE
+                     g.user_id = '$user'";
+					 
+		$query=$this->getEntityManager()->getConnection()->executeQuery($sql)->fetchAll();
+		
+        return $query;
+    }
 }

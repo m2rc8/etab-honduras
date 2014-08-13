@@ -34,21 +34,28 @@ class FichaTecnicaAdminController extends Controller
         $usuario = $this->getUser();
         if ($usuario->getClasificacionUso()) {
             $clasificacionUsoPorDefecto = $usuario->getClasificacionUso();
-        } else {
+        } 
+		else 
+		{
             $clasificacionUsoPorDefecto = $clasificacionUso[0];
         }
         $categorias = $em->getRepository("IndicadoresBundle:ClasificacionTecnica")->findBy(array('clasificacionUso' => $clasificacionUsoPorDefecto));
 
         //Salas por usuario
         $usuarioSalas = array();
-        if (($usuario->hasRole('ROLE_SUPER_ADMIN'))){
-            foreach ($em->createQuery('SELECT g FROM IndicadoresBundle:GrupoIndicadores g ORDER BY g.nombre ASC')->getResult() as $sala) {
+        if (($usuario->hasRole('ROLE_SUPER_ADMIN')))
+		{
+            foreach ($em->createQuery('SELECT g FROM IndicadoresBundle:GrupoIndicadores g ORDER BY g.nombre ASC')->getResult() as $sala) 	
+			{
                 $usuarioSalas[$sala->getId()] = $sala;
             } 
-        }else{
-           foreach ($usuario->getGruposIndicadores() as $sala) {
+        }
+		else
+		{
+           foreach ($usuario->getGruposIndicadores() as $sala) 
+		   {
                 $usuarioSalas[$sala->getGrupoIndicadores()->getId()] = $sala->getGrupoIndicadores();
-            } 
+           } 
         }
 		
 		$salasXusuario=array();
@@ -59,22 +66,30 @@ class FichaTecnicaAdminController extends Controller
                     ->getIndicadoresSala($sala);
             $i++;
         }
+		
         //Salas asignadas al grupo al que pertenece el usuario
 		$salasXgrupoTemp=array();
-        foreach ($usuario->getGroups() as $grp){
-            foreach ($grp->getSalas() as $sala){
+        foreach ($usuario->getGroups() as $grp)
+		{
+            foreach ($grp->getSalas() as $sala)
+			{
                 $usuarioSalas[$sala->getId()] = $sala;
 				$salasXgrupoTemp[]=$sala;
             }
         }
         $salasXgrupo=array();
 		$i=0;
-		foreach ($salasXgrupo as $sala) {
-            $salasXgrupo[$i]['datos_sala'] = $sala;
-            $salasXgrupo[$i]['indicadores_sala'] = $em->getRepository('IndicadoresBundle:GrupoIndicadores')
-                    ->getIndicadoresSala($sala);
-            $i++;
-        }
+		$user = $this->container->get('security.context')->getToken()->getUser();
+		$uXg=$em->getRepository('IndicadoresBundle:GrupoIndicadores')->getSalaGrupo($user->getId());
+		foreach ($uXg as $sala) 
+		{
+			$id=$sala["grupoindicadores_id"];
+			$sala=$em->createQuery("SELECT g FROM IndicadoresBundle:GrupoIndicadores g WHERE g='$id' ORDER BY g.nombre ASC")->getResult();
+			$salasXgrupo[$i]['datos_sala'] = $sala[0];
+			$salasXgrupo[$i]['indicadores_sala'] = $em->getRepository('IndicadoresBundle:GrupoIndicadores')
+					->getIndicadoresSala($sala[0]);
+			$i++;
+		}
 		
         $i = 0;
         $salas = array();
@@ -88,7 +103,7 @@ class FichaTecnicaAdminController extends Controller
         //Indicadores asignados por usuario
         $usuarioIndicadores = ($usuario->hasRole('ROLE_SUPER_ADMIN')) ?
                 //$em->getRepository("IndicadoresBundle:FichaTecnica")->findAll() :
-                $this->get('doctrine')->getManager()->createQuery('SELECT c FROM IndicadoresBundle:FichaTecnica c ORDER BY c.nombre ASC')->getResult() :
+                $this->get('doctrine')->getManager()->createQuery('SELECT c FROM IndicadoresBundle:FichaTecnica c ORDER BY c.id,c.nombre ASC')->getResult() :
                 $usuario->getIndicadores();
         //Indicadores asignadas al grupo al que pertenece el usuario
         $indicadoresPorGrupo = array();
