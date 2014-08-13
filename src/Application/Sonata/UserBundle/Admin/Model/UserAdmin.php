@@ -85,6 +85,10 @@ class UserAdmin extends BaseAdmin
 						'username' => $this->getTranslator()->trans('formato_Max')." 8"
 					))
                 ->end()
+				->with('Restricciones')
+                    ->add('jurisdiccion', null, array('label' => $this->getTranslator()->trans('jurisdiccion'), 'expanded' => true))
+					->add('clues', null, array('label' => $this->getTranslator()->trans('clues'), 'expanded' => true))
+                ->end()
                 /*->with('Social')
                     ->add('facebookUid', null, array('required' => false))
                     ->add('facebookName', null, array('required' => false))

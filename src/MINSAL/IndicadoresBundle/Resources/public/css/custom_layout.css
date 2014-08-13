@@ -29,6 +29,11 @@
 	font-size:1em;
 }
 
+#contenedor_tablero
+	{
+		margin-top:112px;
+	}
+
 @media screen and (max-width:1200px)
 {
 	.y.axis .tick text
@@ -56,11 +61,11 @@
 		font-size:.7em;
 	}
 }
-@media screen and (max-width:992px)
+@media screen and (min-width:980px)
 {
-	#sala
+	#contenedor_tablero
 	{
-		margin-top:70px;
+		margin-top:0px;
 	}
 }
 @media screen and (max-width:890px)

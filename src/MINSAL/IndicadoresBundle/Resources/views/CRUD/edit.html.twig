@@ -85,7 +85,22 @@ file that was distributed with this source code.
 			$("#"+idcontrol+"_salas").parent().html()+
 		  '</div>'+
 		'</div>');	
-
+		
+		$("#"+idcontrol+"_jurisdiccion ").attr("class","list-group");
+		$("#"+idcontrol+"_jurisdiccion li").attr("class","list-group-item");
+		$("#"+idcontrol+"_jurisdiccion").parent('div').html('<div class="panel panel-default">'+		  
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
+			$("#"+idcontrol+"_jurisdiccion").parent().html()+
+		  '</div>'+
+		'</div>');	
+		
+		$("#"+idcontrol+"_clues ").attr("class","list-group");
+		$("#"+idcontrol+"_clues li").attr("class","list-group-item");
+		$("#"+idcontrol+"_clues").parent('div').html('<div class="panel panel-default">'+		  
+		  '<div class="panel-body" style=" max-height:280px; overflow:auto; ">'+
+			$("#"+idcontrol+"_clues").parent().html()+
+		  '</div>'+
+		'</div>');
 		
 		$("#"+idcontrol+"_realRoles ").attr("class","list-group");
 		$("#"+idcontrol+"_realRoles li").attr("class","list-group-item");

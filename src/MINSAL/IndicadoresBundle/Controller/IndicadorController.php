@@ -160,9 +160,11 @@ class IndicadorController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $fichaRepository = $em->getRepository('IndicadoresBundle:FichaTecnica');
-
+		
+		$user = $this->container->get('security.context')->getToken()->getUser();
+		
         $fichaRepository->crearIndicador($fichaTec, $dimension, $filtros);
-        $resp['datos'] = $fichaRepository->calcularIndicador($fichaTec, $dimension, $filtros, $verSql, $fechas);
+        $resp['datos'] = $fichaRepository->calcularIndicador($fichaTec, $dimension, $filtros, $verSql, $fechas, $user->getId());
         $response = new Response(json_encode($resp));
         if ($this->get('kernel')->getEnvironment() != 'dev')
             $response->setMaxAge($this->container->getParameter('indicador_cache_consulta'));

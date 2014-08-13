@@ -54,7 +54,20 @@ class User extends BaseUser
      * @ORM\OrderBy({"codigo" = "ASC"})
      **/
     private $clasificacionUso;
-
+	
+	/**
+     * @ORM\ManyToMany(targetEntity="MINSAL\IndicadoresBundle\Entity\CtlJurisdiccion", inversedBy="jurisdiccion")    
+     * @ORM\OrderBy({"descripcion" = "ASC"})
+     **/
+    protected $jurisdiccion;
+	
+	/**
+     * @ORM\ManyToMany(targetEntity="MINSAL\IndicadoresBundle\Entity\CtlClues", inversedBy="clues")    
+     * @ORM\OrderBy({"descripcion" = "ASC"})
+     **/
+    protected $clues;
+        
+	
     /**
      * Get id
      *
@@ -117,8 +130,10 @@ class User extends BaseUser
     public function __construct()
     {
         $this->gruposIndicadores = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->indicadores = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->indicadores 		 = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->groups 			 = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->jurisdiccion 	 = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->clues        	 = new \Doctrine\Common\Collections\ArrayCollection();
         parent::__construct();
     }
 
@@ -243,4 +258,72 @@ class User extends BaseUser
     {
         return $this->indicadores;
     }
+	
+	
+	/**
+     * Add jurisdiccion
+     *
+     * @param \MINSAL\IndicadoresBundle\Entity\CtlJurisdiccion $jurisdiccion
+     * @return Group
+     */
+    public function addJurisdiccion(\MINSAL\IndicadoresBundle\Entity\CtlJurisdiccion $jurisdiccion)
+    {
+        $this->jurisdiccion[] = $jurisdiccion;
+    
+        return $this;
+    }
+
+    /**
+     * Remove jurisdiccion
+     *
+     * @param \MINSAL\IndicadoresBundle\Entity\CtlJurisdiccion $jurisdiccion
+     */
+    public function removeJurisdiccion(\MINSAL\IndicadoresBundle\Entity\CtlJurisdiccion $jurisdiccion)
+    {
+        $this->jurisdiccion->removeElement($jurisdiccion);
+    }
+
+    /**
+     * Get jurisdiccion
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getJurisdiccion()
+    {
+        return $this->jurisdiccion;
+    }   
+	
+	
+	/**
+     * Add clues
+     *
+     * @param \MINSAL\IndicadoresBundle\Entity\CtlClues $clues
+     * @return Group
+     */
+    public function addClues(\MINSAL\IndicadoresBundle\Entity\CtlClues $clues)
+    {
+        $this->clues[] = $clues;
+    
+        return $this;
+    }
+
+    /**
+     * Remove clues
+     *
+     * @param \MINSAL\IndicadoresBundle\Entity\CtlClues $clues
+     */
+    public function removeClues(\MINSAL\IndicadoresBundle\Entity\CtlClues $clues)
+    {
+        $this->clues->removeElement($clues);
+    }
+
+    /**
+     * Get clues
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getClues()
+    {
+        return $this->clues;
+    }   
 }

@@ -286,7 +286,7 @@ class FichaTecnicaRepository extends EntityRepository
         return $sql;
     }
 
-    public function calcularIndicador(FichaTecnica $fichaTecnica, $dimension, $filtro_registros = null, $ver_sql = false, $filtrofecha)
+    public function calcularIndicador(FichaTecnica $fichaTecnica, $dimension, $filtro_registros = null, $ver_sql = false, $filtrofecha, $user="")
     {
         $util = new \MINSAL\IndicadoresBundle\Util\Util();
         $acumulado = $fichaTecnica->getEsAcumulado();
@@ -399,12 +399,35 @@ class FichaTecnicaRepository extends EntityRepository
             $otros_campos = ' B.id AS id_category, ';
             $grupo_extra = ', B.id ';
         }
+		$jurisdiccion="";
+		$juris="SELECT ctljurisdiccion_id FROM user_ctljurisdiccion where user_id='$user'";
+		$juris=$this->getEntityManager()->getConnection()->executeQuery($juris)->fetchAll();
+		if($juris)
+		{			
+			$in="";
+			foreach($juris as $j)
+				$in.="'".$j["ctljurisdiccion_id"]."',";
+			$jurisdiccion=" AND id_jurisdiccion in($in'')";
+		}
+		
+		$clues="";
+		$cls="SELECT ctlclues_id FROM user_ctlclues where user_id='$user'";
+		$cls=$this->getEntityManager()->getConnection()->executeQuery($cls)->fetchAll();
+		if($cls)
+		{			
+			$in="";
+			foreach($cls as $j)
+				$in.="'".$j["ctlclues_id"]."',";
+			$clues=" AND clues in($in'')";
+		}
+		
 
         $sql = "SELECT $camposrangos $dimension AS category, $otros_campos $variables_query, case concat('A',round(($formula)::numeric,2)) when 'A' then 0 else round(($formula)::numeric,2) end AS measure FROM $tabla_indicador A" . $rel_catalogo;
-        $sql .= ' WHERE 1=1 ' . $evitar_div_0 . $filtroporfecha;
+        $sql .= ' WHERE 1=1 ' . $evitar_div_0 . $filtroporfecha.$jurisdiccion.$clues;
 		$orderid="";
 		
-        if ($filtro_registros != null) {
+        if ($filtro_registros != null) 
+		{
             foreach ($filtro_registros as $campo => $valor) {
                 //Si el filtro es un catálogo, buscar su id correspondiente
                 $significado = $this->getEntityManager()->getRepository('IndicadoresBundle:SignificadoCampo')
@@ -430,14 +453,19 @@ class FichaTecnicaRepository extends EntityRepository
             GROUP BY $dimension $grupo_extra            
             ORDER BY $orderid $dimension";
 			
-        try {
+        try 
+		{
             if ($ver_sql == true)
                 return $sql;
             else
                 return $this->getEntityManager()->getConnection()->executeQuery($sql)->fetchAll();
-        } catch (\PDOException $e) {
+        } 
+		catch (\PDOException $e) 
+		{
             return $e->getMessage();
-        } catch (\Doctrine\DBAL\DBALException $e) {
+        } 
+		catch (\Doctrine\DBAL\DBALException $e) 
+		{
             return $e->getMessage();
         }
     }

@@ -32,10 +32,10 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 		var long = $('#' + contexto.zona + ' .titulo_indicador').attr('data-unidad-medida');
 		texto="";
 		if(long=="%")
-		texto="Porcentaje";
+			texto="Porcentaje";
 		
 		var datasetPrincipal_bk = JSON.parse($('#' + this.zona).attr('datasetPrincipal_bk'));
-		max_y = d3.max(datasetPrincipal_bk, function(d) 
+		max_yy = d3.max(datasetPrincipal_bk, function(d) 
 		{
 			return parseFloat(d.measure);
 		});
@@ -47,7 +47,8 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			meta=$('#' + this.zona + 'meta').attr("data-id");
 			max_y = $('#' + this.zona + ' .titulo_indicador').attr('data-max_rango');
 		}
-		
+		if(max_y<max_yy)
+			max_y=max_yy;
 		var yScale = d3.scale.linear()
 			.domain([0, max_y])
 			.range([height, 0]);
@@ -193,9 +194,9 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 		{
 			svg.append("line")
 				.attr("x1", 5)
-				.attr("y1", height-((height*meta)/100))
+				.attr("y1", height-((height*meta)/max_y))
 				.attr("x2", width)
-				.attr("y2", height-((height*meta)/100))
+				.attr("y2", height-((height*meta)/max_y))
 				.attr("stroke-width", 1)
 				.style("stroke-dasharray",("5","5"))
 				.attr("stroke", "green");	
@@ -209,7 +210,7 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.append("text")
 			.text(function(d) 
 			{
-				return d.measure;
+				return number_format(d.measure,2);
 			})
 			
 			.attr('x', function(d,i){return (i)*(width/contexto.currentDatasetChart.length)+(width/contexto.currentDatasetChart.length)/2;})

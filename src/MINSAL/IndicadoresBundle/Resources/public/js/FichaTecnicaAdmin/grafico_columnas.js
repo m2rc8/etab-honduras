@@ -11,7 +11,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 	var contexto=this;
     this.dibujar = function() 
 	{
-		var margin = {top: 30, right: 40, bottom: 75, left: 50},
+		var margin = {top: 30, right: 40, bottom: 75, left: 60},
 		width = parseInt(d3.select('#'+this.zona+' .panel-body').style('width'), 10);		
 		width  = width - margin.left - margin.right-50,
 		barPadding = 1;
@@ -33,17 +33,19 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 		
 		var long = $('#' + contexto.zona + ' .titulo_indicador').attr('data-unidad-medida');
 		texto="";
-		if(long=="%")
-		texto="Porcentaje";
+		
 		//El nivel máximo de la escala puede ser el mayor valor de la serie
 		// o el mayor valor del rango, el usuario elige
 		// se utiliza datasetPrincipal_bk por si se han aplicado filtros
 		// Así no usará el máximo valor del filtro
 		var datasetPrincipal_bk = JSON.parse($('#' + this.zona).attr('datasetPrincipal_bk'));
-		max_y = d3.max(datasetPrincipal_bk, function(d) 
+		max_yy = d3.max(datasetPrincipal_bk, function(d) 
 		{
 			return parseFloat(d.measure);
 		});
+		if(long=="%")
+			texto="Porcentaje";
+		
 		if ($('#' + this.zona + ' .max_y') != null && $('#' + this.zona + ' .max_y').val() == 'rango_alertas')
 			max_y = $('#' + this.zona + ' .titulo_indicador').attr('data-max_rango');
 	
@@ -52,7 +54,9 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			meta=$('#' + this.zona + 'meta').attr("data-id");
 			max_y = $('#' + this.zona + ' .titulo_indicador').attr('data-max_rango');
 		}
-		
+		console.log(max_y+"--"+max_yy);
+		if(max_y<max_yy)
+			max_y=max_yy;
 		var yScale = d3.scale.linear()
 			.domain([0, max_y])
 			.range([height, 0]);
@@ -149,12 +153,12 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.attr("class","label_barra")
 			.text(function(d) 
 			{
-				return d.measure;
+				return number_format(d.measure,2);
 			})			
 			.attr('x', function(d,i){return (i)*(width/contexto.currentDatasetChart.length)+(width/contexto.currentDatasetChart.length)/2;})
 			.attr('y',height)
 			.transition().duration(500).delay(20)
-			.attr('y', function(d){return (height-((height*d.measure)/100))-5})
+			.attr('y', function(d){return (height-((height*d.measure)/max_y))-5})
 			.attr('text-anchor', 'middle')			
 			.attr('font-size', function()
 			{ 
@@ -169,9 +173,9 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 		{
 			svg.append("line")
 				.attr("x1", 5)
-				.attr("y1", height-((height*meta)/100))
+				.attr("y1", height-((height*meta)/max_y))
 				.attr("x2", width)
-				.attr("y2", height-((height*meta)/100))
+				.attr("y2", height-((height*meta)/max_y))
 				.attr("stroke-width", 1)
 				.style("stroke-dasharray",("5","5"))
 				.attr("stroke", "steelblue");	

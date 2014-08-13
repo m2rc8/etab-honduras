@@ -20,6 +20,7 @@ graficoPastel = function(ubicacion, datos, colorChosen, categoryChoosen)
 		height=width*.65;
 		
         $('#' + ubicacion + ' .grafico').html('');
+		
        
 		$("#" + contexto.zona + ' .grafico').attr("id",contexto.zona + '_grafico')
 		var pie = new d3pie(contexto.zona + '_grafico', 
