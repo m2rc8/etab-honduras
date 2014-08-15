@@ -32,6 +32,13 @@ file that was distributed with this source code.
 				$("input[type='checkbox']").removeClass("fa fa-check-square-o");
 			che=!che;
 		});
+		$("input[type='checkbox']").on("click", function () 
+		{
+			if(this.checked)
+				$(this).addClass("fa fa-check-square-o");
+			else 
+				$(this).removeClass("fa fa-check-square-o");
+		});
     });
 	
 	</script>

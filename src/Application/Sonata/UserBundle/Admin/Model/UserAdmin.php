@@ -87,7 +87,9 @@ class UserAdmin extends BaseAdmin
                 ->end()
 				->with('Restricciones')
                     ->add('jurisdiccion', null, array('label' => $this->getTranslator()->trans('jurisdiccion'), 'expanded' => true))
-					->add('clues', null, array('label' => $this->getTranslator()->trans('clues'), 'expanded' => true))
+					->add('clues', null, array('label' => $this->getTranslator()->trans('clues'), 'expanded' => true, ))
+					//->add('clues','collection',array('label' => $this->getTranslator()->trans('clues'),'allow_add' => true,'mapped' => false))
+					
                 ->end()
                 /*->with('Social')
                     ->add('facebookUid', null, array('required' => false))

@@ -215,7 +215,7 @@ $(document).ready(function(){
                                     data-unidad-medida='{{indicador.unidadMedida}}' id='{{indicador.id}}'>
                                     <i class="glyphicon glyphicon-plus"></i>
                                     </button>
-                                    {{indicador.nombre}}                                    
+                                    {{indicador.nombre}}  <div class="clearfix"></div>                                  
                                 </li>
                             
                             {% endfor %}
@@ -572,7 +572,7 @@ function indicadoresList(valor,che,ft)
 				'<button type="button" class="indicador pull-left btn" style="margin-right:15px" data-id="'+datos[c].id+'"'+
 				'onclick="cargar_indicador('+datos[c].id+');" id="'+datos[c].id+'">'+
 				'<i class="glyphicon glyphicon-plus"></i>'+
-				'</button>'+datos[c].nombre+'</li>';										
+				'</button>'+datos[c].nombre+'<div class="clearfix"></div></li>';										
 			}
 			if(li=="")
 				li="<div class='alert alert-warning col-lg-12'>No hay resultados</div>";					

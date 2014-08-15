@@ -7,7 +7,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use MINSAL\IndicadoresBundle\Validator as CustomAssert;
 use Doctrine\ORM\EntityManager as Manager;
-use MINSAL\IndicadoresBundle\Entity\OrigenDatosRepo;
 /**
  * MINSAL\IndicadoresBundle\Entity\OrigenDatos
  *
