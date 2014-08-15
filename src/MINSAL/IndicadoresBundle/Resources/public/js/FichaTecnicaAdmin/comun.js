@@ -925,7 +925,7 @@ function acciones_button()
 		{
 			zona=$(this).attr("data-id");
 			
-            $("#"+zona+"_image").html('<li><a id="'+zona+'esvg"><i class="ion ion-images"></i> SVG</a></li><li> <a id="'+zona+'epng"><i class="ion ion-image"></i> PNG</a></li>');
+            $("#"+zona+"_image").html('<li><a id="'+zona+'esvg"><i class="ion ion-images"></i> SVG</a></li><li> <a id="'+zona+'epng"><i class="ion ion-image"></i> PNG</a></li><div style="display:none" class="output" id="canvas"></div>');
 			
 			// se obtiene el uniqid que genera en auto symfony al create			
 			$("svg").attr({ version: '1.1' , xmlns:"http://www.w3.org/2000/svg"});
@@ -945,7 +945,7 @@ function acciones_button()
 				img.style.display = "none";								
 				
 			};
-			
+			/*
 			var image = img;
 			var canvas = document.createElement("canvas");
 			
@@ -963,8 +963,33 @@ function acciones_button()
 					p.href = canvas.toDataURL("image/png");	
 				
 			  	};
-			}
+			}*/
+			var svg = $("#"+zona+" .grafico").html();
 			
+			width=img.width;
+			height=img.height	
+			if(width<1)width=550;
+			if(height<1)height=550;
+			
+			document.createElement('canvas')
+			var c = document.createElement('canvas');				
+			
+			c.width = width ;
+			c.height = height ;
+			document.getElementById('canvas').innerHTML = '';
+			document.getElementById('canvas').appendChild(c);
+			if (typeof FlashCanvas != "undefined") 
+			{
+				FlashCanvas.initElement(c);
+			}
+			canvg(c, svg, { log: true, renderCallback: function (dom) 
+			{
+				
+			}});
+			var p = document.getElementById(zona+"epng")
+			p.download = titulo+".png";
+			p.href = c.toDataURL("image/png");	
+	
         });
         $('body').on("change",'.filtro_por_fecha',function()
 		{

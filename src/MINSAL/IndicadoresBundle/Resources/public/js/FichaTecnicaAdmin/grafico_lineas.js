@@ -9,7 +9,7 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 	var contexto=this;
 	this.dibujar = function() 
 	{
-		var margin = {top: 30, right: 40, bottom: 75, left: 50},
+		var margin = {top: 50, right: 40, bottom: 75, left: 70},
 		width = parseInt(d3.select('#'+this.zona+' .panel-body').style('width'), 10)
 		width  = width - margin.left - margin.right-50,
 		barPadding = 1;
@@ -166,7 +166,8 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.attr("dy", "-2.2em")	  
 			.text(long+" "+texto)
 			.style("text-anchor", "end")
-			.style("font-size", "0.7em");
+			.style("font-family", "arial")
+			.style("font-size", "7pt");
 			
 		svg.append("g")
 			.attr("class", "x axis")
@@ -175,8 +176,9 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.selectAll("text")			
 			.attr('x', 7).attr('y', 10)
 			.attr('text-anchor', 'start')
+			.style("font-family", "arial")
 			.attr('style', '')
-			.style("font-size", "0.7em")			
+			.style("font-size", "12pt")			
 			.attr("transform", "rotate(30)"); 
 		
 		var ylabel=$('#' + contexto.zona + ' .dimensiones option:selected').text();
@@ -188,7 +190,8 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.attr("dy", "-4.2em")	  
 			.text(ylabel)
 			.style("text-anchor", "end")
-			.style("font-size", "0.7em");               
+			.style("font-family", "arial")
+			.style("font-size", "10pt");               
 				
 		if(meta>0)
 		{
@@ -201,6 +204,13 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 				.style("stroke-dasharray",("5","5"))
 				.attr("stroke", "green");	
 		}
+		
+		svg.selectAll(".axis line, .axis path")
+			.style("fill", "none")
+			.style("stroke", "#000")
+			.style("font-family", "arial")
+			.style("stroke-width", "1px");
+		
 		var plot = svg
 		.append("g")
 		
@@ -218,6 +228,7 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.transition().duration(500).delay(20)
 			.attr('y', function(d){a= yScale(parseFloat(d.measure))+15; if(a<0) a=0; return a;})
 			.attr('text-anchor', 'middle')
+			.style("font-family", "arial")
 			.attr('font-size', function()
 			{ 
 				var size=(width/contexto.currentDatasetChart.length)/2;

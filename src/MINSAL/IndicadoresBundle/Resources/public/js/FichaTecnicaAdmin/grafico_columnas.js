@@ -11,7 +11,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 	var contexto=this;
     this.dibujar = function() 
 	{
-		var margin = {top: 30, right: 40, bottom: 75, left: 60},
+		var margin = {top: 50, right: 40, bottom: 75, left: 70},
 		width = parseInt(d3.select('#'+this.zona+' .panel-body').style('width'), 10);		
 		width  = width - margin.left - margin.right-50,
 		barPadding = 1;
@@ -54,7 +54,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			meta=$('#' + this.zona + 'meta').attr("data-id");
 			max_y = $('#' + this.zona + ' .titulo_indicador').attr('data-max_rango');
 		}
-		console.log(max_y+"--"+max_yy);
+		
 		if(max_y<max_yy)
 			max_y=max_yy;
 		var yScale = d3.scale.linear()
@@ -83,6 +83,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 				
 		svg.append("g")
 			.attr("class", "y axis")
+			.style("font", "1em")						
 			.call(yAxis);
 			  
 		svg.append("text")
@@ -93,7 +94,8 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.attr("dy", "-2.2em")	  
 			.text(long+" "+texto)
 			.style("text-anchor", "end")
-			.style("font-size", "0.7em");			
+			.style("font-family", "arial")
+			.style("font-size", "10pt");			
 		    
 		  
 		svg.append("g")
@@ -104,7 +106,9 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.attr('x', 7).attr('y', 10)
 			.attr('text-anchor', 'start')
 			.attr('style', '')
-			.style("font-size", "0.7em")
+			.style("font", "1em")
+			.style("font-size", "10pt")
+			.style("font-family", "arial")
 			.attr("transform", "rotate(30)");
 		
 		var ylabel=$('#' + contexto.zona + ' .dimensiones option:selected').text();
@@ -113,10 +117,9 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.attr("transform", "rotate(-90)")
 			.attr("y", width+margin.left)
 			.attr("x",-((height-margin.top)-ylabel.length))
-			.attr("dy", "-4.2em")	  
+			.attr("dy", "-42pt")	  
 			.text(ylabel)
-			.style("text-anchor", "end")
-			.style("font-size", "0.7em");
+			.style("text-anchor", "end");
 				
 		svg.selectAll("rect")
 			.data(this.currentDatasetChart)
@@ -142,7 +145,14 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 				return height - yScale(parseFloat(d.measure));
 			})
 			;								                 
-				
+		
+		svg.selectAll(".axis line, .axis path")
+			.style("fill", "none")
+			.style("stroke", "#000")
+			.style("font-family", "arial")
+			.style("stroke-width", "1px");
+		svg.selectAll("svg")
+			.style("font-family", "arial");		
 		var plot = svg
 		.append("g")		 
 		 
@@ -159,7 +169,8 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.attr('y',height)
 			.transition().duration(500).delay(20)
 			.attr('y', function(d){return (height-((height*d.measure)/max_y))-5})
-			.attr('text-anchor', 'middle')			
+			.attr('text-anchor', 'middle')
+			.style("font-family", "arial")			
 			.attr('font-size', function()
 			{ 
 				var size=(xScale.rangeBand()/6)<1 ? 1: (xScale.rangeBand()/6);
