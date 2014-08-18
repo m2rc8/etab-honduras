@@ -926,12 +926,12 @@ function acciones_button()
 			zona=$(this).attr("data-id");
 			
             $("#"+zona+"_image").html('<li><a id="'+zona+'esvg"><i class="ion ion-images"></i> SVG</a></li><li> <a id="'+zona+'epng"><i class="ion ion-image"></i> PNG</a></li><div style="display:none" class="output" id="canvas"></div>');
+		
+									
+			$("svg").attr({ version: '1.1' , xmlns:"http://www.w3.org/2000/svg" });
+			var valor = '<?xml version="1.0" encoding="utf-8"?>'+$("#"+zona+" .grafico").html().replace("\\n","");
 			
-			// se obtiene el uniqid que genera en auto symfony al create			
-			$("svg").attr({ version: '1.1' , xmlns:"http://www.w3.org/2000/svg"});
-			var valor = $("#"+zona+" .grafico").html();
-			
-			valor=window.btoa( valor );
+			valor=window.btoa( utf8_encode(valor) );
 			
 			var img = document.createElement("img");
 			img.setAttribute( "src", "data:image/svg+xml;base64," +valor) ;
@@ -945,27 +945,10 @@ function acciones_button()
 				img.style.display = "none";								
 				
 			};
-			/*
-			var image = img;
-			var canvas = document.createElement("canvas");
-			
-			canvas.width = image.width;
-			canvas.height = image.height;
-			if (canvas.getContext) 
-			{
-				image.onload=new function () 
-				{
-					var ctx = canvas.getContext("2d");               
-					ctx.clearRect(0, 0, canvas.width, canvas.height);
-					ctx.drawImage(image, 0, 0);
-					var p = document.getElementById(zona+"epng")
-					p.download = titulo+".png";
-					p.href = canvas.toDataURL("image/png");	
+			var svg = '<?xml version="1.0" encoding="utf-8"?>'+$("#"+zona+" .grafico").html().replace("\\n","");
+			if(navigator.appVersion.search(".NET")>0||navigator.userAgent.search("Trident")>0)
+			 	svg=svg.replace('xmlns="http://www.w3.org/2000/svg"','');
 				
-			  	};
-			}*/
-			var svg = $("#"+zona+" .grafico").html();
-			
 			width=img.width;
 			height=img.height	
 			if(width<1)width=550;
@@ -982,15 +965,34 @@ function acciones_button()
 			{
 				FlashCanvas.initElement(c);
 			}
-			canvg(c, svg, { log: true, renderCallback: function (dom) 
-			{
-				
-			}});
+			canvg(c, svg, { log: true});
+			
 			var p = document.getElementById(zona+"epng")
 			p.download = titulo+".png";
 			p.href = c.toDataURL("image/png");	
-	
+			
+			if(navigator.appVersion.search(".NET")>0||navigator.userAgent.search("Trident")>0)
+			{
+				$("#"+zona+"epng").click(function()
+				{
+					var html="<p>Haga click-Derecho en la imagen de abajo y Guardar-Imagen-Como</p>"+
+					"<p><h3>"+titulo+"</h3></p>";
+					html+="<img src='"+c.toDataURL()+"' alt='"+titulo+"' title='"+titulo+"'/>";
+					var tab=window.open();
+					tab.document.write(html);
+				});
+				
+				$("#"+zona+"esvg").click(function()
+				{
+					var html="<p>Haga click-Derecho en la imagen de abajo y Guardar-Imagen-Como</p>"+
+					"<p><h3>"+titulo+"</h3></p>";
+					html+=svg;
+					var tab=window.open();
+					tab.document.write(html);
+				});
+			}
         });
+		
         $('body').on("change",'.filtro_por_fecha',function()
 		{
 			zona=$(this).attr("data-id");
@@ -1272,4 +1274,59 @@ function number_format(number, decimals, dec_point, thousands_sep)
         s[1] += new Array(prec - s[1].length + 1).join('0');
     }
     return s.join(dec);
+}
+
+function utf8_encode(argString) 
+{
+  if (argString === null || typeof argString === 'undefined') {
+    return '';
+  }
+
+  var string = (argString + ''); // .replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  var utftext = '',
+    start, end, stringl = 0;
+
+  start = end = 0;
+  stringl = string.length;
+  for (var n = 0; n < stringl; n++) {
+    var c1 = string.charCodeAt(n);
+    var enc = null;
+
+    if (c1 < 128) {
+      end++;
+    } else if (c1 > 127 && c1 < 2048) {
+      enc = String.fromCharCode(
+        (c1 >> 6) | 192, (c1 & 63) | 128
+      );
+    } else if ((c1 & 0xF800) != 0xD800) {
+      enc = String.fromCharCode(
+        (c1 >> 12) | 224, ((c1 >> 6) & 63) | 128, (c1 & 63) | 128
+      );
+    } else { // surrogate pairs
+      if ((c1 & 0xFC00) != 0xD800) {
+        throw new RangeError('Unmatched trail surrogate at ' + n);
+      }
+      var c2 = string.charCodeAt(++n);
+      if ((c2 & 0xFC00) != 0xDC00) {
+        throw new RangeError('Unmatched lead surrogate at ' + (n - 1));
+      }
+      c1 = ((c1 & 0x3FF) << 10) + (c2 & 0x3FF) + 0x10000;
+      enc = String.fromCharCode(
+        (c1 >> 18) | 240, ((c1 >> 12) & 63) | 128, ((c1 >> 6) & 63) | 128, (c1 & 63) | 128
+      );
+    }
+    if (enc !== null) {
+      if (end > start) {
+        utftext += string.slice(start, end);
+      }
+      utftext += enc;
+      start = end = n + 1;
+    }
+  }
+
+  if (end > start) {
+    utftext += string.slice(start, stringl);
+  }
+
+  return utftext;
 }

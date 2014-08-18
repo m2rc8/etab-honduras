@@ -94,7 +94,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.attr("dy", "-2.2em")	  
 			.text(long+" "+texto)
 			.style("text-anchor", "end")
-			.style("font-family", "arial")
+			.style("font-family", "Arial, Helvetica, sans-serif")
 			.style("font-size", "10pt");			
 		    
 		  
@@ -108,7 +108,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.attr('style', '')
 			.style("font", "1em")
 			.style("font-size", "10pt")
-			.style("font-family", "arial")
+			.style("font-family", "Arial, Helvetica, sans-serif")
 			.attr("transform", "rotate(30)");
 		
 		var ylabel=$('#' + contexto.zona + ' .dimensiones option:selected').text();
@@ -119,6 +119,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.attr("x",-((height-margin.top)-ylabel.length))
 			.attr("dy", "-42pt")	  
 			.text(ylabel)
+			.style("font-family", "Arial, Helvetica, sans-serif")
 			.style("text-anchor", "end");
 				
 		svg.selectAll("rect")
@@ -149,10 +150,10 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 		svg.selectAll(".axis line, .axis path")
 			.style("fill", "none")
 			.style("stroke", "#000")
-			.style("font-family", "arial")
+			.style("font-family", "Arial, Helvetica, sans-serif")
 			.style("stroke-width", "1px");
 		svg.selectAll("svg")
-			.style("font-family", "arial");		
+			.style("font-family", "Arial, Helvetica, sans-serif");		
 		var plot = svg
 		.append("g")		 
 		 
@@ -170,7 +171,7 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.transition().duration(500).delay(20)
 			.attr('y', function(d){return (height-((height*d.measure)/max_y))-5})
 			.attr('text-anchor', 'middle')
-			.style("font-family", "arial")			
+			.style("font-family", "Arial, Helvetica, sans-serif")			
 			.attr('font-size', function()
 			{ 
 				var size=(xScale.rangeBand()/6)<1 ? 1: (xScale.rangeBand()/6);

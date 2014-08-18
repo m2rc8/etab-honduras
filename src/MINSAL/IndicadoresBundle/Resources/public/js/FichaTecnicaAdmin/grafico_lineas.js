@@ -166,7 +166,7 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.attr("dy", "-2.2em")	  
 			.text(long+" "+texto)
 			.style("text-anchor", "end")
-			.style("font-family", "arial")
+			.style("font-family", "Arial, Helvetica, sans-serif")
 			.style("font-size", "7pt");
 			
 		svg.append("g")
@@ -176,7 +176,7 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.selectAll("text")			
 			.attr('x', 7).attr('y', 10)
 			.attr('text-anchor', 'start')
-			.style("font-family", "arial")
+			.style("font-family", "Arial, Helvetica, sans-serif")
 			.attr('style', '')
 			.style("font-size", "12pt")			
 			.attr("transform", "rotate(30)"); 
@@ -190,7 +190,7 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.attr("dy", "-4.2em")	  
 			.text(ylabel)
 			.style("text-anchor", "end")
-			.style("font-family", "arial")
+			.style("font-family", "Arial, Helvetica, sans-serif")
 			.style("font-size", "10pt");               
 				
 		if(meta>0)
@@ -208,7 +208,7 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 		svg.selectAll(".axis line, .axis path")
 			.style("fill", "none")
 			.style("stroke", "#000")
-			.style("font-family", "arial")
+			.style("font-family", "Arial, Helvetica, sans-serif")
 			.style("stroke-width", "1px");
 		
 		var plot = svg
@@ -228,7 +228,7 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			.transition().duration(500).delay(20)
 			.attr('y', function(d){a= yScale(parseFloat(d.measure))+15; if(a<0) a=0; return a;})
 			.attr('text-anchor', 'middle')
-			.style("font-family", "arial")
+			.style("font-family", "Arial, Helvetica, sans-serif")
 			.attr('font-size', function()
 			{ 
 				var size=(width/contexto.currentDatasetChart.length)/2;
