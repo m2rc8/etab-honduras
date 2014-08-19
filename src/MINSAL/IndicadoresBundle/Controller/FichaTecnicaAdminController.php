@@ -27,6 +27,7 @@ class FichaTecnicaAdminController extends Controller
 
     public function tableroAction()
     {
+		$user = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $clasificacionUso = $em->getRepository("IndicadoresBundle:ClasificacionUso")->findAll();
 
@@ -61,10 +62,14 @@ class FichaTecnicaAdminController extends Controller
 		$salasXusuario=array();
 		$i=0;
 		foreach ($usuarioSalas as $sala) {
+			$esduenio=$em->createQuery("SELECT u.esDuenio FROM IndicadoresBundle:UsuarioGrupoIndicadores u WHERE u.usuario='".$user->getId()."' and u.grupoIndicadores='".$sala->getId()."'")->getResult();
+			if($esduenio[0]["esDuenio"])
+			{
             $salasXusuario[$i]['datos_sala'] = $sala;
             $salasXusuario[$i]['indicadores_sala'] = $em->getRepository('IndicadoresBundle:GrupoIndicadores')
                     ->getIndicadoresSala($sala);
             $i++;
+			}
         }
 		
         //Salas asignadas al grupo al que pertenece el usuario
@@ -79,7 +84,7 @@ class FichaTecnicaAdminController extends Controller
         }
         $salasXgrupo=array();
 		$i=0;
-		$user = $this->container->get('security.context')->getToken()->getUser();
+		
 		$uXg=$em->getRepository('IndicadoresBundle:GrupoIndicadores')->getSalaGrupo($user->getId());
 		foreach ($uXg as $sala) 
 		{
