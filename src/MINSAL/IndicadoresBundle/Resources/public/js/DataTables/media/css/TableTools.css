@@ -225,7 +225,7 @@ div.DTTT_collection {
 	background-color: #f3f3f3;
 	background-color: rgba( 255, 255, 255, 0.3 );
 	overflow: hidden;
-	z-index: 2002;
+	z-index:999999999999;
 
 	-webkit-border-radius: 5px;
 	   -moz-border-radius: 5px;
@@ -242,7 +242,7 @@ div.DTTT_collection {
 
 div.DTTT_collection_background {
 	background: transparent url(../images/background.png) repeat top left;
-	z-index: 2001;
+	z-index:999999999999;
 }
 
 div.DTTT_collection button.DTTT_button,
