@@ -102,6 +102,8 @@
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
+          <li><a href="{{ asset('bundles/indicadores/manuales/Manual-Tablero.pdf') }}" target="_blank"><i class="glyphicon glyphicon-book"></i> {{ 'manual_tablero'|trans }}</a></li>
+            <li class="divider"></li>
             {% for locale, lenguaje in {'es_SV':'Español', 'en_US':'English'} %}
                 {% if locale == app.request.locale %}
                     <li class='active'><A href='#'>{{lenguaje}}</a></li>

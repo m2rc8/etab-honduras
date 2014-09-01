@@ -389,3 +389,8 @@ Cargando: 'Loading ...'
 meta: 'Meta'
 jurisdiccion: 'Jurisdicción'
 clues: 'Clues'
+
+manual_tecnico 'Technical Manual' 
+manual_operativo 'Operating Manual' 
+manual_usuario 'User Manual' 
+manual_tablero 'Dashboard Manual'

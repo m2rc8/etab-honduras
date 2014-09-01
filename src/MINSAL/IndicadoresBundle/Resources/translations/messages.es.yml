@@ -35,7 +35,7 @@ nombre_archivo_mapa: Nombre del archivo del mapa
 cerrar_sesion: 'Cerrar Sesión'
 favoritos: 'Favoritos'
 'form_campo_obigatorio': '¡Los campos con * son Obligatorios!'
-'clasificacion_tecnica': 'Clasificacion Tecnica'
+'clasificacion_tecnica': 'Clasificación Técnica'
 
 
 'clasificacion_tecnica-eTAB' : 'Clasificación Técnica'
@@ -379,3 +379,8 @@ Cargando: 'Cargando ...'
 meta: 'Meta'
 jurisdiccion: 'Jurisdicción'
 clues: 'Clues'
+
+manual_tecnico: 'Manual Técnico'
+manual_operativo: 'Manual Operativo'
+manual_usuario: 'Manual Usuario'
+manual_tablero: 'Manual Tablero'

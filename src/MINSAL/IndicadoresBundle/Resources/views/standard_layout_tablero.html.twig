@@ -192,6 +192,19 @@ file that was distributed with this source code.
             <li><A href='{{url('sonata_user_admin_security_logout')}}'>{{"cerrar_sesion"|trans}}</A></li>
             <li><A href='{{url('fos_user_change_password')}}'>{{"_cambiar_clave_"|trans}}</A></li>
             <li class="divider"></li>
+            {% for group in admin_pool.dashboardgroups %}
+              {% for admin in group.items %}
+              {% if admin.hasroute('tablero') and (is_granted('ROLE_SONATA_ADMIN') ) %}
+               <!-- <li><a href="{{ admin.generateUrl('tablero')}}"><i class="glyphicon glyphicon-dashboard"></i> {{ 'indicador_tablero'|trans }}</a></li> --> 
+               <li><a href="{{ asset('bundles/indicadores/manuales/Manual-Tecnico.pdf') }}" target="_blank"><i class="glyphicon glyphicon-book"></i> {{ 'manual_tecnico'|trans }}</a></li>
+               <li><a href="{{ asset('bundles/indicadores/manuales/Manual-Operativo.pdf') }}" target="_blank"><i class="glyphicon glyphicon-book"></i> {{ 'manual_operativo'|trans }}</a></li>
+               <li><a href="{{ asset('bundles/indicadores/manuales/Manual-Usuario.pdf') }}" target="_blank"><i class="glyphicon glyphicon-book"></i> {{ 'manual_usuario'|trans }}</a></li>
+               <input type="hidden" value="{{ admin.generateUrl('tablero')}}" id="tablero">     
+              {% endif %}
+              {% endfor %}
+      {% endfor %}
+            <li><a href="{{ asset('bundles/indicadores/manuales/Manual-Tablero.pdf') }}" target="_blank"><i class="glyphicon glyphicon-book"></i> {{ 'manual_tablero'|trans }}</a></li>
+            <li class="divider"></li>
             {% for locale, lenguaje in {'es_SV':'Español', 'en_US':'English'} %}
                 {% if locale == app.request.locale %}
                     <li class='active'><A href='#'>{{lenguaje}}</a></li>
