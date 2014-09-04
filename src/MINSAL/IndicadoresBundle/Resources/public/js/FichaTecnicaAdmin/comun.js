@@ -262,7 +262,7 @@ function dibujarControles(zona, datos)
 	//info boton
 	hn=($(window).height()/1.5)+'px';
 	
-	var combo_ordenar_por_medida ='<label class="control-label required col-lg-8">'+ trans.ordenar_y + ":</label>"+
+	var combo_ordenar_por_medida ='<label class="control-label required ">'+ trans.ordenar_y + ":</label>"+
 			"<SELECT class='ordenar_medida form-control' data-id='"+zona+"'>" +
 				"<OPTION VALUE='-1'></OPTION>" +
 				"<OPTION VALUE='desc'>" + trans.descendente + "</OPTION>" +
@@ -274,17 +274,17 @@ function dibujarControles(zona, datos)
 				"<OPTION VALUE='desc'>" + trans.descendente + "</OPTION>" +
 				"<OPTION VALUE='asc'>" + trans.ascendente + "</OPTION>" +
             "</SELECT>";
-	var combo_tipo_grafico ='<label class="control-label required col-lg-8">'+ trans.tipo_grafico + ":</label>"+ 
+	var combo_tipo_grafico ='<label class="control-label required ">'+ trans.tipo_grafico + ":</label>"+ 
 			"<SELECT class='tipo_grafico_principal form-control' data-id='"+zona+"'></SELECT>";
 	var opciones_indicador="";
 
-    opciones_indicador += '<label class="control-label required col-lg-8">'+trans.max_escala_y +
+    opciones_indicador += '<label class="control-label required ">'+trans.max_escala_y +
                 ":</label> <SELECT class='max_y form-control' data-id='"+zona+"'>" +
                 "<OPTION VALUE='indicador' >" + trans.max_indicador + "</OPTION>" +
                 "<OPTION VALUE='rango_alertas' selected='selected'>" + trans.max_rango_alertas + "</OPTION>" +
                 "</SELECT>";
 				
-	var max_y_manual = '<label class="control-label required col-lg-8">'+trans.max_escala_y_manual +
+	var max_y_manual = '<label class="control-label required ">'+trans.max_escala_y_manual +
                 ":</label>"+
 				'<div class="input-group"><input type="text" class="form-control" id="'+zona+'_max_y_manual"><div class="input-group-btn"><button class="btn btn-default btn_max_y_manual" type="button" data-id="'+zona+'"><span class="glyphicon glyphicon-ok"></span></button></div></div>';
    
