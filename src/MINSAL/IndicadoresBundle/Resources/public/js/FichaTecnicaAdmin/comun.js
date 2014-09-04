@@ -295,22 +295,22 @@ function dibujarControles(zona, datos)
 							'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'+
 							'<h3 id="myModalLabel2">' + trans.opciones_grafico + '</h3>'+
 						'</div>'+
-						'<div class="modal-body" style=" max-width:100%; ">'+
-							'<div class="row">'+
+						'<div class="modal-body" >'+
+							'<div class="container-fluid">'+
 								'<div class="col-sm-6">'+
-								'<div class="form-group">' + combo_ordenar_por_medida + '</div>' +
+									'<div class="form-group">' + combo_ordenar_por_medida + '</div>' +
 								'</div>'+
 								'<div class="col-sm-6">'+
-								'<div class="form-group">' + combo_ordenar_por_dimension + '</div>' +
+									'<div class="form-group">' + combo_ordenar_por_dimension + '</div>' +
 								'</div>'+
 								'<div class="col-sm-4">'+
-								'<div class="form-group">' + combo_tipo_grafico + '</div>'+
+									'<div class="form-group">' + combo_tipo_grafico + '</div>'+
 								'</div>'+
 								'<div class="col-sm-4">'+
-								'<div class="form-group">' + opciones_indicador + '</div>'+
+									'<div class="form-group">' + opciones_indicador + '</div>'+
 								'</div>'+
 								'<div class="col-sm-4">'+
-								'<div class="form-group">' + max_y_manual + '</div>'+
+									'<div class="form-group">' + max_y_manual + '</div>'+
 								'</div>'+
 							'</div>'+
 						'</div>'+
