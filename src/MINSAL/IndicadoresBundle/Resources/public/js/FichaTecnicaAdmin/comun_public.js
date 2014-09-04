@@ -139,6 +139,25 @@ function dibujarGrafico(zona, dimension)
         }
         else
         {
+			var $dimension = $('#' + zona + ' .dimensiones option:selected');
+			var indice = $('#' + zona + ' .dimensiones option').index($dimension);
+			
+			$('#' + zona + ' .dimensiones option').eq(indice-1).prop("disabled",false);
+			$dimension.attr('disabled',true);
+			$('#' + zona + ' .dimensiones option').eq(indice-1).prop("selected",true);
+			
+			$filtro = $('#' + zona + ' .filtros_dimensiones'),
+			filtros_obj = jQuery.parseJSON($filtro.attr('data'));
+		
+			var nivel ="";
+			$.each(filtros_obj, function(i, obj) 
+			{
+				nivel=i;
+			});
+		
+			dibujar_breadcum(zona,nivel-1);
+			
+			
             alert("No se encontraron datos con ese filtro");
         }
     });
@@ -454,43 +473,6 @@ function crearGraficoObj(zona, tipo) {
     }
     return grafico;
 }
-function ascenderNivelDimension(zona, nivel) {
-    var ultimo,
-		ruta = '',
-		$filtro = $('#' + zona + ' .filtros_dimensiones'),
-		filtros_obj = jQuery.parseJSON($filtro.attr('data'));
-
-    var nuevo_filtro = [{}];
-    $.each(filtros_obj, function(i, obj) 
-	{
-        if (i <= nivel) 
-		{
-            nuevo_filtro[i] = obj;
-            if (i == nivel)
-                ruta +='<li>'+obj.etiqueta + ': ' + obj.valor+'</li> ';
-            else
-                ruta += '<li><a href="#" data="' + i + '">' + obj.etiqueta + ': ' + obj.valor + '</a></li> ';
-        }
-        else 
-		{
-            // Los que estén a la derecha del seleccionado deben volver al control de dimensiones                        
-            //$('#' + zona + ' .dimensiones').append("<OPTION VALUE='" + obj.codigo + "'>" + obj.etiqueta + "</OPTION>");
-			$('#' + zona + ' .dimensiones').children('option[value="' + obj.codigo + '"]').attr("disabled",false);
-            if (i == parseInt(nivel) + 1)
-                primero = obj.codigo;
-        }
-    });	
-    //El primer elemento 
-    $('#' + zona + ' .dimensiones').children('option[value="' + primero + '"]').attr("disabled",false).attr('selected', 'selected');
-
-    $filtro.html(ruta);
-    $filtro.attr('data', JSON.stringify(nuevo_filtro));
-
-    dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
-    $('#' + zona).attr('orden', null);
-    $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
-    $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');	
-}
 
 function filtroRuta(filtros_obj) {
     var ruta = '';
@@ -504,13 +486,62 @@ function filtroRuta(filtros_obj) {
     });
     return ruta;
 }
-function descenderNivelDimension(zona, category) {
-    if ($('#' + zona + ' .dimensiones option').length-1 ==$('#' + zona + ' .dimensiones option:disabled').length) 
+function dibujar_breadcum(zona,nivel)
+{
+	var ultimo,
+		ruta = '',
+		$filtro = $('#' + zona + ' .filtros_dimensiones'),
+		filtros_obj = jQuery.parseJSON($filtro.attr('data'));
+	
+    var nuevo_filtro = [{}];
+    $.each(filtros_obj, function(i, obj) 
+	{
+        if (i <= nivel) 
+		{
+            nuevo_filtro[i] = obj;
+            if (i == nivel)
+                ruta +='<li>'+obj.etiqueta + ': ' + obj.valor+'</li> ';
+            else
+                ruta += '<a href="#" data="' + i + '">' + obj.etiqueta + ': ' + obj.valor + '</a> / ';
+        }
+        else 
+		{
+            // Los que estén a la derecha del seleccionado deben volver al control de dimensiones                        
+            //$('#' + zona + ' .dimensiones').append("<OPTION VALUE='" + obj.codigo + "'>" + obj.etiqueta + "</OPTION>");
+			$('#' + zona + ' .dimensiones').children('option[value="' + obj.codigo + '"]').attr("disabled",false);
+            if (i == parseInt(nivel) + 1)
+                primero = obj.codigo;
+        }
+    });	
+    //El primer elemento 
+    $('#' + zona + ' .dimensiones').children('option[value="' + primero + '"]').attr("disabled",false).prop("selected",true);
+
+    $filtro.html(ruta);
+    $filtro.attr('data', JSON.stringify(nuevo_filtro));
+}
+function ascenderNivelDimension(zona, nivel) 
+{
+    dibujar_breadcum(zona,nivel);
+
+    dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
+    $('#' + zona).attr('orden', null);
+    $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').prop("selected",true);
+    $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').prop("selected",true);	
+}
+
+function descenderNivelDimension(zona, category) 
+{
+
+	var $dimension = $('#' + zona + ' .dimensiones option:selected');
+	var indice = $('#' + zona + ' .dimensiones option').index($dimension);
+	
+   	if ($('#' + zona + ' .dimensiones option').length-1 == indice) 
 	{
         alert(trans.no_mas_niveles);
         return;
     }
-    var $dimension = $('#' + zona + ' .dimensiones option:selected');
+    
+	
     var $filtro = $('#' + zona + ' .filtros_dimensiones');
     var separador1 = '',
         separador2 = '';
@@ -532,25 +563,25 @@ function descenderNivelDimension(zona, category) {
 
     var ruta = filtroRuta(jQuery.parseJSON($filtro.attr('data')));
     $filtro.html(ruta);
-
-    //Borrar la opcion del control de dimensiones
-   	$dimension.attr('disabled',true);
-	$('#' + zona + ' .dimensiones option:selected').next().attr("selected","selected");
-	
-	dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
+		
+	$('#' + zona + ' .dimensiones option').eq(indice+1).prop("selected",true);
+	//$('#' + zona + ' .dimensiones option:selected').next().attr("selected","selected");
+	dibujarGrafico(zona, $('#' + zona + ' .dimensiones option:selected').val());
+	// Deshabilitamos options que causan conflicto con la consulta
+	$dimension.attr('disabled',true);
     $('#' + zona).attr('orden', null);
-    $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
-    $('#' + zona + '.ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
+    $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').prop("selected",true);
+    $('#' + zona + '.ordenar_medida').children('option[value="-1"]').prop("selected",true);
+	
 }
-
 
 function ordenarDatos(zona, ordenar_por, modo_orden) {
     if (modo_orden === '-1')
         return;
     if (ordenar_por === 'dimension')
-        $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
+        $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').prop("selected",true);
     else
-        $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
+        $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').prop("selected",true);
 
     cerrarMenus();
     $('#' + zona).attr('orden', '[{"tipo":"' + ordenar_por + '", "modo": "' + modo_orden + '"}]');
@@ -925,8 +956,8 @@ function acciones_button()
             setTiposGraficos(zona);
             if ($('#' + zona + ' .tipo_grafico_principal').val() != null) 
 			{
-                $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
-                $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
+                $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').prop("selected",true);
+                $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').prop("selected",true);
                 dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
                 $('#' + zona).attr('orden', null);
             }
@@ -1013,8 +1044,8 @@ function acciones_button()
 		zona=$(this).attr("data-id");
         setTiposGraficos(zona);
         if ($('#' + zona + ' .tipo_grafico_principal').val() != null) {
-            $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
-            $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
+            $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').prop("selected",true);
+            $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').prop("selected",true);
             dibujarGrafico(zona, $(this).val());
             $('#' + zona).attr('orden', null);
         }

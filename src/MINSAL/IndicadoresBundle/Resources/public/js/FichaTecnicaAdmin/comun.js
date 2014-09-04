@@ -16,6 +16,7 @@ var max_zonas = 3;
 
 var color = d3.scale.category20();    //builtin range of colors
 
+// Obtiene el color de las atertas de la ficha tecnica
 function colores_alertas(zona, indice, i) 
 {
 
@@ -33,6 +34,8 @@ function colores_alertas(zona, indice, i)
     }
 }
 var graficos=Array();
+// Crea una instancia de tipo de grafico(barra,lineas,etc)
+// y llama su propiedad dibujar.
 function dibujarGraficoPrincipal(zona, tipo) 
 {
 	//en el caso de que se recuperen tipos de graficos null
@@ -57,7 +60,8 @@ function dibujarGraficoPrincipal(zona, tipo)
 		$('#' + zona + '_icon_maximizar').addClass('glyphicon glyphicon-zoom-out');		
 	}
 }
-//dibujar...
+// Toma todos los valores de los formularios y botones para dibujar el
+// gráfico en base a esos parametros.
 var tam=0,h1=0,w1=0;
 function dibujarGrafico(zona, dimension) 
 {
@@ -140,6 +144,25 @@ function dibujarGrafico(zona, dimension)
         }
         else
         {
+			var $dimension = $('#' + zona + ' .dimensiones option:selected');
+			var indice = $('#' + zona + ' .dimensiones option').index($dimension);
+			
+			$('#' + zona + ' .dimensiones option').eq(indice-1).prop("disabled",false);
+			$dimension.attr('disabled',true);
+			$('#' + zona + ' .dimensiones option').eq(indice-1).prop("selected",true);
+			
+			$filtro = $('#' + zona + ' .filtros_dimensiones'),
+			filtros_obj = jQuery.parseJSON($filtro.attr('data'));
+		
+			var nivel ="";
+			$.each(filtros_obj, function(i, obj) 
+			{
+				nivel=i;
+			});
+		
+			dibujar_breadcum(zona,nivel-1);
+			
+			
             alert("No se encontraron datos con ese filtro");
         }
     });
@@ -150,7 +173,7 @@ function dibujarGrafico(zona, dimension)
 		$('#' + zona + ' .filtros_dimensiones').hide();
 
 }
-
+// Dibja el toolbar de cada grafico para filtrar y los botones de acciones diversas
 function dibujarControles(zona, datos) 
 {
 	//////agregar un nuevo atributo con el nombre del indicador
@@ -166,47 +189,59 @@ function dibujarControles(zona, datos)
 	
 	myConfig='<ul class="dropdown-menu" role="menu" id="myConfig'+zona+'">' +
 					'<li><a class="ver_ficha_tecnica" ' + 
-					' data-id="'+zona+'"><i class="glyphicon glyphicon-briefcase"></i> ' + trans.ver_ficha_tecnica + '</a></li>' +
-					'<li><a class="ver_tabla_datos" data-id="'+zona+'"><i class="glyphicon glyphicon-list-alt" ></i> ' + trans.tabla_datos + ' </a></li>' +
+					' data-id="'+zona+'"><i class="glyphicon glyphicon-briefcase"></i> ' + trans.ver_ficha_tecnica + '</a></li>';
+	
+	if (rangos_alertas.length > 0) 
+	{
+	myConfig +='<li><a class="myAlert" data-toggle="modal" data-target="#myAlert'+ zona +'"  data-id="'+zona+'">' +
+				'<i class="glyphicon glyphicon-exclamation-sign"></i> ' +trans.alertas_indicador+
+			'</a></li>';
+	}	
+		
+	myConfig +=		'<li><a class="ver_tabla_datos" data-id="'+zona+'"><i class="glyphicon glyphicon-list-alt" ></i> ' + trans.tabla_datos + ' </a></li>' +
 					'<li><a class="ver_sql" data-id="'+zona+'"><i class="glyphicon glyphicon-eye-open" ></i> ' + trans.ver_sql + ' </a></li>' +
+					'<li><a class="myNote" id="'+ zona +'_ultima_lectura" data-toggle="modal" data-target="#myNote'+ zona +'" data-id="'+zona+'">' +
+						'<i class="glyphicon glyphicon-calendar"></i> '+trans.last_reading+
+					'</a></li>'+
 			'</ul>';
 				
 	image='<ul class="opciones_dimension dropdown-menu" role="menu" id="'+ zona +'_image" ></ul>';
 	
-	//inicio Botones 
-	botones='<button class="btn btn-info myOption" data-toggle="modal" data-target="#myOption'+ zona +'" title="' + trans.opciones_grafico + '" data-id="'+zona+'">' +
+	//inicio Botones
+	var estilo_boton_favorito="";
+	var title_boton_favorito="";
+	if ($('#fav-' + datos.id_indicador).length === 0){	
+	    estilo_boton_favorito="btn-info";
+		title_boton_favorito=trans.agregar_favorito;
+	}
+	else
+	{	
+		estilo_boton_favorito="btn-warning";
+		title_boton_favorito=trans.quitar_favorito;
+	}
+		botones='<button class="btn '+estilo_boton_favorito+' agregar_como_favorito" data-toggle="dropdown" title="' + title_boton_favorito + '" data-indicador="' + datos.id_indicador + '" data-id="'+zona+'">' +
+				'<i class="glyphicon glyphicon-star"></i>' +
+			'</button>';
+	
+	 
+	botones+='<button class="btn btn-info myOption" data-toggle="modal" data-target="#myOption'+ zona +'" title="' + trans.opciones_grafico + '" data-id="'+zona+'">' +
 				'<i class="glyphicon glyphicon-signal"></i>' +
 			'</button>';	
-	if (rangos_alertas.length > 0) 
-	{
-	botones+='<button class="btn btn-info myAlert" data-toggle="modal" data-target="#myAlert'+ zona +'"  title="' + trans.alertas_indicador + '" data-id="'+zona+'">' +
-				'<i class="glyphicon glyphicon-exclamation-sign"></i>' +
-			'</button>';
-	}	
+	
 	
 	botones+='<button class="btn btn-info myFilter" data-toggle="modal" data-target="#myFilter'+ zona +'" title="' + trans.dimension_opciones + '" data-id="'+zona+'">' +
 				'<i class="glyphicon glyphicon-filter"></i>' +
 			'</button>';
 			
 	botones+='<div class="btn-group div_toimage"><button class="btn btn-info dropdown-toggle toimage" id="'+ zona +'_toimage" data-toggle="dropdown" title="' + trans.exportar_imagen + '" data-id="'+zona+'">' +
-				'<i class="glyphicon glyphicon-camera"></i> <span class="caret"></span>' +
+				'<i class="glyphicon glyphicon-camera"></i>' +
 			'</button>'+image+'</div>';
 			
 	botones+='<div class="btn-group"><button class="btn btn-info dropdown-toggle myConfig" data-toggle="dropdown" title="' + trans.opciones + '" data-id="'+zona+'">' +
 				'<i class="glyphicon glyphicon-info-sign"></i> <span class="caret"></span>' +
 			'</button>'+myConfig+'</div>';
 			
-	botones+='<button class="btn btn-info myNote" id="'+ zona +'_ultima_lectura" data-toggle="modal" data-target="#myNote'+ zona +'" title="' + trans.notas_lectura + '" data-id="'+zona+'">' +
-				'<i class="glyphicon glyphicon-calendar"></i>' +
-			'</button>';
-	if ($('#fav-' + datos.id_indicador).length === 0)
-		botones+='<button class="btn btn-info agregar_como_favorito" data-toggle="dropdown" title="' + trans.agregar_favorito + '" data-indicador="' + datos.id_indicador + '" data-id="'+zona+'">' +
-				'<i class="glyphicon glyphicon-star"></i>' +
-			'</button>';
-	else
-		botones+='<button class="btn btn-warning agregar_como_favorito" data-toggle="dropdown" title="' + trans.quitar_favoritos + '" data-indicador="' + datos.id_indicador + '" data-id="'+zona+'">' +
-				'<i class="glyphicon glyphicon-star"></i>' +
-			'</button>';
+	
 			
 	botones+='<button class="btn btn-info myRefresh" id="'+ zona +'_refresh" data-toggle="dropdown" title="' + trans.refrescar + '" data-id="'+zona+'">' +
 				'<i class="glyphicon glyphicon-refresh"></i>' +
@@ -242,14 +277,17 @@ function dibujarControles(zona, datos)
 	var combo_tipo_grafico ='<label class="control-label required col-lg-8">'+ trans.tipo_grafico + ":</label>"+ 
 			"<SELECT class='tipo_grafico_principal form-control' data-id='"+zona+"'></SELECT>";
 	var opciones_indicador="";
-	if (rangos_alertas.length > 0) 
-	{
-        opciones_indicador += '<label class="control-label required col-lg-8">'+trans.max_escala_y +
+
+    opciones_indicador += '<label class="control-label required col-lg-8">'+trans.max_escala_y +
                 ":</label> <SELECT class='max_y form-control' data-id='"+zona+"'>" +
-                "<OPTION VALUE='indicador' selected='selected'>" + trans.max_indicador + "</OPTION>" +
-                "<OPTION VALUE='rango_alertas'>" + trans.max_rango_alertas + "</OPTION>" +
+                "<OPTION VALUE='indicador' >" + trans.max_indicador + "</OPTION>" +
+                "<OPTION VALUE='rango_alertas' selected='selected'>" + trans.max_rango_alertas + "</OPTION>" +
                 "</SELECT>";
-    } 
+				
+	var max_y_manual = '<label class="control-label required col-lg-8">'+trans.max_escala_y_manual +
+                ":</label>"+
+				'<div class="input-group"><input type="text" class="form-control" id="'+zona+'_max_y_manual"><div class="input-group-btn"><button class="btn btn-default btn_max_y_manual" type="button" data-id="'+zona+'"><span class="glyphicon glyphicon-ok"></span></button></div></div>';
+   
 	botonesinfo='<div id="myOption'+ zona +'" class="modal fade" style="z-index:999999999">'+
 				  '<div class="modal-dialog">'+
 					'<div class="modal-content">'+
@@ -257,11 +295,24 @@ function dibujarControles(zona, datos)
 							'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'+
 							'<h3 id="myModalLabel2">' + trans.opciones_grafico + '</h3>'+
 						'</div>'+
-						'<div class="modal-body" style="max-height:'+hn+'; max-width:100%; overflow:auto;">'+
-							'<div class="form-group">' + combo_ordenar_por_medida + '</div>' +
-							'<div class="form-group">' + combo_ordenar_por_dimension + '</div>' +
-							'<div class="form-group">' + combo_tipo_grafico + '</div>'+
-							'<div class="form-group">' + opciones_indicador + '</div>'+
+						'<div class="modal-body" style=" max-width:100%; ">'+
+							'<div class="row">'+
+								'<div class="col-sm-6">'+
+								'<div class="form-group">' + combo_ordenar_por_medida + '</div>' +
+								'</div>'+
+								'<div class="col-sm-6">'+
+								'<div class="form-group">' + combo_ordenar_por_dimension + '</div>' +
+								'</div>'+
+								'<div class="col-sm-4">'+
+								'<div class="form-group">' + combo_tipo_grafico + '</div>'+
+								'</div>'+
+								'<div class="col-sm-4">'+
+								'<div class="form-group">' + opciones_indicador + '</div>'+
+								'</div>'+
+								'<div class="col-sm-4">'+
+								'<div class="form-group">' + max_y_manual + '</div>'+
+								'</div>'+
+							'</div>'+
 						'</div>'+
 						'<div class="modal-footer">'+
 						'<button class="btn btn-warning" data-dismiss="modal" aria-hidden="true">Cerrar</button>'+
@@ -470,10 +521,9 @@ function filtroRuta(filtros_obj)
     });
     return ruta;
 }
-
-function ascenderNivelDimension(zona, nivel) 
+function dibujar_breadcum(zona,nivel)
 {
-    var ultimo,
+	var ultimo,
 		ruta = '',
 		$filtro = $('#' + zona + ' .filtros_dimensiones'),
 		filtros_obj = jQuery.parseJSON($filtro.attr('data'));
@@ -499,25 +549,34 @@ function ascenderNivelDimension(zona, nivel)
         }
     });	
     //El primer elemento 
-    $('#' + zona + ' .dimensiones').children('option[value="' + primero + '"]').attr("disabled",false).attr('selected', 'selected');
+    $('#' + zona + ' .dimensiones').children('option[value="' + primero + '"]').attr("disabled",false).prop("selected",true);
 
     $filtro.html(ruta);
     $filtro.attr('data', JSON.stringify(nuevo_filtro));
+}
+function ascenderNivelDimension(zona, nivel) 
+{
+    dibujar_breadcum(zona,nivel);
 
     dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
     $('#' + zona).attr('orden', null);
-    $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
-    $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');	
+    $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').prop("selected",true);
+    $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').prop("selected",true);	
 }
 
 function descenderNivelDimension(zona, category) 
 {
-   if ($('#' + zona + ' .dimensiones option').length-1 ==$('#' + zona + ' .dimensiones option:disabled').length) 
+
+	var $dimension = $('#' + zona + ' .dimensiones option:selected');
+	var indice = $('#' + zona + ' .dimensiones option').index($dimension);
+	
+   	if ($('#' + zona + ' .dimensiones option').length-1 == indice) 
 	{
         alert(trans.no_mas_niveles);
         return;
     }
-    var $dimension = $('#' + zona + ' .dimensiones option:selected');
+    
+	
     var $filtro = $('#' + zona + ' .filtros_dimensiones');
     var separador1 = '',
         separador2 = '';
@@ -539,15 +598,15 @@ function descenderNivelDimension(zona, category)
 
     var ruta = filtroRuta(jQuery.parseJSON($filtro.attr('data')));
     $filtro.html(ruta);
-
-    //Borrar la opcion del control de dimensiones
-   	$dimension.attr('disabled',true);
-	$('#' + zona + ' .dimensiones option:selected').next().attr("selected","selected");
-	
-	dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
+		
+	$('#' + zona + ' .dimensiones option').eq(indice+1).prop("selected",true);
+	//$('#' + zona + ' .dimensiones option:selected').next().attr("selected","selected");
+	dibujarGrafico(zona, $('#' + zona + ' .dimensiones option:selected').val());
+	// Deshabilitamos options que causan conflicto con la consulta
+	$dimension.attr('disabled',true);
     $('#' + zona).attr('orden', null);
-    $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
-    $('#' + zona + '.ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
+    $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').prop("selected",true);
+    $('#' + zona + '.ordenar_medida').children('option[value="-1"]').prop("selected",true);
 	
 }
 
@@ -556,9 +615,9 @@ function ordenarDatos(zona, ordenar_por, modo_orden)
     if (modo_orden === '-1')
         return;
     if (ordenar_por === 'dimension')
-        $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
+        $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').prop("selected",true);
     else
-        $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
+        $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').prop("selected",true);
 
     cerrarMenus();
     $('#' + zona).attr('orden', '[{"tipo":"' + ordenar_por + '", "modo": "' + modo_orden + '"}]');
@@ -744,16 +803,18 @@ function alternar_favorito(zona, id_indicador)
     cant_favoritos = (es_favorito) ? cant_favoritos - 1 : cant_favoritos + 1;
     $('#cantidad_favoritos').html(cant_favoritos);
 
-    if (es_favorito) 
+    if (es_favorito) /// esto realmente quiere decir que no es favorito
 	{
         $('#' + zona + ' .agregar_como_favorito').html('<i class="glyphicon glyphicon-star"></i>');
 		$('#' + zona + ' .agregar_como_favorito').removeClass("btn-warning").addClass("btn-info");
+		$('#' + zona + ' .agregar_como_favorito').prop("title",trans.agregar_favorito);
         $('#listado-favoritos #fav-'+id_indicador).parent('li').remove();
     } 
 	else 
 	{
         $('#' + zona + ' .agregar_como_favorito').html('<i class=" glyphicon glyphicon-star"></i>');
 		$('#' + zona + ' .agregar_como_favorito').removeClass("btn-info").addClass("btn-warning");
+		$('#' + zona + ' .agregar_como_favorito').prop("title",trans.quitar_favorito);
 		
 		
 								
@@ -1014,8 +1075,8 @@ function acciones_button()
             setTiposGraficos(zona);
             if ($('#' + zona + ' .tipo_grafico_principal').val() != null) 
 			{
-                $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
-                $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
+                $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').prop("selected",true);
+                $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').prop("selected",true);
                 dibujarGrafico(zona, $('#' + zona + ' .dimensiones').val());
                 $('#' + zona).attr('orden', null);
             }
@@ -1083,6 +1144,11 @@ function acciones_button()
   
   $('body').on("change",' .max_y',function() {
 		zona=$(this).attr("data-id");
+		$("#"+zona+"_max_y_manual").val("");
+        dibujarGraficoPrincipal(zona, $('#' + zona + ' .tipo_grafico_principal').val());
+    });
+	$('body').on("click",'.btn_max_y_manual',function() {
+		zona=$(this).attr("data-id");
         dibujarGraficoPrincipal(zona, $('#' + zona + ' .tipo_grafico_principal').val());
     });
 	
@@ -1102,8 +1168,8 @@ function acciones_button()
 		zona=$(this).attr("data-id");
         setTiposGraficos(zona);
         if ($('#' + zona + ' .tipo_grafico_principal').val() != null) {
-            $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').attr('selected', 'selected');
-            $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').attr('selected', 'selected');
+            $('#' + zona + ' .ordenar_dimension').children('option[value="-1"]').prop("selected",true);
+            $('#' + zona + ' .ordenar_medida').children('option[value="-1"]').prop("selected",true);
             dibujarGrafico(zona, $(this).val());
             $('#' + zona).attr('orden', null);
         }

@@ -1,3 +1,12 @@
+/**
+
+Dependencias:
+
+	comun.js
+			- descenderNivelDimension()
+
+**/
+
 graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen) 
 {
     this.tipo = 'columnas';
@@ -39,24 +48,58 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 		// se utiliza datasetPrincipal_bk por si se han aplicado filtros
 		// Así no usará el máximo valor del filtro
 		var datasetPrincipal_bk = JSON.parse($('#' + this.zona).attr('datasetPrincipal_bk'));
-		max_yy = d3.max(datasetPrincipal_bk, function(d) 
+		// Obtenemos el valor maximo del indicador
+		var max_indicador = d3.max(datasetPrincipal_bk, function(d) 
 		{
 			return parseFloat(d.measure);
 		});
+		
 		if(long=="%")
 			texto="Porcentaje";
-		
-		if ($('#' + this.zona + ' .max_y') != null && $('#' + this.zona + ' .max_y').val() == 'rango_alertas')
-			max_y = $('#' + this.zona + ' .titulo_indicador').attr('data-max_rango');
-	
-		if (parseFloat($('#' + this.zona + 'meta').attr("data-id"))>0)
-		{
-			meta=$('#' + this.zona + 'meta').attr("data-id");
-			max_y = $('#' + this.zona + ' .titulo_indicador').attr('data-max_rango');
+			
+		// Algoritmo de Akira para establecer eje y
+		if($('#' + this.zona + '_max_y_manual').val()!=""){
+			//El valor maximo de y lo indica el usuario
+			max_y = parseFloat($('#' + this.zona + '_max_y_manual').val());
+			// Verficamos que el valor introducido manualmente no sea menor que el maximo valor del indicador
+			if(max_y<max_indicador || isNaN(max_y)){
+				max_y = max_indicador;
+			}
+			
+		}else{
+			if($('#' + this.zona + ' .max_y').val()=="indicador"){
+				//El maximo valor de y lo indica el indicador mas alto
+				max_y = max_indicador;
+			}
+			else{
+				//El maximo valor de y lo da el maximo valor de la alerta
+				var max_alerta = $('#' + this.zona + ' .titulo_indicador').attr('data-max_rango');
+				
+				if(max_alerta !=""){
+					max_y =  max_alerta;					
+					// Verficamos que el max_alerta no sea menor que el maximo valor del indicador
+					if(max_y<max_indicador){
+						max_y = max_indicador;
+					}
+				}
+				else{
+					//Si no tiene alerta ponemos el maximo valor del indicador
+					max_y = max_indicador;
+				}
+			}
 		}
 		
-		if(max_y<max_yy)
-			max_y=max_yy;
+		// Tiene meta?
+		if (parseFloat($('#' + this.zona + 'meta').attr("data-id"))>0)
+		{
+			// Verificamos que la meta no sea mayor a mi maximo valor de y
+			var meta=$('#' + this.zona + 'meta').attr("data-id");
+	
+			if(max_y < meta){
+				max_y = meta;
+			}			
+		}		
+			
 		var yScale = d3.scale.linear()
 			.domain([0, max_y])
 			.range([height, 0]);
@@ -192,10 +235,23 @@ graficoColumnas = function(ubicacion, datos, colorChosen, categoryChoosen)
 				.style("stroke-dasharray",("5","5"))
 				.attr("stroke", "steelblue");	
 		}
-				
+		/*// Identificar si es un movil o pc para manejar los eventos
+		var dispositivo = navigator.userAgent.toLowerCase();
+
+		if( dispositivo.search(/iphone|ipod|ipad|android/) > -1 ){
+			svg.selectAll("rect").on('touchend', function(d,i){				
+				descenderNivelDimension(contexto.zona, d.category);				
+			});
+			
+		}else{
+			svg.selectAll("rect").on("click", function(d, i) {
+				descenderNivelDimension(contexto.zona, d.category);
+			});
+		}*/
+		
 		svg.selectAll("rect").on("click", function(d, i) {
 			descenderNivelDimension(contexto.zona, d.category);
-		});
+		});	
 		
 		if (this.color == null)
 			svg.selectAll("rect").attr("fill", function(d, i) {

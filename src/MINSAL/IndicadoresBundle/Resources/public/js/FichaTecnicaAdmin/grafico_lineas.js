@@ -35,20 +35,57 @@ graficoLineas = function(ubicacion, datos, colorChosen, categoryChoosen)
 			texto="Porcentaje";
 		
 		var datasetPrincipal_bk = JSON.parse($('#' + this.zona).attr('datasetPrincipal_bk'));
-		max_yy = d3.max(datasetPrincipal_bk, function(d) 
+		var	max_indicador = d3.max(datasetPrincipal_bk, function(d) 
 		{
 			return parseFloat(d.measure);
 		});
-		if ($('#' + this.zona + ' .max_y') != null && $('#' + this.zona + ' .max_y').val() == 'rango_alertas')
-			max_y = $('#' + this.zona + ' .titulo_indicador').attr('data-max_rango');
-	
+		
+		
+		
+		// Algoritmo de Akira para establecer eje y
+		if($('#' + this.zona + '_max_y_manual').val()!=""){
+			//El valor maximo de y lo indica el usuario
+			max_y = parseFloat($('#' + this.zona + '_max_y_manual').val());
+			// Verficamos que el valor introducido manualmente no sea menor que el maximo valor del indicador
+			if(max_y<max_indicador || isNaN(max_y)){
+				max_y = max_indicador;
+			}
+			
+		}else{
+			if($('#' + this.zona + ' .max_y').val()=="indicador"){
+				//El maximo valor de y lo indica el indicador mas alto
+				max_y = max_indicador;
+			}
+			else{
+				//El maximo valor de y lo da el maximo valor de la alerta
+				var max_alerta = $('#' + this.zona + ' .titulo_indicador').attr('data-max_rango');
+				
+				if(max_alerta !=""){
+					max_y =  max_alerta;					
+					// Verficamos que el max_alerta no sea menor que el maximo valor del indicador
+					if(max_y<max_indicador){
+						max_y = max_indicador;
+					}
+				}
+				else{
+					//Si no tiene alerta ponemos el maximo valor del indicador
+					max_y = max_indicador;
+				}
+			}
+		}
+		
+		// Tiene meta?
 		if (parseFloat($('#' + this.zona + 'meta').attr("data-id"))>0)
 		{
-			meta=$('#' + this.zona + 'meta').attr("data-id");
-			max_y = $('#' + this.zona + ' .titulo_indicador').attr('data-max_rango');
-		}
-		if(max_y<max_yy)
-			max_y=max_yy;
+			// Verificamos que la meta no sea mayor a mi maximo valor de y
+			var meta=$('#' + this.zona + 'meta').attr("data-id");
+	
+			if(max_y < meta){
+				max_y = meta;
+			}			
+		}	
+		
+		
 		var yScale = d3.scale.linear()
 			.domain([0, max_y])
 			.range([height, 0]);
