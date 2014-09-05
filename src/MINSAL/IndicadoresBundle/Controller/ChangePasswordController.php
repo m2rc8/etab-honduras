@@ -46,8 +46,7 @@ class ChangePasswordController extends ContainerAware
 
         return $this->container->get('templating')->renderResponse(
             'IndicadoresBundle:ChangePassword:changePassword.html.'.$this->container->getParameter('fos_user.template.engine'),
-            array('form' => $form->createView())
-        );
+            array('form' => $form->createView(),'admin_pool'=>$this->container->get('sonata.admin.pool')) );
     }
 
     /**
