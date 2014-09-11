@@ -56,7 +56,7 @@ class UserAdmin extends BaseAdmin
         $formMapper
                 ->with('General')
                     ->add('id','hidden')
-                    ->add('username')
+                    ->add('username',null,array('max_length'=> 25))
                     ->add('email')
                     ->add('plainPassword', 'password', array('required' => $pass_requerido))
                 ->end()
@@ -82,7 +82,7 @@ class UserAdmin extends BaseAdmin
                     ->add('timezone', 'timezone', array('required' => false))
                     ->add('phone', null, array('required' => false))
 					->setHelps(array(
-						'username' => $this->getTranslator()->trans('formato_Max')." 8"
+						'username' => $this->getTranslator()->trans('formato_Max')." 25"
 					))
                 ->end()
 				->with('Restricciones')
@@ -162,7 +162,7 @@ class UserAdmin extends BaseAdmin
     	$errorElement
 	    	->with('username')
 	    	->addConstraint($onlyAlphanumeric)
-	    	->assertLength(array('max' => 8))
+	    	->assertLength(array('max' => 25))
 	    	->end()
 	    	->with('email')
 	    	->addConstraint($validMail)
