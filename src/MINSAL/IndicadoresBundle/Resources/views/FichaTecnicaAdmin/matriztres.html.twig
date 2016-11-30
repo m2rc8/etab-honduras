@@ -1,0 +1,706 @@
+{# Modificado para que agregar el botón para ir al listado #}
+
+{% extends 'IndicadoresBundle::standard_layout_tablero.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/indicadores/css/FichaTecnicaAdmin/tablero.css') }}" type="text/css" media="all" />
+
+    <link rel="stylesheet" href="{{ asset('bundles/indicadores/js/DataTables/media/css/TableTools.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('bundles/indicadores/js/bootstrap/css/summernote.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('bundles/indicadores/js/DataTables/media/css/jquery.dataTables.css') }}" type="text/css" media="all" />
+    <!--EDITADO PARA NUEVOS TIPOS DE GRAFICOS (CSS)-->
+    <link rel="stylesheet" href="{{ asset('bundles/indicadores/css/datepicker.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('bundles/indicadores/css/FichaTecnicaAdmin/gauge.css') }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ asset('bundles/indicadores/js/handsontable/handsontable.css') }}" type="text/css" media="all" />
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/indicadores/js/d3.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/d3pie.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/affix.min.js') }}" type="text/javascript"></script>
+
+    <script src="{{ asset('bundles/indicadores/js/FichaTecnicaAdmin/grafico_pastel.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/FichaTecnicaAdmin/grafico_columnas.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/FichaTecnicaAdmin/grafico_lineas.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/FichaTecnicaAdmin/tablero.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/FichaTecnicaAdmin/comun.js') }}" type="text/javascript"></script>
+
+    <script src="{{ asset('bundles/indicadores/js/bootstrap/js/moment.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/bootstrap/js/summernote.js') }}" type="text/javascript"></script>
+
+    <!--EDITADO PARA NUEVOS TIPOS DE GRAFICOS-->
+    <script src="{{ asset('bundles/indicadores/js/SVG/rgbcolor.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/SVG/StackBlur.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/SVG/canvg.js') }}" type="text/javascript"></script>
+
+    <script src="{{ asset('bundles/indicadores/js/FichaTecnicaAdmin/grafico_gauge.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/FichaTecnicaAdmin/grafico_termometro.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/FichaTecnicaAdmin/iopctrl.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/FichaTecnicaAdmin/grafico_mapa.js') }}" type="text/javascript"></script>
+
+    <script src="{{ asset('bundles/indicadores/js/bridge_draggable_touch.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/jquery.ui.touch-punch.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/rasterizeHTML.allinone.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/DataTables/jquery.dataTables.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/DataTables/ZeroClipboard.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/DataTables/TableTools.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/bootstrap/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/handsontable/handsontable.full.js') }}" type="text/javascript"></script>
+    <script> 
+        function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
+            //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+            var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+            var CSV = '';
+            //Set Report title in first row or line
+
+            CSV += ReportTitle + '\r\n\n';
+            //This condition will generate the Label/Header
+            if (ShowLabel) {
+                var row = "";
+                //This loop will extract the label from 1st index of on array
+                for (var index in arrData[0]) {
+
+                    //Now convert each value to string and comma-seprated
+                    row += index + ',';
+                }
+
+                row = row.slice(0, -1);
+                //append Label row with line break
+                CSV += row + '\r\n';
+            }
+
+            //1st loop is to extract each row
+            for (var i = 0; i < arrData.length; i++) {
+                var row = "";
+                //2nd loop will extract each column and convert it in string comma-seprated
+                for (var index in arrData[i]) {
+                    row += '"' + arrData[i][index] + '",';
+                }
+
+                row.slice(0, row.length - 1);
+                //add a line break after each row
+                CSV += row + '\r\n';
+            }
+
+            if (CSV == '') {
+                alert("Invalid data");
+                return;
+            }
+
+            //Generate a file name
+            var fileName = "MyReport_";
+            //this will remove the blank-spaces from the title and replace it with an underscore
+            fileName += ReportTitle.replace(/ /g, "_");
+            //Initialize file format you want csv or xls
+            var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+            // Now the little tricky part.
+            // you can use either>> window.open(uri);
+            // but this will not work in some browsers
+            // or you will not get the correct file extension   
+
+            //this trick will generate a temp <a /> tag
+            var link = document.createElement("a");
+            link.href = uri;
+            //set the visibility hidden so it will not effect on your web-layout
+            link.style = "visibility:hidden";
+            link.download = fileName + ".csv";
+            //this part will append the anchor tag and remove it after automatic click
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        $(document).ready(function () {
+
+            $('#datetimepicker1').datepicker({
+                format: "m-yyyy",
+                viewMode: "meses",
+                minViewMode: "months"
+            });
+            $('#datetimepicker2').datepicker({
+                format: "m-yyyy",
+                viewMode: "meses",
+                minViewMode: "months"
+            });
+            function getColumns() {
+                var str = $("#hcol").val();
+                var array = str.split(",");
+                return  array;
+            }
+            function getColumnsres(valor) {
+                var str = valor;
+                var array = str.split(",");
+                 //alert('array.length: '+array.length);
+                return  array;
+            }
+            function valColums(ncols, desde) {
+                var dynamicColumns = [];
+                var cols = [];
+                var pintar = 0;
+                //alert('ncols.length: '+ncols.length);
+                //var ncols= getColumns();
+                for (var i = 0; i < ncols.length; i++) {
+                    var col = new Object();
+                    var nombrec = ncols[i];
+                    nombrec = (nombrec.trim());
+                    switch (i) {
+                        case 0:
+                            col.data = "id";
+                            col.title = "Name" + i.toString();
+                            col.type = "text";
+                            col.data = "id";
+                            col.type = 'numeric';
+                            col.format = '0';
+                            col.readOnly = true;
+                            col.width = 20;
+                            col.title = nombrec;
+                            cols[i] = col;
+                            dynamicColumns.push(col);
+                            break;
+                        case 1:
+                            col.data = "descripcion";
+                            col.type = 'text';
+                            col.readOnly = true;
+                            col.width = 400;
+                            cols[i] = col;
+                            col.title = nombrec;
+                            cols[i] = col;
+                            dynamicColumns.push(col);
+                            break;
+                        case 2:
+                            col.data = "tipo";
+                            col.type = 'numeric';
+                            col.readOnly = false;
+                            col.width = 80;
+                            cols[i] = col;
+                            col.title = nombrec;
+                            cols[i] = col;
+                            dynamicColumns.push(col);
+                            break;
+                        default:
+                            //alert(pintar + " xx " +nombrec + " xx "+desde + "i: " +i);
+                             if (nombrec == desde) {
+                                pintar = 1;
+                            }
+                            if (pintar == 1) {
+                                 //alert(nombrec);
+                                if (nombrec !== "observacion") {
+                                    col.data = nombrec;
+                                    col.type = 'numeric';
+                                    col.readOnly = false;
+                                    col.width = 70;
+                                    cols[i] = col;
+                                    col.title = nombrec;
+                                    cols[i] = col;
+                                    dynamicColumns.push(col);
+                                    break;
+                                } else {
+                                    col.data = "observacion";
+                                    col.type = 'text';
+                                    col.readOnly = true;
+                                    col.width = 200;
+                                    cols[i] = col;
+                                    col.title = nombrec;
+                                    cols[i] = col;
+                                    dynamicColumns.push(col);
+                                    break;
+                                }
+                            }else{
+                           }
+                }
+            }
+            return dynamicColumns;
+            }
+            var $container = $("#handsontable");
+            container = document.getElementById('handsontable');
+            var handsontable = $container.data('handsontable');
+            var config = {
+                height: 396,
+                width: 1300,
+                minRows: 0,
+                minCols: 14,
+                minSpareRows: 1,
+                autoWrapRow: true,
+                colHeaders: ["ID", "Indicadores", "", "ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sept", "oct", "nov", "dic", "observacion"],
+                currentRowClassName: 'currentRow',
+                currentColClassName: 'currentCol',
+                contextMenu: {
+                    items: {
+                        "row_above": {},
+                        "row_below": {},
+                        "hsep1": "---------",
+                        "col_left": {},
+                        "col_right": {},
+                        "hsep2": "---------",
+                        "remove_row": {},
+                        "remove_col": {}
+                    }
+                }
+            }; //data:advancedData,
+            var hot = new Handsontable(container, {
+                height: 500,
+                width: '100%',
+                colHeaders: getColumns(),
+                columns: valColums(getColumns(), ''),
+                rowHeaders: true,
+                stretchH: 'all',
+                contextMenu: true,
+                readOnly: false
+
+            });
+            $('#dated01').datepicker({
+                pickTime: false,
+                format: "MM-yyyy",
+                minViewMode: 1
+            });
+            //href();
+            $("#search_").autocomplete({
+                source: "{{ path('autoComplete_Indicador') }}",
+                select: function (a, b)
+                {
+                    var valor = b.item.value;
+                    valor = valor.split("]")[0];
+                    valor = valor.split("[")[1];
+                    sala_agregar_fila();
+                    recuperarDimensiones(valor, null);
+                },
+                position: {
+                    my: "right top",
+                    at: "right bottom"
+                }
+            });
+            $('#search_').click(function () {
+                this.value = "";
+            });
+            //LLENADO MUNICIPIO
+            $('#ddl01').change(function (e) {
+                // href();
+            });
+            $('#ddl02').change(function (e) {
+                //href();
+            });
+            //LLENADO USUARIO_ESTABLECIMIENTOS YA GUARDADOS
+            $('#ddl04').change(function (e) {
+                // href();
+                e.preventDefault();
+                var param = "'" + $("#ddl04").val() + "'/";
+                url = "/buscarEstablecimientoU/" + param;
+                //url="/sigep/web/app_dev.php/catdepartamento/buscarMunicipio/" + param;
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    beforeSend: function () {
+                        $("#lblError").hide();
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.message === 'false') {
+                            alert('false');
+                        } else {
+                            var ejercicio = "<option value='0'> --TODOS LOS ESTABLECIMIENTOS-- </option>";
+                            var valorInicial = "<option value=' '> --OPCIÓN-- </option>";
+                            $.each(data, function (i) {
+                                ejercicio = ejercicio + "<option value='" + data[i].id + "'>" + data[i].id + " - " + data[i].nombre + " - " + data[i].codigo + " - " + data[i].nm + "</option>";
+                            });
+                            $('#ddl01').html(ejercicio);
+                        }
+                    }
+                });
+            });
+            
+
+
+
+ $("#btnExport").click(function (e) {
+                //window.open('data:application/vnd.ms-excel,' + JSON.stringify(hot.getData()));
+                e.preventDefault();
+               if ($("#datetimepicker11").val() == '') {
+                    alert('Debe seleccionar Fecha DESDE');
+                    e.preventDefault();
+                    return;
+                }
+                if ($("#datetimepicker22").val() == '') {
+                    alert('Debe seleccionar Fecha HASTA');
+                    e.preventDefault();
+                    return;
+                }
+                var fecha = $("#ddl02").val();
+                ; //$("#dated01").val().replace(/\//g, '+*)');
+                var Est = $.trim($('#ddl04 option:selected').val());
+                var gest = $.trim($('#ddl04 option:selected').text());
+                var param = fecha + "&&" +
+                        Est + "&&" +
+                        gest + "&&" +
+                        $("#datetimepicker11").val() + "&&" +
+                        $("#datetimepicker22").val() +
+                        "/";
+         
+                url = "/reporterexceltres/" + param;
+                //url="/sigep/web/app_dev.php/catdepartamento/buscarMunicipio/" + param;
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    beforeSend: function () {
+                        $("#lblError").hide();
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.message === 'false') {
+                            alert('false');
+                        } else {
+                            //var ejercicio = "<option value='0'> --TODOS LOS ESTABLECIMIENTOS-- </option>";
+                            //var valorInicial = "<option value=' '> --OPCIÓN-- </option>";
+                            var data = JSON.stringify(data);
+                            JSONToCSVConvertor(data, "Matriz de Seguimiento", true);
+                            e.preventDefault();
+                            //$.each(data, function(i) {
+                            // ejercicio = ejercicio + "<option value='"+data[i].id+"'>"+data[i].id+ " - "+data[i].nombre+ " - "+data[i].codigo+ " - "+data[i].nm+"</option>"; 
+                            // });
+                            // $('#ddl01').html(ejercicio);
+                        }
+                    }
+                });
+            });
+
+
+
+
+
+
+
+            //function href(){
+            //    var d= "/sesal/web/app_dev.php/crearReporte/"+ $("#ddl04").val()+ "," + $("#ddl01").val()+ "," + $("#ddl02").val()+ "/"
+            //    document.getElementById("btnCargar").href= d;  
+            //}
+
+            $('#btnCargar').click(function (e) {
+                if ($("#datetimepicker11").val() == '') {
+                    alert('Debe seleccionar Fecha DESDE');
+                    e.preventDefault();
+                    return;
+                }
+                if ($("#datetimepicker22").val() == '') {
+                    alert('Debe seleccionar Fecha HASTA');
+                    e.preventDefault();
+                    return;
+                }
+                var fecha = $("#ddl02").val();
+                ; //$("#dated01").val().replace(/\//g, '+*)');
+                var Est = $.trim($('#ddl04 option:selected').val());
+                var gest = $.trim($('#ddl04 option:selected').text());
+                var param = fecha + "&&" +
+                        Est + "&&" +
+                        gest + "&&" +
+                        $("#datetimepicker11").val() + "&&" +
+                        $("#datetimepicker22").val() +
+                        "/";
+                url = "/fornpfichatres/" + param;
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    beforeSend: function () {
+                        $("#lblError").hide();
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.message == 'false') {
+                            //alert('false');
+                            advancedData = [["", "", "", "", "", "", "", "", "", "", "", "", "", ""]];
+                            //advancedData=data.message;
+                            hot.loadData(advancedData);
+                            $container = document.getElementById('handsontable');
+                            //hot;
+                            //alert(advancedData);
+                        } else {
+
+                            advancedData = data.message;
+                            $container = document.getElementById('handsontable');
+                            var mes = data.mes;
+                            var meses = data.meses;
+                            var desde = data.desde;
+                            //alert('meses: ' + meses);
+                            //alert('titulo: ' + data.titulo);
+                            $("#titulo").val(data.titulo); 
+                            $("#periodos").val(data.periodos);
+                            // colHeaders: getColumns(),
+                            //columns: valColums(),
+
+
+                            // switch (mes) {
+                            //case '2015':
+                            //hot.updateSettings({colHeaders: getColumnsres(data.titulo), columns: valColums(getColumnsres(data.titulo), desde)
+                            //    , cells: function (row, col, prop) {
+                            var Tit = getColumnsres(data.titulo);
+                            hot.updateSettings({colHeaders: getColumnsres(data.titulo), columns: valColums(Tit, desde)
+                                , cells: function (row, col, prop) {
+                                    var cellProperties = {};
+                                    var resP = data.message;
+                                    cellProperties.renderer = function (instance, td, row, col, prop, value, cellProperties) {
+                                        Handsontable.cellTypes[cellProperties.type].renderer.apply(this, arguments);
+                                         
+                                     if (resP[row] != undefined) {
+                                             if(col== 0){
+                                                   td.style.fontWeight = 'bold';
+                                                   td.style.visibility = 'hidden';
+                                               }
+                                            //if(col== 1){
+                                            if (resP[row]['id'] != null && resP[row]['tipo'] == '') {
+                                                td.style.backgroundColor = '#D8D8D8';
+                                                td.style.fontWeight = 'bold';
+                                            }
+                                            if (resP[row]['tipo'] == 'Status %') {
+                                                td.style.readonly = 'readonly';
+                                                td.style.fontWeight = 'bold';
+                                                cellProperties.readOnly = true;
+                                                //resP[row]['descripcion'] = '';
+                                                resP[row]['id'] = '';
+                                            }
+                                            if (resP[row]['tipo'] == 'Planificado') {
+                                                td.style.readonly = 'readonly';
+                                                //td.style.fontWeight = 'bold';
+                                                //cellProperties.readOnly = true;
+                                                resP[row]['descripcion'] = '';
+                                                resP[row]['id'] = '';
+                                            }
+                                            if (resP[row]['observacion'] == '--PRODUCCION--') {
+                                                td.style.readonly = 'readonly';
+                                                //td.style.fontWeight = 'bold';
+                                                cellProperties.readOnly = true;
+                                            }
+                                        } 
+
+                                        //td.style.backgroundColor= '#ffffff';
+                                          if (col >= 3) {
+                                             
+                                            var nomCol = "c-" + Tit[col];  
+                                            if (resP[row][nomCol] != null) { 
+                                                //alert(nomCol + " - :"+resP[row][nomCol]);
+                                            
+                                               if (resP[row][nomCol] == 'verde') {
+                                                  td.style.backgroundColor = '#70db70';
+                                               }else if (resP[row][nomCol] == 'naranja') {
+                                                  td.style.backgroundColor = '#ffcc66';
+                                               }else if (resP[row][nomCol] == 'rojo') {
+                                                 td.style.backgroundColor = '#ff4d4d';
+                                               }
+                                            } 
+                                        }  
+                                         
+                                    }
+                                    return cellProperties;
+                                }
+                            });
+                            //}
+                            hot.loadData(advancedData);
+                            //alert('2');
+                            //hot;
+                            //alert(advancedData);
+
+
+
+                        }
+                    }
+                });
+            });
+             
+$('#btnGuardar').click(function (e) {
+                var cantC = hot.countCols();
+                var cantR = hot.countRows();
+                //alert(hot.countRows());
+                if (confirm("¿ESTA SEGURO DE LOS VALORES INGRESADOS?")) {
+                } else {
+                    return;
+                }
+                var datos = JSON.stringify(hot.getData());
+                // var fecha= $("#dated01").val().replace(/\//g, '+*)');
+                var Est = $("#ddl04").val();
+                var param = $("#ddl02").val() + "&&" + $("#ddl04").val();
+                var fecha = $("#ddl02").val();
+                var titulo = $("#titulo").val();
+                var periodos = $("#periodos").val();
+                //Est+ "/";
+                url = "/fornpfichastres/";
+                var cadena = '';
+                var fila = '';
+                for (i = 0; i < cantR; i++) {
+                    var val = hot.getDataAtCell(i, 2);
+                    if (val === null) {
+                        break;
+                    } else {
+                        var sepi = '!+';
+                        fila = '';
+                        for (j = 0; j < cantC; j++) {
+                            fila = fila + (hot.getDataAtCell(i, j) == null ? '' : hot.getDataAtCell(i, j)) + sepi;
+                        }
+
+                    }
+                    if (cadena === '') {
+                        cadena = fila;
+                    } else {
+                        var sep = '&-&';
+                        cadena = cadena + sep + fila;
+                    }
+                    if (i === 199) {
+                        break;
+                    }
+                }
+                
+                $.ajax({
+                    type: 'POST',
+                    data: {'fecha': fecha, 'est': Est, 'datos': cadena, 'titulo': titulo, 'periodos': periodos},
+                    url: url,
+                    beforeSend: function () {
+                        $("#lblError").hide();
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.message == 'false') {
+                            alert('CONTACTAR ADMINISTRADOR');
+                        } else {
+                            alert('DATOS ALMACENADOS, DEBE "Cargar" para visualizar nuevo Status %.');
+                            //'scripts/json/save.json', 'GET', JSON.stringify({data: hot.getData()}), function (res) {
+                            //var response = JSON.parse(res.response);
+                        }
+                    }
+                    //if (response.result === 'ok') {
+                    //  exampleConsole.innerText = 'Data saved';
+                    //}
+                    //else {
+                    //  exampleConsole.innerText = 'Save error';
+                    //}
+                });
+                //alert(cadena);
+
+
+
+            });
+
+
+        });
+    </script>
+    <style>
+        .ui-autocomplete { max-height: 200px; overflow:visible; z-index:999999999}
+    </style
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid" id="contenedor_tablero">
+        <form id="login-form"  name="login-form" class="login-form" method="POST">
+            <div class="row" id="titulo_header" >
+                <div class="col-md-12">
+                    <div class="page-header" ><h2 id="header_sala">MATRIZ SEGUIMIENTO</h2></div>
+                </div>
+            </div>
+            <div>
+                <table border="0" style='width: 60%;'>
+                    <input  style="display:none;" id="hcol" name="hcol"  value="{{hcol}}"/>
+
+                    <tr>
+                        <td style="width: 5%;">
+                        </td>
+                        <td>  <label >DESDE:</label></td> 
+                        <td style="width: 5%;">
+                        </td>
+                        <td> <label >HASTA:</label> </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 5%;">
+
+                        </td>
+                        <td><div class='input-group date' id='datetimepicker1'>
+                                <input type='text' class="form-control" id='datetimepicker11'/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div></td> 
+                        <td style="width: 5%;">
+
+                        </td>
+                        <td><div class='input-group date' id='datetimepicker2'>
+                                <input type='text' class="form-control" id='datetimepicker22' />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div></td>
+                    </tr>
+                    <tr><td>
+                        </td>
+                        <td >
+                            <a class="btn dropdown-toggle btn-primary navbar-btn" href='#' id='btnCargar' name='btnCargar' >
+                                <i class="glyphicon glyphicon-cloud-download"></i> <span class="hidden-xs">Cargar</span>
+                            </a>
+                            <a class="btn dropdown-toggle btn-primary navbar-btn" id='btnGuardar' name='btnGuardar' >
+                                <i class=" glyphicon glyphicon-floppy-disk"></i> <span class="hidden-xs">Guardar</span>
+                            </a>
+    <a  class="btn dropdown-toggle btn-primary navbar-btn"  id='btnExport' name='btnExport'>
+                                       <i class="glyphicon glyphicon-open"></i> <span class="hidden-xs">Exportar</span>
+                              </a> 
+                        </td>
+                    </tr>
+                </table>
+                </br>
+                </br>
+                </br>
+                </br>
+                <table border="1" style='width: 50px;' style="display:none;">   
+                    <tr  style="display:none;">
+                        <td style="width: 15%;">
+                            <label >ESTABLECIMIENTOS:</label>
+                        </td>
+                        <td style="width: 85%; display:none;">
+                            <select style="width: 95%; text-transform:uppercase; margin-bottom: 10px;" name="ddl01" id="ddl01" > 
+                                <option value="0">-- TODOS LOS ESTABLECIMIENTOS--</option>
+
+                            </select>
+                        </td>
+                    </tr>
+                    <tr style="display:none;">
+                        <td style="width: 15%;">
+                            <label >GESTORES:</label>
+                        </td>
+                        <td style="width: 35%; display:none;">
+                            <select style="width: 95%; text-transform:uppercase; margin-bottom: 10px;" name="ddl04" id="ddl04" > 
+                                <option value="0">-- TODOS LOS GESTORES--</option>
+                                {% for entity in usuariosf %}
+                                    <option value="{{ entity.id}}"> {{entity.username}}</option>
+                                {% endfor%}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr style="display:none;">
+                        <td>
+                            <label >PERIODO:</label>
+                        </td>
+                        <td style="display:none;">
+                            <select style="width: 95%; text-transform:uppercase; margin-bottom: 10px;" name="ddl02" id="ddl02" >  
+                                <option value="2014">-- 2014 --</option>
+                                <option value="2015">-- 2015 --</option>
+                                <option value="2016">-- 2016 --</option>
+                                <option value="2017">-- 2017--</option>
+                                <option value="2018">-- 2018 --</option>
+
+                            </select>
+                        </td>
+                    </tr>
+
+
+                </table>       
+            </div>
+            <span class="hidden-xs">   *Al Guardar las modificaciones, debe cargar los resultados desde el boton de "Cargar</span>
+
+            </br></br>
+            <div id="handsontable" name="handsontable" class="handsontable">
+
+
+             </div>
+            <div id="sala" >
+            </div>
+            <input type='text' class="form-control" id='titulo' name="titulo"/>
+            <input type='text' class="form-control" id='periodos' name="periodos"/>
+        </form>
+    </div>
+{% endblock %}
