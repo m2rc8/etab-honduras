@@ -6,12 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use MINSAL\IndicadoresBundle\Validator as CustomAssert;
 
 /**
- * MINSAL\IndicadoresBundle\Entity\Alerta
+ *MINSAL\IndicadoresBundle\Entity\UsuarioEstablecimiento
  *
- * @ORM\Table(name="alerta")
+ * @ORM\Table(name="usuario_establecimiento")
  * @ORM\Entity
  */
-class Alerta
+class UsuarioEstablecimiento
 {
     /**
      * @var integer $id
@@ -22,23 +22,95 @@ class Alerta
      */
     private $id;
 
-    /**
-     * @var string $codigo
+
+     /**
      *
-     * @ORM\Column(name="codigo", type="string", length=50, nullable=false)
-	 * @CustomAssert\ValidHTMLcolor(message="ValidHTMLcolor.Message")
+     * @ORM\ManyToOne(targetEntity="Establecimiento", inversedBy="gruposEstablecimientos")
+     * @ORM\JoinColumn(name="id_establecimiento", referencedColumnName="id_establecimiento")
      */
-    private $codigo;
+    
+    
+      /**
+     * @var integer $idEstablecimiento
+     *
+     * @ORM\Column(name="id_establecimiento", type="integer", nullable=false)
+     */
+    
+   
+    
+    
+    
+    
+    private $idEstablecimiento;  
+    
+     /**
+     *
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="gruposIndicadores")
+     * @ORM\JoinColumn(name="id_usuario", referencedColumnName="id")
+     */
+    
+   /**
+     * @var integer $idUsuario
+     *
+     * @ORM\Column(name="id_usuario", type="integer", nullable=false)
+     */
+    private $idUsuario;
+   
+    
+    
+    
+    
+    
+	
+    
+
+     /**
+     * Set idEstablecimiento
+     *
+     * @param  $idEstablecimiento
+     * @return UsuarioEstablecimiento
+     */
+    public function setIdEstablecimiento( $idEstablecimiento)//\MINSAL\IndicadoresBundle\Entity\Establecimiento
+    {
+        $this->idEstablecimiento = $idEstablecimiento;
+    
+        return $this;
+    }
+    /**
+     * Get idEstablecimiento
+     *
+     * @return idEstablecimiento
+     */
+    public function getIdEstablecimiento()
+    {
+        return $this->idEstablecimiento;
+    }
+        /**
+     * Set idUsuario
+     *
+     * @param  $usuario
+     * @return $usuario
+     */
+    public function setIdUsuario($usuario)//\MINSAL\IndicadoresBundle\Entity\User 
+    {
+        $this->idUsuario = $usuario;
+
+        return $this;
+    }
 
     /**
-     * @var string $color
+     * Get idUsuario
      *
-     * @ORM\Column(name="color", type="string", length=50, nullable=false)
-     * @CustomAssert\OnlyAlphanumeric(message="OnlyAlphanumeric.Message")
+     * @return \MINSAL\IndicadoresBundle\Entity\User
      */
-    private $color;
+    public function getIdUsuario()
+    {
+        return $this->idUsuario;
+    }
 
-    /**
+    
+ 
+ /**
      * Get id
      *
      * @return integer
@@ -47,55 +119,10 @@ class Alerta
     {
         return $this->id;
     }
-
-    /**
-     * Set color
-     *
-     * @param  string $color
-     * @return Alerta
-     */
-    public function setColor($color)
-    {
-        $this->color = $color;
-
-        return $this;
-    }
-
-    /**
-     * Get color
-     *
-     * @return string
-     */
-    public function getColor()
-    {
-        return $this->color;
-    }
-
     public function __toString()
     {
-        return $this->color ? :'';
+        return $this->id ? :'';
     }
 
-    /**
-     * Set codigo
-     *
-     * @param  string $codigo
-     * @return Alerta
-     */
-    public function setCodigo($codigo)
-    {
-        $this->codigo = $codigo;
-
-        return $this;
-    }
-
-    /**
-     * Get codigo
-     *
-     * @return string
-     */
-    public function getCodigo()
-    {
-        return $this->codigo;
-    }
+   
 }

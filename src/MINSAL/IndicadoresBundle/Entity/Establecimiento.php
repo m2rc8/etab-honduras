@@ -6,96 +6,148 @@ use Doctrine\ORM\Mapping as ORM;
 use MINSAL\IndicadoresBundle\Validator as CustomAssert;
 
 /**
- * MINSAL\IndicadoresBundle\Entity\Alerta
+ * MINSAL\IndicadoresBundle\Entity\Establecimiento
  *
- * @ORM\Table(name="alerta")
+ * @ORM\Table(name="establecimiento")
  * @ORM\Entity
  */
-class Alerta
+class Establecimiento
 {
+        /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->gruposEstablecimientos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->establecimiento		 = new \Doctrine\Common\Collections\ArrayCollection();
+        parent::__construct();
+    }
     /**
-     * @var integer $id
+     * @var integer $idEstablecimiento
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id_establecimiento", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private $idEstablecimiento;
+
+    
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="UsuarioEstablecimiento", mappedBy="idEstablecimiento", cascade={"all"}, orphanRemoval=true)
+     **/
+    protected $gruposEstablecimientos;
+    
 
     /**
-     * @var string $codigo
+     * @var string $descripcion
      *
-     * @ORM\Column(name="codigo", type="string", length=50, nullable=false)
-	 * @CustomAssert\ValidHTMLcolor(message="ValidHTMLcolor.Message")
-     */
-    private $codigo;
-
-    /**
-     * @var string $color
-     *
-     * @ORM\Column(name="color", type="string", length=50, nullable=false)
+     * @ORM\Column(name="descripcion", type="string", length=1024, nullable=false)
      * @CustomAssert\OnlyAlphanumeric(message="OnlyAlphanumeric.Message")
      */
-    private $color;
+    private $descripcion;
 
+	/**
+     * @ORM\ManyToOne(targetEntity="Municipio")
+     * @ORM\JoinColumn(name="id_municipio", referencedColumnName="id")
+     * @return integer
+     */
+    
+    private $idMunicipio;    
+    
+    /**
+     * Set idMunicipio
+     *
+     * @param integer $idMunicipio
+     * @return Establecimiento
+     */
+    public function setIdMunicipio($idMunicipio)
+    {
+        $this->idMunicipio = $idMunicipio;
+    
+        return $this;
+    }
+
+    /**
+     * Get idMunicipio
+     *
+     * @return integer 
+     */
+    public function getIdMunicipio()
+    {
+        return $this->idMunicipio;
+    }
     /**
      * Get id
      *
      * @return integer
      */
-    public function getId()
+    public function getIdEstablecimiento()
     {
-        return $this->id;
+        return $this->idEstablecimiento;
     }
 
     /**
-     * Set color
+     * Set descripcion
      *
-     * @param  string $color
-     * @return Alerta
+     * @param  string $descripcion
+     * @return Establecimiento
      */
-    public function setColor($color)
+    public function setDescripcion($descripcion)
     {
-        $this->color = $color;
+        $this->descripcion = $descripcion;
 
         return $this;
     }
 
     /**
-     * Get color
+     * Get descripcion
      *
      * @return string
      */
-    public function getColor()
+    public function getDescripcion()
     {
-        return $this->color;
+        return $this->descripcion;
     }
 
     public function __toString()
     {
-        return $this->color ? :'';
+        return $this->descripcion ? :'';
     }
-
-    /**
-     * Set codigo
+    
+    
+/**
+     * Add gruposEstablecimientos
      *
-     * @param  string $codigo
-     * @return Alerta
+     * @param  \MINSAL\IndicadoresBundle\Entity\UsuarioEstablecimiento $gruposEstablecimientos
+     * @return User
      */
-    public function setCodigo($codigo)
+    public function addGruposEstablecimientos(\MINSAL\IndicadoresBundle\Entity\UsuarioEstablecimiento $gruposEstablecimientos)
     {
-        $this->codigo = $codigo;
+        $this->gruposEstablecimientos[] = $gruposEstablecimientos;
 
         return $this;
     }
 
     /**
-     * Get codigo
+     * Remove gruposEstablecimientos
      *
-     * @return string
+     * @param \MINSAL\IndicadoresBundle\Entity\UsuarioEstablecimiento $gruposEstablecimientos
      */
-    public function getCodigo()
+    public function removeGruposEstablecimientos(\MINSAL\IndicadoresBundle\Entity\UsuarioEstablecimiento $gruposEstablecimientos)
     {
-        return $this->codigo;
+        $this->gruposEstablecimientos->removeElement($gruposEstablecimientos);
     }
+
+    /**
+     * Get $gruposEstablecimientos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGruposEstablecimientos()
+    {
+        return $this->gruposEstablecimientos;
+    }
+
+   
 }

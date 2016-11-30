@@ -6,12 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use MINSAL\IndicadoresBundle\Validator as CustomAssert;
 
 /**
- * MINSAL\IndicadoresBundle\Entity\Alerta
+ * MINSAL\IndicadoresBundle\Entity\Departamento
  *
- * @ORM\Table(name="alerta")
+ * @ORM\Table(name="departamento")
  * @ORM\Entity
  */
-class Alerta
+class Departamento
 {
     /**
      * @var integer $id
@@ -25,18 +25,17 @@ class Alerta
     /**
      * @var string $codigo
      *
-     * @ORM\Column(name="codigo", type="string", length=50, nullable=false)
-	 * @CustomAssert\ValidHTMLcolor(message="ValidHTMLcolor.Message")
+     * @ORM\Column(name="codigo", type="string", length=4, nullable=false)
      */
     private $codigo;
 
     /**
-     * @var string $color
+     * @var string $nombre
      *
-     * @ORM\Column(name="color", type="string", length=50, nullable=false)
+     * @ORM\Column(name="nombre", type="string", length=128, nullable=false)
      * @CustomAssert\OnlyAlphanumeric(message="OnlyAlphanumeric.Message")
      */
-    private $color;
+    private $nombre;
 
     /**
      * Get id
@@ -51,12 +50,12 @@ class Alerta
     /**
      * Set color
      *
-     * @param  string $color
-     * @return Alerta
+     * @param  string $nombre
+     * @return Departamento
      */
-    public function setColor($color)
+    public function setNombre($nombre)
     {
-        $this->color = $color;
+        $this->nombre = $nombre;
 
         return $this;
     }
@@ -66,14 +65,14 @@ class Alerta
      *
      * @return string
      */
-    public function getColor()
+    public function getNombre()
     {
-        return $this->color;
+        return $this->nombre;
     }
 
     public function __toString()
     {
-        return $this->color ? :'';
+        return $this->nombre ? :'';
     }
 
     /**

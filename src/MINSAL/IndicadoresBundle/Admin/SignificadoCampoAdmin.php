@@ -19,6 +19,7 @@ class SignificadoCampoAdmin extends Admin
 
     protected function configureFormFields(FormMapper $formMapper)
     {
+        $s=0;
         $formMapper
                 ->add('codigo', null, array('label' => $this->getTranslator()->trans('codigo')))
                 ->add('descripcion', null, array('label' => $this->getTranslator()->trans('descripcion')))
@@ -50,6 +51,7 @@ class SignificadoCampoAdmin extends Admin
 
     protected function configureListFields(ListMapper $listMapper)
     {
+        $f=0;
         $listMapper
                 ->addIdentifier('codigo', null, array('label' => $this->getTranslator()->trans('codigo')))
                 ->add('descripcion', null, array('label' => $this->getTranslator()->trans('descripcion')))

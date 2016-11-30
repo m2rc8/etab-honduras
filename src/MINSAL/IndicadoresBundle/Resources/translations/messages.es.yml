@@ -28,6 +28,7 @@ limite_inferior: 'Límite inferior'
 limite_superior: 'Límite superior'
 color: 'Color'
 indicador_alertas-eTAB: 'Alertas de indicador'
+indicador_alertasseg-eTAB: 'Alertas de indicador Seguimiento'
 comentario: 'Comentario'
 elija_al_menos_una_variable: 'Debe elegir al menos una variable'
 campos_indicador: Dimensiones del indicador
@@ -69,11 +70,30 @@ significado: Significado
 'Fuente Dato Create': 'Fuente de Dato - Crear'
 'Fuente Dato Edit': 'Fuente de Dato - Editar'
 
+'usuario_establecimiento-eTAB' : 'Usuario Establecimiento'
+
+
+
 'responsable_indicador-eTAB': 'Responsable de Indicador'
 'Responsable Indicador List': 'Responsable de Indicador - Listado'
 'Responsable Indicador Delete': 'Responsable de Indicador - Borrar'
 'Responsable Indicador Create': 'Responsable de Indicador - Crear'
 'Responsable Indicador Edit': 'Responsable de Indicador - Editar'
+
+
+'indicadores_hospital-eTAB': 'Indicadores Hospital'
+'indicadores_hospital List': 'Responsable de Indicador - Listado'
+'indicadores_hospital Delete': 'Responsable de Indicador - Borrar'
+'indicadores_hospital Create': 'Responsable de Indicador - Crear'
+'indicadores_hospital Edit': 'Responsable de Indicador - Editar'
+
+
+'indicadores_generales-eTAB': 'Indicadores Generales'
+'indicadores_generales List': 'Responsable de Indicador - Listado'
+'indicadores_generales Delete': 'Responsable de Indicador - Borrar'
+'indicadores_generales Create': 'Responsable de Indicador - Crear'
+'indicadores_generales Edit': 'Responsable de Indicador - Editar'
+
 
 'clasificacion_privacidad-eTAB': 'Clasificación de privacidad'
 'Clasificacion Privacidad List': 'Clasificación de Privacidad - Listado'

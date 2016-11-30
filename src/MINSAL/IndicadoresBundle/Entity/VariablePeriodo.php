@@ -6,12 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use MINSAL\IndicadoresBundle\Validator as CustomAssert;
 
 /**
- * MINSAL\IndicadoresBundle\Entity\Alerta
+ * MINSAL\IndicadoresBundle\Entity\VariablePeriodo
  *
- * @ORM\Table(name="alerta")
+ * @ORM\Table(name="variable_periodo")
  * @ORM\Entity
  */
-class Alerta
+class VariablePeriodo
 {
     /**
      * @var integer $id
@@ -22,23 +22,117 @@ class Alerta
      */
     private $id;
 
-    /**
-     * @var string $codigo
-     *
-     * @ORM\Column(name="codigo", type="string", length=50, nullable=false)
-	 * @CustomAssert\ValidHTMLcolor(message="ValidHTMLcolor.Message")
-     */
-    private $codigo;
 
     /**
-     * @var string $color
+     * @var string $descripcion
      *
-     * @ORM\Column(name="color", type="string", length=50, nullable=false)
-     * @CustomAssert\OnlyAlphanumeric(message="OnlyAlphanumeric.Message")
+     * @ORM\Column(name="descripcion", type="string", length=2048, nullable=false)
      */
-    private $color;
+    private $descripcion;
+
+    
+    /**
+     * @var string $periodo
+     *
+     * @ORM\Column(name="periodo", type="string", length=4, nullable=false)
+     */
+    private $periodo;
+//inicio
+/**
+     * @var Anios
+     *
+     * @ORM\ManyToMany(targetEntity="Anio", inversedBy="origenes")
+     * @ORM\JoinTable(name="variable_anio")
+     */
+    private $anios;
+    
+     /**
+     * @var Pintars
+     *
+     * @ORM\ManyToMany(targetEntity="Pintar", inversedBy="origenes")
+     * @ORM\JoinTable(name="variable_pintar")
+     */
+    private $pintars;
+    
+    
+    
+    
+
+    
+     public function __construct()
+    {
+        $this->anios = new \Doctrine\Common\Collections\ArrayCollection();
+         $this->pintars = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+     /**
+     * Add anios
+     *
+     * @param  \MINSAL\IndicadoresBundle\Entity\Anio $anios
+     * @return OrigenDatos
+     */
+    public function addAnioe(\MINSAL\IndicadoresBundle\Entity\Anio $anios)
+    {
+        $this->anios[] = $anios;
+
+        return $this;
+    }
 
     /**
+     * Remove anios
+     *
+     * @param \MINSAL\IndicadoresBundle\Entity\Anio $anios
+     */
+    public function removeAnioe(\MINSAL\IndicadoresBundle\Entity\Anio $anios)
+    {
+        $this->anios->removeElement($anios);
+    }
+
+    /**
+     * Get anios
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAnios()
+    {
+        return $this->anios;
+    }
+     /**
+     * Add pintars
+     *
+     * @param  \MINSAL\IndicadoresBundle\Entity\Pintar $pintars
+     * @return OrigenDatos
+     */
+    public function addPintare(\MINSAL\IndicadoresBundle\Entity\Pintar $pintars)
+    {
+        $this->pintars[] = $pintars;
+
+        return $this;
+    }
+
+    /**
+     * Remove pintars
+     *
+     * @param \MINSAL\IndicadoresBundle\Entity\Pintar $pintars
+     */
+    public function removePintare(\MINSAL\IndicadoresBundle\Entity\Pintar $pintars)
+    {
+        $this->pintars->removeElement($pintars);
+    }
+
+    /**
+     * Get pintars
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPintars()
+    {
+        return $this->pintars;
+    }
+//fin
+
+
+
+     /**
      * Get id
      *
      * @return integer
@@ -48,54 +142,57 @@ class Alerta
         return $this->id;
     }
 
+
     /**
-     * Set color
+     * Set descripcion
      *
-     * @param  string $color
-     * @return Alerta
+     * @param  string $descripcion
+     * @return variablePeriodo
      */
-    public function setColor($color)
+    public function setDescripcion($descripcion)
     {
-        $this->color = $color;
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+    /**
+     * Get periodo
+     *
+     * @return string
+     */
+    public function getPeriodo()
+    {
+        return $this->periodo;
+    }
+
+  /**
+     * Set periodo
+     *
+     * @param  string $periodo
+     * @return variablePeriodo
+     */
+    public function setPeriodo($periodo)
+    {
+        $this->periodo = $periodo;
 
         return $this;
     }
 
     /**
-     * Get color
+     * Get descripcion
      *
      * @return string
      */
-    public function getColor()
+    public function getDescripcion()
     {
-        return $this->color;
-    }
-
+        return $this->descripcion;
+    }    
+    
+    
     public function __toString()
     {
-        return $this->color ? :'';
+        return $this->descripcion ? :'';
     }
 
-    /**
-     * Set codigo
-     *
-     * @param  string $codigo
-     * @return Alerta
-     */
-    public function setCodigo($codigo)
-    {
-        $this->codigo = $codigo;
-
-        return $this;
-    }
-
-    /**
-     * Get codigo
-     *
-     * @return string
-     */
-    public function getCodigo()
-    {
-        return $this->codigo;
-    }
+   
 }

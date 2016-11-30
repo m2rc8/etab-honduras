@@ -8,114 +8,115 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
-use MINSAL\IndicadoresBundle\Entity\OrigenDatos;
+use MINSAL\IndicadoresBundle\Entity\UsuarioEstablecimiento;
 
-class OrigenDatosAdmin extends Admin
+class UsuarioEstablecimientoAdmin extends Admin
 {
     protected $datagridValues = array(
         '_page' => 1, // Display the first page (default = 1)
         '_sort_order' => 'ASC', // Descendant ordering (default = 'ASC')
-        '_sort_by' => 'nombre' // name of the ordered field (default = the model id field, if any)
+        '_sort_by' => 'id' // name of the ordered field (default = the model id field, if any)
     );
 
     protected function configureFormFields(FormMapper $formMapper)
     {
-        $esFusionado = $this->getSubject()->getEsFusionado();
+        $s=0;
+        //$esFusionado = $this->getSubject()->getEsFusionado();
 
         $formMapper
                 ->with($this->getTranslator()->trans('datos_generales'), array('collapsed' => false))
-                ->add('nombre', null, array('label' => $this->getTranslator()->trans('nombre')))
-                ->add('descripcion', null, array('label' => $this->getTranslator()->trans('descripcion'), 'required' => false))
-                ->add('periodicidad', null, array('label' => 'Periodicidad de actualización'))                
-                ->add('ventana', null, array('attr' => array('label' => 'Ventana de actualización', 'min'=>'0')))
-				->add('fechaCorte', null, array('attr' => array('label' => 'Dia de Corte', 'min'=>'1', 'max'=>'30')))
-				->add('actualizacionIncremental', null, array('attr' => array('label' => '¿Es actualización incremental?')))				
+                ->add('idUsuario', null, array('label' => $this->getTranslator()->trans('Usuario')))
+                ->add('idEstablecimiento', null, array('label' => $this->getTranslator()->trans('Establecimiento'), 'required' => false))
+                //->add('periodicidad', null, array('label' => 'Periodicidad de actualización'))                
+                //->add('ventana', null, array('attr' => array('label' => 'Ventana de actualización', 'min'=>'0')))
+		//		->add('fechaCorte', null, array('attr' => array('label' => 'Dia de Corte', 'min'=>'1', 'max'=>'30')))
+		//		->add('actualizacionIncremental', null, array('attr' => array('label' => '¿Es actualización incremental?')))				
                 ->end()
         ;
         if ($esFusionado == false)
             $formMapper
                     ->with($this->getTranslator()->trans('datos_generales'), array('collapsed' => false))
-                    ->add('esCatalogo', null, array('label' => $this->getTranslator()->trans('es_catalogo')))
+                    //->add('esCatalogo', null, array('label' => $this->getTranslator()->trans('es_catalogo')))
                     ->end()
                     ->with($this->getTranslator()->trans('origen_datos_sql'), array('collapsed' => true))
-                    ->add('conexiones', null, array('label' => $this->getTranslator()->trans('nombre_conexion'), 'required' => false, 'expanded' => true))
-                    ->add('sentenciaSql', null, array('label' => $this->getTranslator()->trans('sentencia_sql'),
+                    //->add('conexiones', null, array('label' => $this->getTranslator()->trans('nombre_conexion'), 'required' => false, 'expanded' => true))
+                    /*->add('sentenciaSql', null, array('label' => $this->getTranslator()->trans('sentencia_sql'),
                         'required' => false,
                         'attr' => array('rows' => 7, 'cols' => 50)
-                    ))
-                    ->end()
-                    ->with($this->getTranslator()->trans('origen_datos_archivo'), array('collapsed' => true))
-                    ->add('archivoNombre', null, array('label' => $this->getTranslator()->trans('archivo_asociado'), 'required' => false, 'read_only' => true))
-                    ->add('file', 'file', array('label' => $this->getTranslator()->trans('subir_nuevo_archivo'), 'required' => false))
-                    ->end()
+                    ))*/
+                    //->end()
+                    //->with($this->getTranslator()->trans('origen_datos_archivo'), array('collapsed' => true))
+                    //->add('archivoNombre', null, array('label' => $this->getTranslator()->trans('archivo_asociado'), 'required' => false, 'read_only' => true))
+                    //->add('file', 'file', array('label' => $this->getTranslator()->trans('subir_nuevo_archivo'), 'required' => false))
+                    //->end()
             ;
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
+        $test=0;
         $datagridMapper
-                ->add('nombre', null, array('label' => $this->getTranslator()->trans('nombre')))
+                ->add('id', null, array('label' => $this->getTranslator()->trans('id')))
         ;
     }
 
     protected function configureListFields(ListMapper $listMapper)
     {
+        $test=0;
         $listMapper
-                ->addIdentifier('nombre', null, array('label' => $this->getTranslator()->trans('nombre')))
-                ->add('descripcion', null, array('label' => $this->getTranslator()->trans('descripcion')))
+                ->addIdentifier('id', null, array('label' => $this->getTranslator()->trans('id')))
+                ->add('idUsuario', null, array('label' => $this->getTranslator()->trans('usuario')))
+                ->add('IdEstablecimiento', null, array('label' => $this->getTranslator()->trans('Establecimiento')))
                 //->add('esFusionado', null, array('label' => $this->getTranslator()->trans('fusion.es_fusionado')))
-                ->add('esCatalogo', null, array('label' => $this->getTranslator()->trans('es_catalogo')))
-                ->add('sentenciaSql', null, array('label' => $this->getTranslator()->trans('sentencia_sql'),
-                    'template'=>'IndicadoresBundle:CRUD:list_sentencia_sql.html.twig'))
-                ->add('archivoNombre', null, array('label' => $this->getTranslator()->trans('archivo_asociado')))
+                //->add('esCatalogo', null, array('label' => $this->getTranslator()->trans('es_catalogo')))
+                /*->add('sentenciaSql', null, array('label' => $this->getTranslator()->trans('sentencia_sql'),
+                    'template'=>'IndicadoresBundle:CRUD:list_sentencia_sql.html.twig'))*/
+                //->add('archivoNombre', null, array('label' => $this->getTranslator()->trans('archivo_asociado2')))
 				
-				->add('ultima_lectura', 'string', array('label' => $this->getTranslator()->trans('_ultima_actualizacion_')))				       			          				
-                ->add('_action', 'actions', array(
-                    'actions' => array(
-                        'load_data' => array('template' => 'IndicadoresBundle:OrigenDatosAdmin:list__action_load_data.html.twig')
-                    )
-                ))
+		//		->add('ultima_lectura', 'string', array('label' => $this->getTranslator()->trans('_ultima_actualizacion_')))				       			          				
+                //->add('_action', 'actions', array(
+                //    'actions' => array(
+                //        'load_data' => array('template' => 'IndicadoresBundle:OrigenDatosAdmin:list__action_load_data.html.twig')
+                //    )
+                //))
         ;
     }
 
     public function validate(ErrorElement $errorElement, $object)
     {
-        if ($object->getEsFusionado() == false) {
-            if ($object->file == '' and $object->getArchivoNombre() == '' and $object->getSentenciaSql() == '') {
-                $errorElement->with('sentenciaSql')
-                        ->addViolation($this->getTranslator()->trans('validacion.sentencia_o_archivo'))
-                        ->end();
-            }
-            if ($object->file != '' and $object->getSentenciaSql() != '') {
-                $errorElement->with('sentenciaSql')
-                        ->addViolation($this->getTranslator()->trans('validacion.sentencia_o_archivo_no_ambas'))
-                        ->end();
-            }
-            if ($object->getSentenciaSql() != '' and count($object->getConexiones()) == 0) {
-                $errorElement->with('conexiones')
-                        ->addViolation($this->getTranslator()->trans('validacion.requerido'))
-                        ->end();
-            }
+        
+        
+        $piecesURL = explode("/", $_SERVER['REQUEST_URI']);
+        $pieceAction = $piecesURL[count($piecesURL) - 1]; // create or update
+        $pieceId = $piecesURL[count($piecesURL) - 2]; // id/edit
+         
+        $obj = new \MINSAL\IndicadoresBundle\Entity\UsuarioEstablecimiento;
+         
+        $rowsRD = $this->getModelManager()->findBy('IndicadoresBundle:UsuarioEstablecimiento',
+        		array('id' => $object->getId()));
+        
+        if (strpos($pieceAction,'create') !== false) // entra cuando es ALTA
+        {
+        	if (count($rowsRD) > 0){
+        		$errorElement
+        		->with('codigo')
+        		->addViolation($this->getTranslator()->trans('registro existente, no se puede duplicar'))
+        		->end();
+        	}
         }
-        // Revisar la validación, no me reconoce los archivos con los tipos que debería
-        /*
-         * 'application/octet-stream',
-          'text/comma-separated-values',
-          'application/zip',
-          'text/x-c++'
-         */
-        /* $errorElement
-          ->with('file')
-          ->assertFile(array(
-          'mimeTypes' => array("application/vnd.ms-excel",
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          'text/csv','application/vnd.oasis.opendocument.spreadsheet',
-          'application/vnd.ms-office'
-          )))
-          ->end()
-          ; */
-
-        return true;
+        else // entra cuando es EDICION
+        {
+        	if (count($rowsRD) > 0){
+        		$obj = $rowsRD[0];
+        		if ($obj->getId() != $pieceId)
+        		{
+        			$errorElement
+        			->with('codigo')
+        			->addViolation($this->getTranslator()->trans('registro existente, no se puede duplicar'))
+        			->end();
+        		}
+        	}
+        }
     }
 
     public function getBatchActions()
@@ -123,10 +124,10 @@ class OrigenDatosAdmin extends Admin
         //$actions = parent::getBatchActions();
         $actions = array();
 
-        $actions['load_data'] = array(
-            'label' => $this->trans('action_load_data'),
-            'ask_confirmation' => false // If true, a confirmation will be asked before performing the action
-        );
+        //$actions['load_data'] = array(
+        //    'label' => $this->trans('action_load_data'),
+        //    'ask_confirmation' => false // If true, a confirmation will be asked before performing the action
+        //);
 		/*$actions['ultima_lectura'] = array(
             'label' => $this->trans('_ultima_actualizacion_'),
             'ask_confirmation' => false // If true, a confirmation will be asked before performing the action
@@ -134,11 +135,11 @@ class OrigenDatosAdmin extends Admin
         $actions['merge'] = array(
             'label' => $this->trans('action_merge'),
             'ask_confirmation' => true // If true, a confirmation will be asked before performing the action
-        );
+        );*/
         $actions['crear_pivote'] = array(
             'label' => $this->trans('crear_pivote'),
             'ask_confirmation' => true // If true, a confirmation will be asked before performing the action
-        );*/
+        );
 
         return $actions;
     }
@@ -147,10 +148,10 @@ class OrigenDatosAdmin extends Admin
     {
         switch ($name) {
             case 'edit':
-                return 'IndicadoresBundle:CRUD:origen_dato-edit.html.twig';
+                return 'IndicadoresBundle:CRUD:usuario_establecimiento-edit.html.twig';
                 break;
-			case 'list':
-                return 'IndicadoresBundle:CRUD:origen_dato-list.html.twig';
+		case 'list':
+                return 'IndicadoresBundle:CRUD:usuario_establecimiento-list.html.twig';
                 break;
             default:
                 return parent::getTemplate($name);
@@ -160,49 +161,26 @@ class OrigenDatosAdmin extends Admin
 
     public function prePersist($origenDato)
     {
-        $this->saveFile($origenDato);
-        $this->setNombreCatalogo($origenDato);
+        $valor=$origenDato;
+        //$this->saveFile($origenDato);
+        //$this->setNombreCatalogo($origenDato);
 
-        $this->guardarDrescripcion($origenDato);
+        //$this->guardarDrescripcion($origenDato);
     }
 
     public function preUpdate($origenDato)
     {
-        $this->saveFile($origenDato);
-        $this->guardarDrescripcion($origenDato);
-        $this->setNombreCatalogo($origenDato);
+        $valor=$origenDato;
+        //$this->saveFile($origenDato);
+        //$this->guardarDrescripcion($origenDato);
+        //$this->setNombreCatalogo($origenDato);
     }
 
-    public function setNombreCatalogo($origenDato)
-    {
-        if ($origenDato->getEsCatalogo()) {
-            // replace all non letters or digits by -
-            $util = new \MINSAL\IndicadoresBundle\Util\Util();
-            $origenDato->setNombreCatalogo('ctl_' . $util->slug($origenDato->getNombre()));
-        }
-    }
 
-    public function guardarDrescripcion($origenDato)
-    {
-        if ($origenDato->getEsFusionado()) {
-            $origenes_fusionados = '';
-            foreach ($origenDato->getFusiones() as $origen) {
-                $origenes_fusionados .= $origen->getNombre() . ', ';
-            }
-            $origenes_fusionados = trim($origenes_fusionados, ', ');
 
-            $nueva_descripcion = $this->getTranslator()->trans('fusion.fusiona_siguientes_origenes') .
-                    $origenes_fusionados;
-            if (strpos($origenDato->getDescripcion(), $nueva_descripcion) === false)
-                $origenDato->setDescripcion(trim($origenDato->getDescripcion() . '. ' . $nueva_descripcion, '. '));
-        }
-    }
 
-    public function saveFile($origenDato)
-    {
-        $basepath = $this->getRequest()->getBasePath();
-        $origenDato->upload($basepath);
-    }
+
+
 
     protected function configureRoutes(RouteCollection $collection)
     {

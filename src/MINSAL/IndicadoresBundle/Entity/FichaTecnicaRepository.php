@@ -65,7 +65,7 @@ class FichaTecnicaRepository extends EntityRepository
                         $tipo = $campo->getTipoCampo()->getCodigo();
                         $sig = $campo->getSignificado()->getCodigo();
                         $sql .= $sig . ' ' . $tipo . ', ';
-                        if (in_array($sig, $campos_pivote))
+                       if (in_array($sig, $campos_pivote))
                             $pivote[$sig] = $tipo;
                         else
                             $campos_regulares[$sig] = $tipo;
@@ -83,7 +83,8 @@ class FichaTecnicaRepository extends EntityRepository
             }
             //Crear la estructura de la tabla asociada a la variable
             $tabla = strtolower($variable->getIniciales());
-            $sql .= ' CREATE TEMP TABLE IF NOT EXISTS ' . $tabla . '(';
+	    $sql .= ' DROP TABLE IF EXISTS ' . $tabla . '; ';
+            $sql .= ' CREATE TEMP  TABLE IF NOT EXISTS ' . $tabla . '(';
 
             if ($origen->getEsFusionado()) {
                 $significados = explode(",", str_replace("'", '', $origen->getCamposFusionados()));
@@ -126,12 +127,15 @@ class FichaTecnicaRepository extends EntityRepository
                         $origenes[] = $of->getId();
                 else
                     $origenes[] = $origen->getId();
-                $sql .= "INSERT INTO $tabla
+                $sql .= "DELETE FROM $tabla;
+	            INSERT INTO $tabla
                     SELECT (populate_record(null::$tabla, datos)).*
                     FROM fila_origen_dato
                         WHERE id_origen_dato IN (" . implode(',', $origenes) . ")
                     ;";
             }
+	    
+	    
             //Obtener los campos que son calculados
             $campos_calculados = array();
             foreach ($origen->getCamposCalculados() as $campo) {
@@ -151,7 +155,7 @@ class FichaTecnicaRepository extends EntityRepository
             //Obtener solo los datos que se pueden procesar en el indicador
             $sql .= "DROP TABLE IF EXISTS $tabla" . "_var; ";
             $sql .= "SELECT  $campos, SUM(calculo::numeric) AS  $tabla $campos_calculados
-                INTO TEMP  $tabla" . "_var
+                INTO  TEMP $tabla" . "_var
                 FROM $tabla
                 GROUP BY $campos $campos_calculados_nombre
                 HAVING  SUM(calculo::numeric) > 0
@@ -172,6 +176,7 @@ class FichaTecnicaRepository extends EntityRepository
         if ($acumulado != true) {
             $sql .= $this->crearTablaIndicador($fichaTecnica, $tablas_variables);
         }
+	
         try {
             $em->getConnection()->exec($sql);
             if ($acumulado == true)
@@ -277,12 +282,13 @@ class FichaTecnicaRepository extends EntityRepository
         $sufijoTablas = 'var';
         if ($fichaTecnica->getEsAcumulado() == true)
             $sufijoTablas = 'var_acum';
+	
         $sql .= 'SELECT  ' . $campos . ',' . implode(',', $tablas_variables) .
                 " INTO tmp_ind_" . $nombre_indicador . " FROM  " . array_shift($tablas_variables) . '_' . $sufijoTablas . ' ';
         foreach ($tablas_variables as $tabla) {
             $sql .= " FULL OUTER JOIN " . $tabla . "_" . $sufijoTablas . " USING ($campos) " . $evitar_div_0;
         }
-
+	
         return $sql;
     }
 

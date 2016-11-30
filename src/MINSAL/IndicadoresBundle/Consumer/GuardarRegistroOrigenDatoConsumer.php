@@ -96,11 +96,13 @@ class GuardarRegistroOrigenDatoConsumer implements ConsumerInterface
                     $sql = "INSERT INTO fila_origen_dato SELECT * FROM fila_origen_dato_aux WHERE id_origen_dato='$msg[id_origen_dato]';
                         DELETE FROM fila_origen_dato_aux WHERE id_origen_dato='$msg[id_origen_dato]' ;
                         ";
+		echo 'carga_incremental';
                 } else {
                     $sql = "DELETE FROM fila_origen_dato WHERE id_origen_dato='$msg[id_origen_dato]'  ;
                         INSERT INTO fila_origen_dato SELECT * FROM fila_origen_dato_aux WHERE id_origen_dato='$msg[id_origen_dato]';
                         DELETE FROM fila_origen_dato_aux WHERE id_origen_dato='$msg[id_origen_dato]' ;
                         ";
+		echo 'SIN CARGA INCREMENTAL '. $sql;
                 }
 
                 $this->em->getConnection()->exec($sql);
@@ -129,11 +131,11 @@ class GuardarRegistroOrigenDatoConsumer implements ConsumerInterface
                         $this->em->persist($ind);
                         $this->em->flush();
 
-                        $fichaTec = $this->em->find('IndicadoresBundle:FichaTecnica', $ind->getId());
-                        $fichaRepository = $this->em->getRepository('IndicadoresBundle:FichaTecnica');
-                        $fichaRepository->crearCamposIndicador($fichaTec);
-                        if (!$fichaTec->getEsAcumulado())
-                            $fichaRepository->crearIndicador($fichaTec);
+                        //$fichaTec = $this->em->find('IndicadoresBundle:FichaTecnica', $ind->getId());
+                        //$fichaRepository = $this->em->getRepository('IndicadoresBundle:FichaTecnica');
+                        //$fichaRepository->crearCamposIndicador($fichaTec);
+                        //if (!$fichaTec->getEsAcumulado())
+                         //   $fichaRepository->crearIndicador($fichaTec);
                     }
                 }
 

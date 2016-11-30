@@ -9,6 +9,38 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class FichaTecnicaAdminController extends Controller
 {
+
+public function bloqueo($em, $IdEstablecimiento, $periodo, $m) {
+        //$objID1->setIdEstablecimiento($estP);
+        //$objID1->setIdVariablePeriodo($campo['id']);
+        //$objID1->setPeriodo($periodo);
+        //$objID1->setMes($m);
+        //$em = $this->getDoctrine()->getManager();//
+        $sql = 'SELECT vp.idIndicadorb
+              FROM IndicadoresBundle:IndicadorB vp 
+              WHERE  vp.idEstablecimiento = :pidEstablecimiento AND vp.periodo= :pperiodo
+              AND vp.mes = :pmes';
+
+        //$sql="SELECT vp.id  FROM IndicadoresBundle:VariablehPeriodo vp ";
+        //$sql="SELECT id.m1 as Ene FROM IndicadoresBundle:IndicadorhDetalle id";
+        $query = $em->createQuery($sql);
+        $query->setParameter('pperiodo', $periodo);
+        $query->setParameter('pidEstablecimiento', $IdEstablecimiento);
+        $query->setParameter('pmes', $m);
+        //$res= $query->getResult();
+        $Establecimiento = $query->getResult();
+        if (!$Establecimiento) {
+            return 'false';
+        } else {
+            return 'true';
+        }
+    }
+
+
+
+
+
+
     public function editAction($id = null)
     {
         $repo = $this->getDoctrine()->getManager()->getRepository('IndicadoresBundle:FichaTecnica');
@@ -63,13 +95,17 @@ class FichaTecnicaAdminController extends Controller
 		$i=0;
 		foreach ($usuarioSalas as $sala) {
 			$esduenio=$em->createQuery("SELECT u.esDuenio FROM IndicadoresBundle:UsuarioGrupoIndicadores u WHERE u.usuario='".$user->getId()."' and u.grupoIndicadores='".$sala->getId()."'")->getResult();
-			if($esduenio[0]["esDuenio"])
+			
+                       if(empty($esduenio)){
+                       }else{
+                        if($esduenio[0]["esDuenio"])
 			{
-            $salasXusuario[$i]['datos_sala'] = $sala;
-            $salasXusuario[$i]['indicadores_sala'] = $em->getRepository('IndicadoresBundle:GrupoIndicadores')
-                    ->getIndicadoresSala($sala);
-            $i++;
+                           $salasXusuario[$i]['datos_sala'] = $sala;
+                           $salasXusuario[$i]['indicadores_sala'] = $em->getRepository('IndicadoresBundle:GrupoIndicadores')
+                           ->getIndicadoresSala($sala);
+                           $i++;
 			}
+                     }
         }
 		
         //Salas asignadas al grupo al que pertenece el usuario

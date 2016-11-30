@@ -73,8 +73,8 @@ class AdminSecurityController extends SecurityController
             'last_username' => $lastUsername,
             'error'         => $error,
             'csrf_token'    => $csrfToken,
-            'base_template' => $this->container->get('sonata.admin.pool')->getTemplate('layout'),
-            'admin_pool'    => $this->container->get('sonata.admin.pool')
+            'base_template' => $this->container->get('sonata.admin.pool')->getTemplate('layout')
+           ,'admin_pool'    => $this->container->get('sonata.admin.pool')
         ));
     }
 }

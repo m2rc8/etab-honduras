@@ -6,7 +6,7 @@
     </parameters>
     <services>
 	
-		<service id="sonata.admin.fuente_dato" class="MINSAL\IndicadoresBundle\Admin\FuenteDatoAdmin">
+        <service id="sonata.admin.fuente_dato" class="MINSAL\IndicadoresBundle\Admin\FuenteDatoAdmin">
             <tag name="sonata.admin" 
                  manager_type="orm" 
                  group="catalogos" 
@@ -15,9 +15,11 @@
             <argument />
             <argument>MINSAL\IndicadoresBundle\Entity\FuenteDato</argument>
             <argument>SonataAdminBundle:CRUD</argument>
-            <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
+            <call method="setMaxPerPage">
+                <argument>%admin_max_per_page_number%</argument>
+            </call>
         </service>
-		
+        		
         <service id="sonata.admin.responsable_dato" class="MINSAL\IndicadoresBundle\Admin\ResponsableDatoAdmin">
             <tag name="sonata.admin" 
                  manager_type="orm" 
@@ -29,7 +31,7 @@
             <argument>SonataAdminBundle:CRUD</argument>
             <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
         </service>                
-        
+        <!-- USUARIO INDICADORES-->
         <service id="sonata.admin.responsable_indicador" class="MINSAL\IndicadoresBundle\Admin\ResponsableIndicadorAdmin">
             <tag name="sonata.admin" 
                  manager_type="orm" 
@@ -41,7 +43,30 @@
             <argument>SonataAdminBundle:CRUD</argument>
             <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
         </service>
-
+        <!-- INDICADORES INICIALES-->
+        <service id="sonata.admin.responsable_indicador1" class="MINSAL\IndicadoresBundle\Admin\VariablePeriodoAdmin">
+            <tag name="sonata.admin" 
+                 manager_type="orm" 
+                 group="catalogos" 
+                 label="indicadores_generales-eTAB"
+            />
+            <argument />
+            <argument>MINSAL\IndicadoresBundle\Entity\VariablePeriodo</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
+            <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
+        </service>
+        <!-- INDICADORES HOSPITAL-->
+        <service id="sonata.admin.responsable_indicador2" class="MINSAL\IndicadoresBundle\Admin\VariablehPeriodoAdmin">
+            <tag name="sonata.admin" 
+                 manager_type="orm" 
+                 group="catalogos" 
+                 label="indicadores_hospital-eTAB"
+            />
+            <argument />
+            <argument>MINSAL\IndicadoresBundle\Entity\VariablehPeriodo</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
+            <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
+        </service>
         <service id="sonata.admin.clasificacion_tecnica" class="MINSAL\IndicadoresBundle\Admin\ClasificacionTecnicaAdmin">
             <tag name="sonata.admin" 
                  manager_type="orm" 
@@ -62,6 +87,28 @@
             />
             <argument />
             <argument>MINSAL\IndicadoresBundle\Entity\ClasificacionPrivacidad</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
+            <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
+        </service>
+  <service id="sonata.admin.clasificacion_tecnicam" class="MINSAL\IndicadoresBundle\Admin\ClasificacionTecnicamAdmin">
+            <tag name="sonata.admin"
+                 manager_type="orm"
+                 group="catalogos"
+                 label="Matriz de Seguimiento Clasificación"
+            />
+            <argument />
+            <argument>MINSAL\IndicadoresBundle\Entity\ClasificacionTecnicam</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
+            <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
+        </service>
+          <service id="sonata.admin.clasificacion_tecnicai" class="MINSAL\IndicadoresBundle\Admin\ClasificacionTecnicaiAdmin">
+            <tag name="sonata.admin"
+                 manager_type="orm"
+                 group="catalogos"
+                 label="Matriz Seguimiento Indicadores"
+            />
+            <argument />
+            <argument>MINSAL\IndicadoresBundle\Entity\ClasificacionTecnicai</argument>
             <argument>SonataAdminBundle:CRUD</argument>
             <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
         </service>
@@ -197,6 +244,17 @@
             />
             <argument />
             <argument>MINSAL\IndicadoresBundle\Entity\IndicadorAlertas</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
+            <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
+        </service>
+        <service id="sonata.admin.indicador_alertasseg" class="MINSAL\IndicadoresBundle\Admin\IndicadorAlertassegAdmin">
+            <tag name="sonata.admin"
+                 manager_type="orm"
+                 group="indicadores"
+                 label="indicador_alertasseg-eTAB"
+            />
+            <argument />
+            <argument>MINSAL\IndicadoresBundle\Entity\IndicadorAlertasseg</argument>
             <argument>SonataAdminBundle:CRUD</argument>
             <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
         </service>

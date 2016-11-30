@@ -83,7 +83,7 @@ file that was distributed with this source code.
         {% endblock %}
 
         <title>
-            eTAB
+            eTAB2d
             {#{{ 'Admin'|trans({}, 'SonataAdminBundle') }}
 
             {% if _title is not empty %}
@@ -130,6 +130,9 @@ file that was distributed with this source code.
       <!-- inicio menu -->
       {% if admin_pool is defined %}
 	  {% set a = 0 %}
+           <!--USUARIO ESTABLECIMIENTO -->
+           {% set ab = 0 %}
+            <!--FIN USUARIO ESTABLECIMIENTO -->
       {# MENU PRINCIPAL #}
         {% block top_bar_before_nav %} {% endblock %}
         {% block sonata_top_bar_nav %}
@@ -151,6 +154,9 @@ file that was distributed with this source code.
                                 or (admin.hasroute('cubos') and is_granted('ROLE_USER_CUBOS'))
                             %}
                                 {% set item_count = item_count+1 %}
+                                <!-- USUARIO ESTABLECIMIENTO -->
+                                {% set ab = ab+1 %}
+                                 <!--FIN USUARIO ESTABLECIMIENTO -->
                             {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -159,7 +165,11 @@ file that was distributed with this source code.
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ group.label|trans }} <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                            	
+                            	<!--USUARIO ESTABLECIMIENTO-->
+                            {% if ab==1  and group.label  == 'catalogos'%}
+                                <li><a href="{{ path('_ue') }}">Usuarios Establecimiento</a></li>
+                            {% endif %}
+                            <!--FIN USUARIO ESTABLECIMIENTO -->
                                 {% for admin in group.items %}
                                     {% if admin.hasroute('list') and admin.isGranted('LIST') %}
                                         <li><a href="{{ admin.generateUrl('list')}}">{{ admin.label|trans }}</a></li>
@@ -179,6 +189,23 @@ file that was distributed with this source code.
                     {% endif %}
 
                 {% endfor %}
+                     <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Captura de datos<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                    <li><a href="{{ path('_inicio') }}forn">FormWeb Gestores</a></li>
+                    <li><a href="{{ path('_inicio') }}fornh">FormWeb Hospitales</a></li>
+                    </ul>
+                    </li>
+<li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reportes<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('_inicio') }}reporte">Reporte - Gestores Variables</a></li>
+			    <li><a href="{{ path('_inicio') }}reporte">Reporte - Hospitales Variables</a></li>
+                            <li><a href="{{ path('_inicio') }}matriz">Mapa de Calor</a></li>
+ <li><a href="{{ path('_inicio') }}matrizdos">Matriz de Seguimiento</a></li>
+</ul>
+                    </li>
+
             {% endif %}
         {% endblock %}
         {% block top_bar_after_nav %} {% endblock %}

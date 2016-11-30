@@ -8,9 +8,22 @@
     </div>
         <div class="collapse navbar-collapse" id="collapseTwo">
             
-            <a href='#myModalSalas' class="btn dropdown-toggle btn-primary navbar-btn" data-toggle="modal" >
+	    <a href="{{ path('_inicio') }}forn" 
+	    style="background-color: Orange"
+	    class="btn dropdown-toggle btn-primary navbar-btn"  >
+                <i class="glyphicon glyphicon-th-list"></i> <span class="hidden-xs">FormWeb Gestores</span>
+            </a>
+
+           <a href="{{ path('_inicio') }}fornh" 
+		style="background-color: Red"
+	        class="btn dropdown-toggle btn-primary navbar-btn"  >
+                <i class="glyphicon glyphicon-th-list"></i> <span class="hidden-xs">FormWeb Hospitales</span>
+            </a>
+            
+	    <a href='#myModalSalas' class="btn dropdown-toggle btn-primary navbar-btn" data-toggle="modal" >
                 <i class="glyphicon glyphicon-th-large"></i> <span class="hidden-xs">{{'_sala_'|trans}}</span>
             </a>
+                 
             
             <a class="btn dropdown-toggle btn-success navbar-btn" href="#myModalMenu" data-toggle="modal" id="mimodal" >
                 <i class="glyphicon glyphicon-flag"></i> <span class="hidden-xs">{{"indicadores"|trans}}</span>
@@ -23,6 +36,7 @@
             <a class="btn btn-warning" title="{{'_cerrar_sala_'|trans}}" id="_cerrar_sala_" style="display:none">
                 <i class="fa fa-times"></i> <span class="hidden-xs">{{"_cerrar_sala_"|trans}}</span>
             </a>
+            
         </div>
     </div>
 </nav>
