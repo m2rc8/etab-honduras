@@ -886,6 +886,7 @@ public function fornpfichaTres($param, $pperiodo) {
         $fechaDesde = "01-" . $parametros[3];
         $fechaDesdeo = $parametros[3];
         $fechaHasta = "01-" . $parametros[4];
+        $matrizReporte = $parametros[5];
 
         $datetime1 = new \DateTime($fechaDesde);
         $anio1 = $datetime1->format('Y');
@@ -923,8 +924,9 @@ FROM variable_periodo vp
                 left join   clasificacion_tecnica ct on (fc.clasificaciontecnica_id = ct.id)
                 order by ct.id ";
         $sql = "select distinct descripcion, id
-                from clasificacion_tecnicam
-                order by id"; //TODOS LOS TIPOS, DE LOS INDICADORES
+                from clasificacion_tecnicam " .
+                "where matriz_id = " .$matrizReporte . 
+                " order by id"; //TODOS LOS TIPOS, DE LOS INDICADORES
         $stmt = $em->getConnection()->prepare($sql);
         $stmt->execute();
         //$Establecimiento = $stmt->fetchAll();
@@ -1444,8 +1446,8 @@ FROM variable_periodo vp
                     array_push($indicadorFinal, $v3);
                     //ENE
 
-                    $v01 = (int) $var2['ene'];
-                    $v02 = (int) $vars3[0]['meta'];
+                    $v01 = ceil($var2['ene']);
+                    $v02 = ceil($vars3[0]['meta']);
                     $ene = ($v01 / $v02) * 100;
                     $sql2 = " Select " .
                             "CASE WHEN id_color_alerta = 1 then 'verde'  " .
@@ -1463,8 +1465,8 @@ FROM variable_periodo vp
                     $enecolor = $temp_2[0]['color'];
 
                     //FEB
-                    $v01 = (int) $var2['feb'];
-                    $v02 = (int) $vars3[0]['meta'];
+                    $v01 = ceil($var2['feb']);
+                    $v02 = ceil($vars3[0]['meta']);
                     $feb = ($v01 / $v02) * 100;
                     $sql2 = " Select " .
                             "CASE WHEN id_color_alerta = 1 then 'verde'  " .
@@ -1483,8 +1485,8 @@ FROM variable_periodo vp
 
 
                     //MAR
-                    $v01 = (int) $var2['mar'];
-                    $v02 = (int) $vars3[0]['meta'];
+                    $v01 = ceil($var2['mar']);
+                    $v02 = ceil($vars3[0]['meta']);
                     $mar = ($v01 / $v02) * 100;
                     $sql2 = " Select " .
                             "CASE WHEN id_color_alerta = 1 then 'verde'  " .
@@ -1501,8 +1503,8 @@ FROM variable_periodo vp
                     $temp_2 = $stmt2->fetchAll();
                     $marcolor = $temp_2[0]['color'];
                     //ABR
-                    $v01 = (int) $var2['abr'];
-                    $v02 = (int) $vars3[0]['meta'];
+                    $v01 = ceil($var2['abr']);
+                    $v02 = ceil($vars3[0]['meta']);
                     $abr = ($v01 / $v02) * 100;
                     $sql2 = " Select " .
                             "CASE WHEN id_color_alerta = 1 then 'verde'  " .
@@ -1519,8 +1521,8 @@ FROM variable_periodo vp
                     $temp_2 = $stmt2->fetchAll();
                     $abrcolor = $temp_2[0]['color'];
                     //MAY
-                    $v01 = (int) $var2['may'];
-                    $v02 = (int) $vars3[0]['meta'];
+                    $v01 = ceil($var2['may']);
+                    $v02 = ceil($vars3[0]['meta']);
                     $may = ($v01 / $v02) * 100;
                     $sql2 = " Select " .
                             "CASE WHEN id_color_alerta = 1 then 'verde'  " .
@@ -1537,8 +1539,8 @@ FROM variable_periodo vp
                     $temp_2 = $stmt2->fetchAll();
                     $maycolor = $temp_2[0]['color'];
                     //JUN
-                    $v01 = (int) $var2['jun'];
-                    $v02 = (int) $vars3[0]['meta'];
+                    $v01 = ceil($var2['jun']);
+                    $v02 = ceil($vars3[0]['meta']);
                     $jun = ($v01 / $v02) * 100;
                     $sql2 = " Select " .
                             "CASE WHEN id_color_alerta = 1 then 'verde'  " .
@@ -1558,8 +1560,8 @@ FROM variable_periodo vp
 
 
                     //JUL
-                    $v01 = (int) $var2['jul'];
-                    $v02 = (int) $vars3[0]['meta'];
+                    $v01 = ceil($var2['jul']);
+                    $v02 = ceil($vars3[0]['meta']);
                     $jul = ($v01 / $v02) * 100;
                     $sql2 = " Select " .
                             "CASE WHEN id_color_alerta = 1 then 'verde'  " .
@@ -1577,8 +1579,8 @@ FROM variable_periodo vp
                     $julcolor = $temp_2[0]['color'];
 
                     //AGO
-                    $v01 = (int) $var2['ago'];
-                    $v02 = (int) $vars3[0]['meta'];
+                    $v01 =  ceil($var2['ago']);
+                    $v02 = ceil($vars3[0]['meta']);
                     $ago = ($v01 / $v02) * 100;
                     $sql2 = " Select " .
                             "CASE WHEN id_color_alerta = 1 then 'verde'  " .
@@ -1596,8 +1598,8 @@ FROM variable_periodo vp
                     $agocolor = $temp_2[0]['color'];
 
                     //SEP
-                    $v01 = (int) $var2['sep'];
-                    $v02 = (int) $vars3[0]['meta'];
+                    $v01 = ceil($var2['sep']);
+                    $v02 = ceil($vars3[0]['meta']);
                     $sep = ($v01 / $v02) * 100;
                     $sql2 = " Select " .
                             "CASE WHEN id_color_alerta = 1 then 'verde'  " .
@@ -1616,8 +1618,8 @@ FROM variable_periodo vp
 
 
                     //OCT
-                    $v01 = (int) $var2['oct'];
-                    $v02 = (int) $vars3[0]['meta'];
+                    $v01 = ceil($var2['oct']);
+                    $v02 = ceil($vars3[0]['meta']);
                     $oct = ($v01 / $v02) * 100;
                     $sql2 = " Select " .
                             "CASE WHEN id_color_alerta = 1 then 'verde'  " .
@@ -1638,8 +1640,8 @@ FROM variable_periodo vp
 
 
                     //NOV
-                    $v01 = (int) $var2['nov'];
-                    $v02 = (int) $vars3[0]['meta'];
+                    $v01 = ceil($var2['nov']);
+                    $v02 = ceil($vars3[0]['meta']);
                     $nov = ($v01 / $v02) * 100;
                     $sql2 = " Select " .
                             "CASE WHEN id_color_alerta = 1 then 'verde'  " .
@@ -1658,8 +1660,8 @@ FROM variable_periodo vp
 
 
                     //DIC
-                    $v01 = (int) $var2['dic'];
-                    $v02 = (int) $vars3[0]['meta'];
+                    $v01 = ceil($var2['dic']);
+                    $v02 = ceil($vars3[0]['meta']);
                     $dic = ($v01 / $v02) * 100;
                     $sql2 = " Select " .
                             "CASE WHEN id_color_alerta = 1 then 'verde'  " .
@@ -1836,8 +1838,9 @@ public function fornpfichatresAction($param) {
                 $temp['12-' . strval($periodo)] = $indicador['12-' . strval($periodo)];
                 array_push($indicadorFinal3, $temp);
             }
-            if (empty($indicadorFinal4)) {
-                $indicadorFinal4 = $indicadorFinal3;
+            if (!$indicadorFinal4) {
+                //$indicadorFinal4 ='false';//$indicadorFinal3;
+                $indicadorFinal4 =$indicadorFinal3;
             } else {
                
                 $temp2=array();
@@ -1860,6 +1863,12 @@ public function fornpfichatresAction($param) {
         }
 
         $response = new JsonResponse();
+         if (count($indicadorFinal4)<2) {
+                $indicadorFinal4 ='false';//$indicadorFinal3;
+                //$indicadorFinal4 =$indicadorFinal3;
+            }  
+
+
         $response->setData(array('message' => $indicadorFinal4,
             'desde' => $fechaDesdeo,
             'mes' => $per[0],
@@ -4331,6 +4340,7 @@ $sql='SELECT Distinct(ue.idEstablecimiento) AS IDE,
     {
         $em = $this->getDoctrine()->getManager();
         $clasificacionUso = $em->getRepository("IndicadoresBundle:ClasificacionUso")->findAll();
+        $matrizReporte = $em->getRepository("IndicadoresBundle:Matriz")->findAll();
         //$Establecimiento = $em->getRepository("IndicadoresBundle:Establecimiento")->findAll();
         //Luego agregar un método para obtener la clasificacion de uso por defecto del usuario
         $usuario = $this->getUser();
@@ -4491,6 +4501,7 @@ $sql='SELECT Distinct(ue.idEstablecimiento) AS IDE,
                     'establecimiento'=>$Establecimiento,
                     'categorias' => $categorias_indicador,
                     'clasificacionUso' => $clasificacionUso,
+                    'matrizReporte' => $matrizReporte,
                     'salas' => $salas,
 					'salasXusuario' => $salasXusuario,
 					'salasXgrupo' => $salasXgrupo,

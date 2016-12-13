@@ -8,7 +8,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Form\FormMapper;
 
-class ClasificacionTecnicamAdmin extends Admin
+class MatrizAdmin extends Admin
 {
     protected $datagridValues = array(
         '_page' => 1, // Display the first page (default = 1)
@@ -19,12 +19,8 @@ class ClasificacionTecnicamAdmin extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('codigo', null, array('label'=> $this->getTranslator()->trans('codigo')))
             ->add('descripcion', null, array('label'=> $this->getTranslator()->trans('descripcion')))
-            ->add('comentario', 'textarea', array('required'=>false, 'label'=> $this->getTranslator()->trans('comentario')))
-            ->add('matriz', null, array('required'=>true, 'label'=> $this->getTranslator()->trans('matriz reportes')))
-           
-
+             
         ;
     }
 
@@ -49,16 +45,16 @@ class ClasificacionTecnicamAdmin extends Admin
     	$pieceAction = $piecesURL[count($piecesURL) - 1]; // create or update
     	$pieceId = $piecesURL[count($piecesURL) - 2]; // id/edit
     	 
-    	$obj = new \MINSAL\IndicadoresBundle\Entity\ClasificacionTecnicam;
+    	$obj = new \MINSAL\IndicadoresBundle\Entity\Matriz;
     	 
-    	$rowsRD = $this->getModelManager()->findBy('IndicadoresBundle:ClasificacionTecnicam',
-    			array('codigo' => $object->getCodigo()));
+    	$rowsRD = $this->getModelManager()->findBy('IndicadoresBundle:Matriz',
+    			array('descripcion' => $object->getDescripcion()));
     
     	if (strpos($pieceAction,'create') !== false) // entra cuando es ALTA
     	{
     		if (count($rowsRD) > 0){
     			$errorElement
-    			->with('codigo')
+    			->with('descripcion')
     			->addViolation($this->getTranslator()->trans('registro existente, no se puede duplicar'))
     			->end();
     		}
@@ -70,7 +66,7 @@ class ClasificacionTecnicamAdmin extends Admin
     			if ($obj->getId() != $pieceId)
     			{
     				$errorElement
-    				->with('codigo')
+    				->with('descripcion')
     				->addViolation($this->getTranslator()->trans('registro existente, no se puede duplicar'))
     				->end();
     			}

@@ -19,6 +19,7 @@ class ClasificacionTecnicaiAdmin extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
+         ->with($this->getTranslator()->trans('_datos_generales_'))
             ->add('codigo', null, array('label'=> $this->getTranslator()->trans('codigo')))
             ->add('descripcion', null, array('label'=> $this->getTranslator()->trans('descripcion')))
             ->add('descripcionm', null, array('label'=> $this->getTranslator()->trans('descripcion en Matriz')))
@@ -29,7 +30,23 @@ class ClasificacionTecnicaiAdmin extends Admin
            'choices'  => array('Planificacion'=>'Planificacion','Produccion'=>'Produccion'),
            'multiple' => false, 'empty_value' => 'Seleccione valor'))
             ->add('ficha', null, array('empty_value' => 'Valor planificacion','required'=>false, 'label'=> $this->getTranslator()->trans('Ficha')))
-          ;  
+            ->end()
+->with($this->getTranslator()->trans('alertas'))
+                ->add('alertas', 'sonata_type_collection', 
+				array(				
+                    'label' => $this->getTranslator()->trans('alertas'),
+                    'required' => true), 
+				array(
+					'class'=>'form-control',
+                    'edit' => 'inline',
+                    'inline' => 'table',
+                    'sortable' => 'position'									
+                ))
+                ->end()
+
+
+
+;   
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)

@@ -335,7 +335,8 @@
                         Est + "&&" +
                         gest + "&&" +
                         $("#datetimepicker11").val() + "&&" +
-                        $("#datetimepicker22").val() +
+                        $("#datetimepicker22").val() + "&&" +
+                        $.trim($('#ddl04rm option:selected').val()) +
                         "/";
          
                 url = "/reporterexceltres/" + param;
@@ -396,7 +397,8 @@
                         Est + "&&" +
                         gest + "&&" +
                         $("#datetimepicker11").val() + "&&" +
-                        $("#datetimepicker22").val() +
+                        $("#datetimepicker22").val() + "&&" +
+                        $.trim($('#ddl04rm option:selected').val()) +
                         "/";
                 url = "/fornpfichatres/" + param;
                 $.ajax({
@@ -456,9 +458,10 @@
                                                 td.style.readonly = 'readonly';
                                                 td.style.fontWeight = 'bold';
                                                 cellProperties.readOnly = true;
-                                                //resP[row]['descripcion'] = '';
+                                                resP[row]['descripcion'] = '';
                                                 resP[row]['id'] = '';
                                             }
+
                                             if (resP[row]['tipo'] == 'Planificado') {
                                                 td.style.readonly = 'readonly';
                                                 //td.style.fontWeight = 'bold';
@@ -475,10 +478,10 @@
 
                                         //td.style.backgroundColor= '#ffffff';
                                           if (col >= 3) {
-                                             
-                                            var nomCol = "c-" + Tit[col];  
-                                            if (resP[row][nomCol] != null) { 
-                                                //alert(nomCol + " - :"+resP[row][nomCol]);
+                                            if (resP[row] != undefined) { 
+                                                var nomCol = "c-" + Tit[col];  
+                                                if (resP[row][nomCol] != null) { 
+                                                 //alert(nomCol + " - :"+resP[row][nomCol]);
                                             
                                                if (resP[row][nomCol] == 'verde') {
                                                   td.style.backgroundColor = '#70db70';
@@ -487,8 +490,10 @@
                                                }else if (resP[row][nomCol] == 'rojo') {
                                                  td.style.backgroundColor = '#ff4d4d';
                                                }
-                                            } 
+                                            }
+                                           } 
                                         }  
+
                                          
                                     }
                                     return cellProperties;
@@ -602,6 +607,7 @@ $('#btnGuardar').click(function (e) {
                     <tr>
                         <td style="width: 5%;">
                         </td>
+                        <td>  <label >MATRIZ REPORTES:</label></td> 
                         <td>  <label >DESDE:</label></td> 
                         <td style="width: 5%;">
                         </td>
@@ -609,7 +615,14 @@ $('#btnGuardar').click(function (e) {
                     </tr>
                     <tr>
                         <td style="width: 5%;">
-
+                        </td>
+                        <td style="width: 35%;">
+                            <select style="width: 95%; text-transform:uppercase; margin-bottom: 10px;" 
+                            name="ddl04rm" id="ddl04rm" >
+                                {% for entity in matrizReporte %}
+                                    <option value="{{ entity.id}}"> {{entity.descripcion}}</option>
+                                {% endfor%}
+                            </select>
                         </td>
                         <td><div class='input-group date' id='datetimepicker1'>
                                 <input type='text' class="form-control" id='datetimepicker11'/>
@@ -629,7 +642,7 @@ $('#btnGuardar').click(function (e) {
                     </tr>
                     <tr><td>
                         </td>
-                        <td >
+                        <td colspan="4">
                             <a class="btn dropdown-toggle btn-primary navbar-btn" href='#' id='btnCargar' name='btnCargar' >
                                 <i class="glyphicon glyphicon-cloud-download"></i> <span class="hidden-xs">Cargar</span>
                             </a>
@@ -699,8 +712,8 @@ $('#btnGuardar').click(function (e) {
              </div>
             <div id="sala" >
             </div>
-            <input type='text' class="form-control" id='titulo' name="titulo"/>
-            <input type='text' class="form-control" id='periodos' name="periodos"/>
+            <input type='hidden' class="form-control" id='titulo' name="titulo"/>
+            <input type='hidden' class="form-control" id='periodos' name="periodos"/>
         </form>
     </div>
 {% endblock %}

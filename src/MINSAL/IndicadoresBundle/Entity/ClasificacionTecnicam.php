@@ -42,7 +42,44 @@ class ClasificacionTecnicam
      *
      * @ORM\Column(name="comentario", type="text", nullable=true)
      */
-    private $comentario; 
+    private $comentario;
+
+ /**
+     *
+     * @var clasificacionUso
+     *
+     * @ORM\ManyToOne(targetEntity="Matriz")
+     * @ORM\OrderBy({"id" = "ASC"})
+     **/
+    private $matriz;
+
+/**
+     * Set matriz
+     *
+     * @param  \MINSAL\IndicadoresBundle\Entity\Matriz $matriz
+     * @return ClasificacionTecnicam
+     */
+    public function setMatriz(\MINSAL\IndicadoresBundle\Entity\Matriz $matriz)
+    {
+        $this->matriz = $matriz;
+
+        return $this;
+    }
+
+    /**
+     * Get matriz
+     *
+     * @return \MINSAL\IndicadoresBundle\Entity\Matriz
+     */
+    public function getMatriz()
+    {
+        return $this->matriz;
+    }
+  
+
+
+
+ 
 
     /**
      * Get id

@@ -90,6 +90,22 @@
             <argument>SonataAdminBundle:CRUD</argument>
             <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
         </service>
+
+
+<service id="sonata.admin.matriz" class="MINSAL\IndicadoresBundle\Admin\MatrizAdmin">
+            <tag name="sonata.admin"
+                 manager_type="orm"
+                 group="catalogos"
+                 label="Matriz de Reportes"
+            />
+            <argument />
+            <argument>MINSAL\IndicadoresBundle\Entity\Matriz</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
+            <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
+        </service>
+
+
+
   <service id="sonata.admin.clasificacion_tecnicam" class="MINSAL\IndicadoresBundle\Admin\ClasificacionTecnicamAdmin">
             <tag name="sonata.admin"
                  manager_type="orm"
