@@ -1,0 +1,11 @@
+1f8a60,::1,GET,http://localhost/etab-honuras-nuevo/web/app_dev.php/,1482207954,,302
+314f9a,::1,GET,http://localhost/etab-honuras-nuevo/web/app_dev.php/admin/login,1482207961,,200
+876d7b,::1,GET,http://localhost/etab-honuras-nuevo/web/app_dev.php/js/routing?callback=fos.Router.setData,1482207966,,200
+a160c5,::1,POST,http://localhost/etab-honuras-nuevo/web/app_dev.php/admin/login_check,1482207994,,302
+352601,::1,GET,http://localhost/etab-honuras-nuevo/web/app_dev.php/admin/dashboard,1482208002,,200
+22f94f,::1,GET,http://localhost/etab-honuras-nuevo/web/app_dev.php/js/routing?callback=fos.Router.setData,1482208006,,200
+069594,::1,GET,http://localhost/etab-honuras-nuevo/web/app_dev.php/admin/minsal/indicadores/fichatecnica/tablero,1482208015,,200
+979ea9,::1,GET,http://localhost/etab-honuras-nuevo/web/app_dev.php/admin/minsal/indicadores/fichatecnica/pivotTable,1482208021,,200
+0f6337,::1,GET,http://localhost/etab-honuras-nuevo/web/app_dev.php/js/routing?callback=fos.Router.setData,1482208025,,200
+7323f1,::1,GET,http://localhost/etab-honuras-nuevo/web/app_dev.php/rest-service/data/2,1482208038,,200
+142033,::1,GET,http://localhost/etab-honuras-nuevo/web/app_dev.php/rest-service/data/2,1482208043,,200
