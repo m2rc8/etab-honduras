@@ -1,19 +1,19 @@
 <?php
 
-namespace MINSAL\IndicadoresBundle\Controller;
+namespace ISECH\IndicadoresBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Symfony\Component\HttpFoundation\Response;
-use MINSAL\IndicadoresBundle\Entity\ComentariosSala;
-use MINSAL\IndicadoresBundle\Entity\Social;
-use MINSAL\IndicadoresBundle\Entity\GrupoIndicadores;
-use MINSAL\IndicadoresBundle\Entity\User;
-use MINSAL\IndicadoresBundle\Entity\UsuarioGrupoIndicadores;
+use ISECH\IndicadoresBundle\Entity\ComentariosSala;
+use ISECH\IndicadoresBundle\Entity\Social;
+use ISECH\IndicadoresBundle\Entity\GrupoIndicadores;
+use ISECH\IndicadoresBundle\Entity\User;
+use ISECH\IndicadoresBundle\Entity\UsuarioGrupoIndicadores;
 use Symfony\Component\HttpFoundation\Session\Session;
-use MINSAL\IndicadoresBundle\Entity\SalaAcciones;
+use ISECH\IndicadoresBundle\Entity\SalaAcciones;
 
 class SocialController extends Controller {
 
@@ -310,7 +310,7 @@ class SocialController extends Controller {
              return new Response("No existe el elemento");
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($id);
         $em->flush();
     
